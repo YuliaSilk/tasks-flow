@@ -16,7 +16,7 @@ const CardColumn = ({column}) => {
       key={card._id}
       title={card.title}
       description={card.description}
-      id={card._id} // Ensure to use the correct ID
+      _id={card._id} // Ensure to use the correct ID
       onEdit={() => {}} // Define your edit handler
       onDelete={() => {}} // Define your delete handler
      />

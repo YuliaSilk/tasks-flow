@@ -5,7 +5,7 @@ import {useBoards} from "../../hooks/useBoard";
 
 interface BoardOption {
  title: string;
- id: string;
+ _id: string;
 }
 interface SearchFieldProps {
  onBoardSelected: (boardTitle: string) => void;
@@ -18,7 +18,7 @@ export default function SearchField({onBoardSelected}: SearchFieldProps) {
   .filter((board): board is {title: string; _id: string} => Boolean(board.title && board._id)) // Type guard to ensure correct types
   .map((board) => ({
    title: board.title,
-   id: board._id,
+   _id: board._id,
   }));
  console.log("SearchField:boardOptions", boardOptions);
 
@@ -29,11 +29,11 @@ export default function SearchField({onBoardSelected}: SearchFieldProps) {
     id="free-solo-2-demo"
     disableClearable
     options={boardOptions}
-    getOptionLabel={(option) => option.title} // Use title from BoardOption
+    getOptionLabel={(option) => option.title}
     onChange={(event, value) => {
      console.log("SearchField:onChange", event, value);
      if (value) {
-      onBoardSelected(value._id);
+      onBoardSelected((value as BoardOption)._id);
      }
     }}
     renderInput={(params) => (

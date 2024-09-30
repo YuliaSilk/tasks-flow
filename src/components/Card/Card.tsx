@@ -12,7 +12,7 @@ interface CardComponentProps extends CardProps {
  onDelete: (id: string) => void;
 }
 
-const Card: React.FC<CardComponentProps> = ({id: cardId, title, description, onEdit, onDelete}) => {
+const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, onEdit, onDelete}) => {
  const dispatch = useDispatch();
  const card: CardProps | undefined = useSelector((state: any) => state.cards.cards.find((c) => c.id === cardId));
  useEffect(() => {

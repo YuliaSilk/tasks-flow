@@ -28,16 +28,16 @@ const Board = () => {
  }
 
  return (
-  <div>
+  <div className="bg-primary-tertiary w-[300px] h-[80vh] p-3">
    <h2>{currentBoard.title}</h2>
    <div className="columns">
-    {columns.map((column) => (
+    {/* {columns.map((column) => (
      <div
       key={column._id}
       className="column"
      >
-      <h3>{column.name}</h3>
-      <div className="cards">
+      <h3>{column.name}</h3> */}
+    {/* <div className="cards">
        {Array.isArray(column.card) &&
         column.card.map((card) => (
          <div
@@ -45,12 +45,12 @@ const Board = () => {
           className="card"
          >
           <p>{card.title}</p>
-         </div>
-        ))}
-      </div>
-     </div>
-    ))}
+         </div> */}
+    {/* ))} */}
+    {/* </div> */}
    </div>
+   {/* // ))} */}
+   {/* </div> */}
   </div>
  );
 };

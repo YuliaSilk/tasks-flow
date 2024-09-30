@@ -47,7 +47,11 @@ const columnSlice = createSlice({
           // state.loading = false; // Loading is complete
           state.error = action.error.message || 'Failed to load columns and cards'; // Set error message
         });
+
+        
     },
+
+    
   });
   
 
