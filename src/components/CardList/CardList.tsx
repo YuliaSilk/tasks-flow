@@ -1,16 +1,20 @@
 import React from "react";
 import Card from "../Card/Card";
-import cards from "../../helpers/cards-data.json";
-
-const CardList: React.FC = () => {
+interface CardListProps {
+ cards: any[]; // Adjust type according to your card structure
+}
+const CardList: React.FC<CardListProps> = ({cards}) => {
  return (
   <div>
    <ul className="flex flex-col gap-4 ">
-    {cards.map((card, id) => (
+    {cards.map((card) => (
      <Card
-      key={id}
+      key={card._id}
       title={card.title}
       description={card.description}
+      id={card._id} // Ensure to use the correct ID
+      onEdit={() => {}} // Define your edit handler
+      onDelete={() => {}} // Define your delete handler
      />
     ))}
    </ul>

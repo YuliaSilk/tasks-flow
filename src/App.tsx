@@ -1,16 +1,20 @@
 import React from "react";
 import "./App.css";
 import Board from "./components/Board/Board";
+import Header from "./components/Header/Header";
+import {BoardProvider} from "./components/Board/BoardContext";
 
 const App: React.FC = () => {
  return (
-  <div className="w-full h-screen p-10">
-   <h1>Tasks Flow</h1>
-
-   <Board
-    id={1}
-    title={""}
-   />
+  <div>
+   <BoardProvider>
+    <Header />
+    <Board
+    //  id={"boardId"}
+    //  title={"Board"}
+    //  boardId={"boardId"}
+    />
+   </BoardProvider>
   </div>
  );
 };
