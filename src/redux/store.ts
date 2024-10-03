@@ -19,6 +19,7 @@ import {
   const persistConfig = {
     key: 'root',
     storage,
+    whitelist: ['currentBoard'],
   };
 const persistedReducer = persistReducer(persistConfig, boardsReducer);
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk} from "@reduxjs/toolkit";
-// import {BoardProps} from "../../types/types";
+import {BoardProps} from "../../types/types";
 
 axios.defaults.baseURL = "http://localhost:3001";
 
@@ -9,8 +9,6 @@ export const fetchBoards = createAsyncThunk(
  async (_, thunkAPI) => {
   try {
     const res = await axios.get("/api/boards");
-    console.log("Fetched boards:", res.data); 
-
     return res.data;
   } catch(error) {
     return thunkAPI.rejectWithValue(error.message);
@@ -30,7 +28,7 @@ export const createBoard = createAsyncThunk(
  },
 );
 
-export const getBoardById = createAsyncThunk(
+export const getBoardById = createAsyncThunk<BoardProps, string>(
  "boards/getBoardById",
  async ( _id: string , thunkAPI ) => {
   try {

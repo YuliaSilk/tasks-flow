@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import ButtonAdd from "../UI/Buttons/ButtonAdd";
 import ButtonLoad from "../UI/Buttons/ButtonLoad";
-import SearchField from "../UI/SearchField";
+// import SearchField from "../UI/SearchField";
 import {useDispatch} from "react-redux";
 import {getBoardById} from "../../redux/boards/operations";
 import {AppDispatch} from "../../redux/store";
+import SearchComponent from "../SaerchComponent";
 
 const Header: React.FC = () => {
  const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
@@ -14,6 +15,9 @@ const Header: React.FC = () => {
  };
 
  const handleLoadBoard = () => {
+  if (selectedBoardId === null) {
+   throw new Error("selectedBoardId is null in handleLoadBoard");
+  }
   if (selectedBoardId) {
    dispatch(getBoardById(selectedBoardId));
   }
@@ -23,7 +27,8 @@ const Header: React.FC = () => {
   <>
    <h1 className="text-primary-accent text-[48px] font-bold">Tasks Flow</h1>
    <div className="flex gap-4">
-    <SearchField onBoardSelected={handleBoardSelected} />
+    <SearchComponent onBoardSelected={handleBoardSelected} />
+    {/* <SearchField onBoardSelected={handleBoardSelected} /> */}
     <ButtonLoad onClick={handleLoadBoard} />
     <ButtonAdd
     // onClick={handleAddCard}

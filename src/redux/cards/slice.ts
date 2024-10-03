@@ -10,7 +10,13 @@ interface CardsState {
 }
 
 const initialState: CardsState = {
-  cards: [],
+  cards: [{
+    _id: '',
+    title: '',
+    description: '',
+    boardId: '',
+    columnId: '',
+  }],
   isLoading: false,
   error: null,
   filter: '',
@@ -42,6 +48,7 @@ const cardSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.cards = action.payload;
+        console.log('fetchCards.fulfilled: ', action.payload);
       })
 
       .addCase(createCard.pending, handlePending)
@@ -56,6 +63,7 @@ const cardSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.cards = [action.payload];
+        console.log('getCardById.fulfilled: ', action.payload);
       })
      
       .addCase(editCard.pending, handlePending)

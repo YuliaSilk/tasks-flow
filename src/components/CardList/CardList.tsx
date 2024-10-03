@@ -15,6 +15,8 @@ const CardList: React.FC<CardListProps> = ({cards}) => {
       _id={card._id} // Ensure to use the correct ID
       onEdit={() => {}} // Define your edit handler
       onDelete={() => {}} // Define your delete handler
+      columnId=""
+      boardId=""
      />
     ))}
    </ul>

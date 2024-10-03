@@ -14,7 +14,7 @@ interface CreateCardProps {
 interface GetCardByIdProps {
   boardId: string; 
   columnId: string; 
-  id: string;
+  _id: string;
 }
 
 
@@ -23,13 +23,13 @@ interface EditCardProps {
   columnId: string ; 
   title: string;
   description: string;
-  id: string;
+  _id: string;
 }
 
 interface DeleteCardProps {
   boardId: string; 
   columnId: string; 
-  id: string;
+  _id: string;
 }
 
 
@@ -38,6 +38,7 @@ export const fetchCards = createAsyncThunk<CardProps[]>(
  async (_, thunkAPI) => {
   try {
     const res = await axios.get(`/api/cards`);
+    console.log('fetchCards: ', res.data);
     return res.data;  
   } catch(error) {
     return thunkAPI.rejectWithValue(error.message);
@@ -50,6 +51,7 @@ export const createCard = createAsyncThunk<CardProps, CreateCardProps>(
  async ({ title, description, boardId, columnId }, thunkAPI) => {
     try{
         const res = await axios.post(`/api/boards/${boardId}/columns/${columnId}/cards`, { title, description });
+        console.log('createCard: ', res.data);
         return res.data;
        } catch(error) {
 return thunkAPI.rejectWithValue(error.message);
@@ -59,9 +61,10 @@ return thunkAPI.rejectWithValue(error.message);
 
 export const getCardById = createAsyncThunk<CardProps, GetCardByIdProps>(
  "cards/getCardById",
- async ({ boardId, columnId, id }, thunkAPI) => {
+ async ({ boardId, columnId, _id }, thunkAPI) => {
   try {
-    const res = await axios.get(`/api/boards/${boardId}/columns/${columnId}/cards/${id}`);
+    const res = await axios.get(`/api/boards/${boardId}/columns/${columnId}/cards/${_id}`);
+    console.log('getCardById: ', res.data);
     return res.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message);
@@ -71,9 +74,10 @@ export const getCardById = createAsyncThunk<CardProps, GetCardByIdProps>(
 
 export const editCard = createAsyncThunk<CardProps, EditCardProps>(
   "cards/editCard",
-  async ({ boardId, columnId, title, description, id }, thunkAPI) => {
+  async ({ boardId, columnId, title, description, _id }, thunkAPI) => {
     try {
-      const res = await axios.put(`/api/boards/${boardId}/columns/${columnId}/cards/${id}`, { title, description });
+      const res = await axios.put(`/api/boards/${boardId}/columns/${columnId}/cards/${_id}`, { title, description });
+      console.log('editCard: ', res.data);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -83,9 +87,10 @@ export const editCard = createAsyncThunk<CardProps, EditCardProps>(
 
 export const deleteCard = createAsyncThunk<CardProps, DeleteCardProps>(
   "cards/deleteCard",
-  async ({ boardId, columnId, id }, thunkAPI) => {
+  async ({ boardId, columnId, _id }, thunkAPI) => {
     try {
-      const res = await axios.delete(`/api/boards/${boardId}/columns/${columnId}/cards/${id}`);
+      const res = await axios.delete(`/api/boards/${boardId}/columns/${columnId}/cards/${_id}`);
+      console.log('deleteCard: ', res.data);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);

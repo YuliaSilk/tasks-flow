@@ -1,16 +1,19 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ColumnProps } from '../../types/types';
-
 axios.defaults.baseURL = 'http://localhost:3001';
 
-const BOARD_ID = "replace_with_your_board_id"; 
+//  const BOARD_ID = getBoardByID(currentBoard?._id);
 
 export const getAllColumns = createAsyncThunk<ColumnProps[]>(
   'columns/getAllColumns',
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get(`/api/boards/${BOARD_ID}/columns`);
+      const state = thunkAPI.getState() as any;
+      const boardId = state.boards.currentBoard?._id;
+
+      const response = await axios.get(`/api/boards/${boardId}/columns`);
+      console.log('getAllColumns: ', response.data);
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
@@ -21,9 +24,13 @@ export const getAllColumns = createAsyncThunk<ColumnProps[]>(
 
 export const getColumnsById = createAsyncThunk<ColumnProps, string>(
     'columns/getById',
-    async (id, thunkAPI) => {
+    async (columnId, thunkAPI) => {
       try {
-        const response = await axios.get(`/api/boards/${BOARD_ID}/columns/${id}`);
+        const state = thunkAPI.getState() as any;
+        const boardId = state.boards.currentBoard?._id;
+
+        const response = await axios.get(`/api/boards/${boardId}/columns`);
+        console.log('getColumnsById: ', response.data);
         return response.data;
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error.message);
@@ -34,31 +41,36 @@ export const getColumnsById = createAsyncThunk<ColumnProps, string>(
 
   export const getColumnsAndCardsByBoardId = createAsyncThunk(
     "boards/getColumnsAndCards",
-    async (boardId: string) => {
-      const response = await axios.get(`/boards/${boardId}/columns`); // Fetch columns for the board
+    async (_id: string, thunkAPI) => {
+      const state = thunkAPI.getState() as any;
+      const boardId = state.boards.currentBoard?._id;
+
+      const response = await axios.get(`/boards/${boardId}/columns`);
       const columns = response.data;
   
-      // Assuming each column has a property `cards` to fetch cards
       const columnsWithCards = await Promise.all(columns.map(async (column: any) => {
-        const cardsResponse = await axios.get(`/columns/${column.id}/cards`); // Fetch cards for each column
+        const cardsResponse = await axios.get(`/columns/${column.id}/cards`);
         return {
           ...column,
           cards: cardsResponse.data,
         };
       }));
   
-      return columnsWithCards; // Return the columns with their respective cards
+      return columnsWithCards; 
     }
   );
 
-  // export const addColumn = createAsyncThunk<ColumnProps, { name: string }>(
-  //   'columns/addColumn',
-  //   async ({ name }, thunkAPI) => {
-  //     try {
-  //       const response = await axios.post(`/api/boards/${BOARD_ID}/columns`, { name });
-  //       return response.data;
-  //     } catch (error: any) {
-  //       return thunkAPI.rejectWithValue(error.message);
-  //     }
-  //   }
-  // );
+  export const addColumn = createAsyncThunk<ColumnProps, { name: string }>(
+    'columns/addColumn',
+    async ({ name }, thunkAPI) => {
+      try {
+        const state = thunkAPI.getState() as any;
+        const boardId = state.boards.currentBoard?._id;
+
+        const response = await axios.post(`/api/boards/${boardId}/columns`, { name });
+        return response.data;
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    }
+  );

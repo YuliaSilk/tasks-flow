@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, AsyncThunkAction } from '@reduxjs/toolkit';
 import { BoardProps, CardProps } from '../../types/types';
 import {
   fetchBoards,
@@ -17,19 +17,25 @@ const handleRejected = (state, action) => {
 };
 
 interface ColumnProps {
-  id: string | number;
+  _id: string | number;
   name: string;
-  cards: CardProps[];
+  cards: {
+    _id: string | number;
+    title: string;
+    description: string;
+    boardId: string | number;
+    columnId: string | number;
+  } [];
 }
 
 interface CurrentBoard {
-  id: string | number;
+  _id: string | number;
   title: string;
   columns: ColumnProps[];
 }
 
 interface BoardsState {
-  currentBoard: CurrentBoard ; 
+  currentBoard: CurrentBoard | null; 
   boards: BoardProps[]; 
   isLoading: boolean;
   error: string | null;
@@ -37,27 +43,34 @@ interface BoardsState {
 
 const initialState: BoardsState = {
   boards: [],
-  currentBoard: {
-    id: '',
-    title: '',
-    columns: [
-      {
-        id: '1',
-        name: 'To Do',
-        cards: [],
-      },
-      {
-        id: '2',
-        name: 'In Progress',
-        cards: [],
-      },
-      {
-        id: '3',
-        name: 'Done',
-        cards: [],
-      }
-    ],
-  },
+  currentBoard: null,
+  // currentBoard: {
+  //   _id: '',
+  //   title: '',
+  //   columns: [
+  //     {
+  //       _id: '',
+  //       name: 'To Do',
+  //       cards: [{
+  //         _id: '',
+  //         title: '',
+  //         description: '',
+  //         boardId: '',
+  //         columnId: '',
+  //       }],
+  //     },
+  //     {
+  //       _id: '',
+  //       name: 'In Progress',
+  //       cards: [],
+  //     },
+  //     {
+  //       _id: '',
+  //       name: 'Done',
+  //       cards: [],
+  //     }
+  //   ],
+  // },
   isLoading: false,
   error: null,
 };
@@ -80,19 +93,40 @@ const boardsSlice = createSlice({
               state.boards = action.payload;
           })
 
-            .addCase(getBoardById.pending, handlePending)
-            .addCase(getBoardById.rejected, handleRejected)
+            // .addCase(getBoardById.pending, handlePending)
+            // .addCase(getBoardById.rejected, handleRejected)
+            // .addCase(getBoardById.fulfilled, (state, action) => {
+            //   console.log('getBoardById.fulfilled: ', action.payload);
+            //   state.isLoading = false;
+            //   state.error = null;
+            //   state.currentBoard = {
+            //     _id: action.payload._id,
+            //     title: action.payload.title,
+            //     columns: action.payload.columns.map((col) => ({
+            //       _id: col._id,
+            //       name: col.name,
+            //       cards: col.cards || [],
+            //     })),
+            //   };
+            // })
+
             .addCase(getBoardById.fulfilled, (state, action) => {
               console.log('getBoardById.fulfilled: ', action.payload);
               state.isLoading = false;
               state.error = null;
               state.currentBoard = {
-                id: action.payload._id,
+                _id: action.payload._id,
                 title: action.payload.title,
                 columns: action.payload.columns.map((col) => ({
-                  id: col._id,
+                  _id: col._id,
                   name: col.name,
-                  cards: col.card || [],
+                  cards: action.payload.cards?.map((card) => ({
+                    _id: card._id,
+                    title: card.title,
+                    description: card.description,
+                    boardId: card.boardId,
+                    columnId: card.columnId,
+                  })) || [],
                 })),
               };
             })

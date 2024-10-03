@@ -1,24 +1,23 @@
 export type CardProps = {
-    _id: number | string ;
+    _id: string ;
     title: string;
     description: string;
-    columnId?: number | string;
-    boardId?: number | string;
+    columnId: string;
+    boardId: string;
 }
 
 export type BoardProps = {
-    _id: number | string;
-    title?: string;
-    columns?: ColumnProps[];
+    _id: string;
+    title: string;
+    columns: ColumnProps[];
     cards?: CardProps[];
-    boardId?: number | string;
 }
 
 export type ColumnProps = {
-    _id: number | string;
+    _id: string;
     name: string;
     cards?: CardProps[];
-    boardId?: number | string;
+    boardId: number | string;
 }
 
 export type ButtonProps = {

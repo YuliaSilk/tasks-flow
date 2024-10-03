@@ -18,7 +18,7 @@ const StyledButtonLoad = styled(Button)(({theme}) => ({
  },
 }));
 interface ButtonLoadProps {
- onClick: () => void; // Accept an onClick prop
+ onClick: () => void;
 }
 const ButtonLoad: React.FC<ButtonLoadProps> = ({onClick}) => {
  return (

@@ -15,7 +15,17 @@ const handleRejected = (state, action) => {
 const columnSlice = createSlice({
     name: 'columns',
     initialState: {
-      columns: [] as ColumnProps[],
+      columns: [{
+        _id: '',
+        name: 'To Do',
+        cards: [{
+          _id: '',
+          title: '',
+          description: '',
+          boardId: '',
+          columnId: '',
+        }],
+      }] as ColumnProps[],
       isLoading: false,
       error: null as string | null,
     },
@@ -27,10 +37,14 @@ const columnSlice = createSlice({
       .addCase(getColumnsById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.columns = [action.payload];
+        // state.columns = action.payload;
+        if (Array.isArray(action.payload)) {
+          state.columns = action.payload;
+        } else {
+          console.error('Payload is not an array: ', action.payload);
+        }
+        console.log('getColumnsById.fulfilled: ', action.payload);
       })
-
-  
 
       .addCase(getAllColumns.pending, handlePending)
       .addCase(getAllColumns.rejected, handleRejected)
@@ -38,8 +52,8 @@ const columnSlice = createSlice({
           state.isLoading = false;
           state.error = null;
           state.columns = action.payload;
+          console.log('getAllColumns.fulfilled: ', action.payload);
         })
-
 
         .addCase(getColumnsAndCardsByBoardId.pending, handlePending)
         .addCase(getColumnsAndCardsByBoardId.fulfilled, handleRejected)
