@@ -70,7 +70,7 @@ const initialState: BoardsState = {
   //       cards: [],
   //     }
   //   ],
-  // },
+  // } || null,
   isLoading: false,
   error: null,
 };
@@ -111,25 +111,40 @@ const boardsSlice = createSlice({
             // })
 
             .addCase(getBoardById.fulfilled, (state, action) => {
-              console.log('getBoardById.fulfilled: ', action.payload);
+              console.log('Full API response:', action.payload); 
               state.isLoading = false;
               state.error = null;
+           
               state.currentBoard = {
                 _id: action.payload._id,
                 title: action.payload.title,
                 columns: action.payload.columns.map((col) => ({
                   _id: col._id,
                   name: col.name,
-                  cards: action.payload.cards?.map((card) => ({
-                    _id: card._id,
-                    title: card.title,
-                    description: card.description,
-                    boardId: card.boardId,
-                    columnId: card.columnId,
-                  })) || [],
+                  cards: col.card || [], 
                 })),
               };
-            })
+           })
+            // .addCase(getBoardById.fulfilled, (state, action) => {
+            //   console.log('getBoardById.fulfilled: ', action.payload);
+            //   state.isLoading = false;
+            //   state.error = null;
+            //   state.currentBoard = {
+            //     _id: action.payload._id,
+            //     title: action.payload.title,
+            //     columns: action.payload.columns.map((col) => ({
+            //       _id: col._id,
+            //       name: col.name,
+            //       cards: action.payload.cards?.map((card) => ({
+            //         _id: card._id,
+            //         title: card.title,
+            //         description: card.description,
+            //         boardId: card.boardId,
+            //         columnId: card.columnId,
+            //       })) || [],
+            //     })),
+            //   };
+            // })
 
             .addCase(createBoard.pending, handlePending)
             .addCase(createBoard.rejected, handleRejected)

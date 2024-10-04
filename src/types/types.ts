@@ -16,7 +16,7 @@ export type BoardProps = {
 export type ColumnProps = {
     _id: string;
     name: string;
-    cards?: CardProps[];
+    card?: CardProps[];
     boardId: number | string;
 }
 

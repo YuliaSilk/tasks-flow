@@ -24,17 +24,14 @@ const Header: React.FC = () => {
  };
 
  return (
-  <>
+  <div className="w-full h-[80px] p-5 bg-cyan-400 rounded-lg flex justify-between items-center">
    <h1 className="text-primary-accent text-[48px] font-bold">Tasks Flow</h1>
    <div className="flex gap-4">
     <SearchComponent onBoardSelected={handleBoardSelected} />
-    {/* <SearchField onBoardSelected={handleBoardSelected} /> */}
     <ButtonLoad onClick={handleLoadBoard} />
-    <ButtonAdd
-    // onClick={handleAddCard}
-    />
+    <ButtonAdd />
    </div>
-  </>
+  </div>
  );
 };
 export default Header;

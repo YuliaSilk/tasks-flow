@@ -4,14 +4,15 @@ import CardColumn from "../CardColumn/CardColumn";
 
 const Board = () => {
  const currentBoard = useSelector((state: any) => state.boards.currentBoard);
+ console.log("Current board data:", currentBoard);
 
  if (!currentBoard) {
-  return <div>No board selected.</div>;
+  return <div>No board selected. Please, select a board.</div>;
  }
  const {columns} = currentBoard;
 
  return (
-  <div className="bg-primary-tertiary w-[96%] h-[80vh] p-3 mx-auto">
+  <div className=" w-[96%] h-[80vh] p-3 mx-auto">
    <h2 className="text-primary-main text-[48px] font-bold text-center">{currentBoard.title}</h2>
    <div className="h-[60vh] flex gap-5 mx-auto">
     {columns.map((column) => (
@@ -20,6 +21,7 @@ const Board = () => {
       column={column}
       name={column.name}
       cards={column.cards}
+      columnId={column._id}
      />
     ))}
    </div>

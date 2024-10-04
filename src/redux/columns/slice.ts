@@ -18,7 +18,7 @@ const columnSlice = createSlice({
       columns: [{
         _id: '',
         name: 'To Do',
-        cards: [{
+        card: [{
           _id: '',
           title: '',
           description: '',
