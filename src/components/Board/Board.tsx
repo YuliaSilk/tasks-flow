@@ -7,7 +7,13 @@ const Board = () => {
  console.log("Current board data:", currentBoard);
 
  if (!currentBoard) {
-  return <div>No board selected. Please, select a board.</div>;
+  return (
+   <div className="w-[96%] h-auto p-3 m-auto my-40 flex justify-center items-center align-middle ">
+    <p className="text-primary-main text-[28px] font-bold text-center">
+     No board selected. <br /> Please, select a board.
+    </p>
+   </div>
+  );
  }
  const {columns} = currentBoard;
 
@@ -22,6 +28,7 @@ const Board = () => {
       name={column.name}
       cards={column.cards}
       columnId={column._id}
+      boardId={currentBoard._id}
      />
     ))}
    </div>

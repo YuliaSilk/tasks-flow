@@ -1,5 +1,5 @@
-import { createSlice, AsyncThunkAction } from '@reduxjs/toolkit';
-import { BoardProps, CardProps } from '../../types/types';
+import { createSlice } from '@reduxjs/toolkit';
+import { BoardProps } from '../../types/types';
 import {
   fetchBoards,
   createBoard,
@@ -44,33 +44,6 @@ interface BoardsState {
 const initialState: BoardsState = {
   boards: [],
   currentBoard: null,
-  // currentBoard: {
-  //   _id: '',
-  //   title: '',
-  //   columns: [
-  //     {
-  //       _id: '',
-  //       name: 'To Do',
-  //       cards: [{
-  //         _id: '',
-  //         title: '',
-  //         description: '',
-  //         boardId: '',
-  //         columnId: '',
-  //       }],
-  //     },
-  //     {
-  //       _id: '',
-  //       name: 'In Progress',
-  //       cards: [],
-  //     },
-  //     {
-  //       _id: '',
-  //       name: 'Done',
-  //       cards: [],
-  //     }
-  //   ],
-  // } || null,
   isLoading: false,
   error: null,
 };
@@ -93,23 +66,6 @@ const boardsSlice = createSlice({
               state.boards = action.payload;
           })
 
-            // .addCase(getBoardById.pending, handlePending)
-            // .addCase(getBoardById.rejected, handleRejected)
-            // .addCase(getBoardById.fulfilled, (state, action) => {
-            //   console.log('getBoardById.fulfilled: ', action.payload);
-            //   state.isLoading = false;
-            //   state.error = null;
-            //   state.currentBoard = {
-            //     _id: action.payload._id,
-            //     title: action.payload.title,
-            //     columns: action.payload.columns.map((col) => ({
-            //       _id: col._id,
-            //       name: col.name,
-            //       cards: col.cards || [],
-            //     })),
-            //   };
-            // })
-
             .addCase(getBoardById.fulfilled, (state, action) => {
               console.log('Full API response:', action.payload); 
               state.isLoading = false;
@@ -125,27 +81,7 @@ const boardsSlice = createSlice({
                 })),
               };
            })
-            // .addCase(getBoardById.fulfilled, (state, action) => {
-            //   console.log('getBoardById.fulfilled: ', action.payload);
-            //   state.isLoading = false;
-            //   state.error = null;
-            //   state.currentBoard = {
-            //     _id: action.payload._id,
-            //     title: action.payload.title,
-            //     columns: action.payload.columns.map((col) => ({
-            //       _id: col._id,
-            //       name: col.name,
-            //       cards: action.payload.cards?.map((card) => ({
-            //         _id: card._id,
-            //         title: card.title,
-            //         description: card.description,
-            //         boardId: card.boardId,
-            //         columnId: card.columnId,
-            //       })) || [],
-            //     })),
-            //   };
-            // })
-
+    
             .addCase(createBoard.pending, handlePending)
             .addCase(createBoard.rejected, handleRejected)
             .addCase(createBoard.fulfilled, (state, action) => {
@@ -154,8 +90,6 @@ const boardsSlice = createSlice({
                 state.error = null;
                 state.boards.push(action.payload);
             })
-
-            
     }
 });
 

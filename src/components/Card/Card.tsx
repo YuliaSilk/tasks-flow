@@ -1,13 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 
 import {CardProps} from "../../types/types";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+
 import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "../../redux/store";
-import {deleteCard} from "../../redux/cards/operations";
-// import CardModal from "../CardModal/CardModal";
+import {deleteCard, editCard} from "../../redux/cards/operations";
+import DeleteDialog from "../../components/UI/ModalWindodws/DeleteDialogBasic";
+import {getBoardById} from "../../redux/boards/operations";
+import EditCardModal from "../../components/UI/ModalWindodws/EditCardModal";
 
 interface CardComponentProps extends CardProps {
  _id: string;
@@ -15,22 +18,37 @@ interface CardComponentProps extends CardProps {
  description: string;
  onEdit: (_id: string) => void;
  onDelete: (_id: string) => void;
+ open: () => void;
 }
 
 const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, onEdit, onDelete}) => {
- const [isOpen, setIsOpen] = React.useState(false);
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
+ const [isDialogOpen, setDialogOpen] = useState(false);
+ const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
  const dispatch: AppDispatch = useDispatch();
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const card: CardProps = useSelector((state: any) => state.cards.cards.find((c) => c._id === cardId));
  const columnId = useSelector((state: any) => state.boards.currentBoard?.columns[0]._id);
  const boardId = useSelector((state: any) => state.boards.currentBoard?._id);
 
- const openModal = () => {
-  setIsOpen(true);
+ const openEditModal = () => {
+  setIsEditModalOpen(true);
  };
 
- const handleDelete = (_id: string) => {
-  dispatch(deleteCard({boardId, columnId, _id: cardId}));
-  console.log(`Delete card with ID: ${_id}`);
+ const handleDelete = () => {
+  dispatch(deleteCard({boardId, columnId, _id: cardId})).then(() => {
+   dispatch<any>(getBoardById(boardId));
+  });
+  console.log(`Delete card with ID: ${cardId}`);
+
+  setDialogOpen(false);
+ };
+
+ const handleEdit = (cardId: string, newTitle: string, newDescription: string) => {
+  dispatch(editCard({boardId, columnId, _id: cardId, title: newTitle, description: newDescription})).then(() => {
+   dispatch(getBoardById(boardId));
+  });
  };
 
  return (
@@ -41,18 +59,38 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, on
    </div>
    <div className="flex w-full justify-end gap-4 items-center">
     <Button
-     onClick={openModal}
+     onClick={openEditModal}
      className="w-8 h-8 text-primary-main hover:text-primary-secondary focus:text-primary-secondary bg-transparent hover:bg-transparent focus:bg-transparent transition-all translate-x-2 duration-200"
     >
      <EditNoteRoundedIcon />
     </Button>
+
     <Button
-     onClick={() => handleDelete(card._id)}
+     onClick={() => setDialogOpen(true)}
      className=" w-8 h-8  text-primary-main  hover:text-primary-red focus:text-primary-red bg-transparent hover:bg-transparent focus:bg-transparent transition-all translate-x-2 duration-200"
     >
      <DeleteRoundedIcon />
     </Button>
    </div>
+   <DeleteDialog
+    isOpen={isDialogOpen}
+    onClose={() => setDialogOpen(false)}
+    title="Delete Card"
+    onClick={handleDelete}
+   >
+    <p>Are you sure you want to delete this card?</p>
+   </DeleteDialog>
+   {isEditModalOpen && (
+    <EditCardModal
+     open={isEditModalOpen}
+     onClose={() => setIsEditModalOpen(false)}
+     cardId={cardId}
+     title={title}
+     description={description}
+     onEdit={handleEdit}
+     boardId={boardId}
+    />
+   )}{" "}
   </div>
  );
 };

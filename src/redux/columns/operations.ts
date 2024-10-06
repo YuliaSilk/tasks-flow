@@ -45,7 +45,7 @@ export const getColumnsById = createAsyncThunk<ColumnProps, string>(
       const state = thunkAPI.getState() as any;
       const boardId = state.boards.currentBoard?._id;
 
-      const response = await axios.get(`/boards/${boardId}/columns`);
+      const response = await axios.get(`api/boards/${boardId}/columns`);
       const columns = response.data;
   
       const columnsWithCards = await Promise.all(columns.map(async (column: any) => {

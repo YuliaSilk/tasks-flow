@@ -22,4 +22,5 @@ export type ColumnProps = {
 
 export type ButtonProps = {
     onClick?: () => void;
+    onConfirm?: () => void;
 }

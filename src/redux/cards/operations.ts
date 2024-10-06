@@ -4,12 +4,12 @@ import {CardProps} from "../../types/types";
 
 axios.defaults.baseURL = "http://localhost:3001";
 
-interface CreateCardProps {
-  title: string;
-  description: string;
-  boardId: string; 
-  columnId: string; 
-}
+// interface CreateCardProps {
+//   title: string;
+//   description: string;
+//   boardId: string; 
+//   columnId: string; 
+// }
 
 interface GetCardByIdProps {
   boardId: string; 
@@ -46,17 +46,16 @@ export const fetchCards = createAsyncThunk<CardProps[]>(
  },
 );
 
-export const createCard = createAsyncThunk<CardProps, CreateCardProps>(
- "cards/createCardStatus",
- async ({ title, description, boardId, columnId }, thunkAPI) => {
-    try{
-        const res = await axios.post(`/api/boards/${boardId}/columns/${columnId}/cards`, { title, description });
-        console.log('createCard: ', res.data);
-        return res.data;
-       } catch(error) {
-return thunkAPI.rejectWithValue(error.message);
-       }
-    }
+export const createCard = createAsyncThunk(
+  "cards/createCard",
+  async ({ title, description, columnId, boardId }: { title: string; description: string; columnId: string; boardId: string }, { dispatch }) => {
+    const response = await axios.post(`/api/boards/${boardId}/columns/${columnId}/cards`, {
+      title,
+      description,
+    });
+
+    return { card: response.data, columnId };
+  }
 );
 
 export const getCardById = createAsyncThunk<CardProps, GetCardByIdProps>(

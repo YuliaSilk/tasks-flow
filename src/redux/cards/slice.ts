@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchCards, createCard, getCardById, editCard, deleteCard } from './operations';
 import { CardProps } from '../../types/types';
-
 interface CardsState {
   cards: CardProps[];
   isLoading: boolean;
   error: string | null;
   filter: string;
+  
 }
 
 const initialState: CardsState = {
@@ -20,6 +20,7 @@ const initialState: CardsState = {
   isLoading: false,
   error: null,
   filter: '',
+  
 };
 const handlePending = state => {
   state.isLoading = true;
@@ -53,10 +54,20 @@ const cardSlice = createSlice({
 
       .addCase(createCard.pending, handlePending)
       .addCase(createCard.rejected, handleRejected)
-      .addCase(createCard.fulfilled, (state, action: PayloadAction<CardProps>) => {
-        state.cards.push(action.payload);
+      // .addCase(createCard.fulfilled, (state, action: PayloadAction<CardProps>) => {
+      //   console.log('Card successfully created: ', action.payload);
+      //   state.cards.push(action.payload);
+        // getColumnsById(action.payload.boardId);
+      .addCase(createCard.fulfilled, (state, action) => {
+          const { card, columnId } = action.payload;
+              if (state[columnId]) {
+            state[columnId].push(card);
+          } else {
+            state[columnId] = [card]; 
+          }
       })
 
+  
       .addCase(getCardById.pending, handlePending)
       .addCase(getCardById.rejected, handleRejected)
       .addCase(getCardById.fulfilled, (state, action: PayloadAction<CardProps>) => {
@@ -82,7 +93,7 @@ const cardSlice = createSlice({
         const id = typeof action.payload === 'string' ? action.payload : action.payload._id;
         state.cards = state.cards.filter(card => card._id !== id);
       });
-      
+    
   },
 });
 
