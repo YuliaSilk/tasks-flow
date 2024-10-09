@@ -56,6 +56,7 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, on
  return (
   <Draggable
    draggableId={cardId.toString()}
+   //    draggableId={card._id}
    key={cardId}
    index={index}
   >

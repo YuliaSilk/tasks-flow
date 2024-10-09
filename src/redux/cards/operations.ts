@@ -34,14 +34,14 @@ interface DeleteCardProps {
 
 interface DndMovementPayload {
   // cardID: string;
-  finishCardIndex: number;
-  startColumnID: string;
-  finishColumnID: string;
+  // finishCardIndex: number;
+  // startColumnID: string;
+  // finishColumnID: string;
   boardId: string;
   // columnId: string;
   cardId: string;
-  // sourceColumnId: string;
-  // destinationColumnId: string;
+  sourceColumnId: string;
+  destinationColumnId: string;
   destinationIndex: number;
 
 }
@@ -116,12 +116,11 @@ export const deleteCard = createAsyncThunk<CardProps, DeleteCardProps>(
 export const dndMovement = createAsyncThunk(
   'cards/dndMovement',
   async (
-      { boardId, cardId: _id, finishCardIndex, startColumnID, finishColumnID }: DndMovementPayload,
+      { boardId, cardId: _id, sourceColumnId: startColumnID , destinationColumnId: finishColumnID }: DndMovementPayload,
       thunkAPI
   ) => {
       try {
           const res = await axios.patch(`/api/boards/${boardId}/columns/${finishColumnID}/cards/dnd/${_id}`, {
-              finishCardIndex,
               startColumnID,
               finishColumnID,
           });

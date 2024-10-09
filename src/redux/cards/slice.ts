@@ -116,8 +116,8 @@ const cardSlice = createSlice({
         state.error = null;
         const { card, finishTaskIndex, startColumnID, finishColumnID } = action.payload;
       
-        const startColumn = state.columns.find((column) => column._id === startColumnID);
-        const finishColumn = state.columns.find((column) => column._id === finishColumnID);
+        const startColumn = state.columns.find((column) => column._id === startColumnID) || {cards: []};
+        const finishColumn = state.columns.find((column) => column._id === finishColumnID) || {cards: []};
       
         if (!startColumn || !finishColumn) {
           console.error(`One of the columns does not exist: ${startColumnID}, ${finishColumnID}`);
@@ -125,69 +125,46 @@ const cardSlice = createSlice({
         }
       
         if (!startColumn.cards) {
+          startColumn.cards = [];
           console.error(`Start column does not have cards defined.`);
           return;
         }
+        if (!finishColumn.cards) {
+          finishColumn.cards = [];
+        }
       
-        // Remove the card from the start column
         const cardIndex = startColumn.cards.findIndex((c) => c._id === card._id);
         if (cardIndex !== -1) {
           startColumn.cards.splice(cardIndex, 1);
         }
       
-        // Add the card to the finish column
         if (!finishColumn.cards) {
           finishColumn.cards = [];
         }
         finishColumn.cards.splice(finishTaskIndex, 0, card);
       })
-      // .addCase(dndMovement.fulfilled, (state, action) => {
-      //   state.isLoading = false;
-      //   state.error = null;
-      //   const { card, finishTaskIndex, startColumnID, finishColumnID } = action.payload;
-    
-      //   const startColumn = state.columns.find(column => column._id === startColumnID);
-      //   const finishColumn = state.columns.find(column => column._id === finishColumnID);
-    
-      //   // Ensure that startColumn and finishColumn exist and have `cards`
-      //   if (!startColumn || !finishColumn) {
-      //       console.error(`One of the columns does not exist: ${startColumnID}, ${finishColumnID}`);
-      //       return;
-      //   }
-    
-      //   if (!startColumn.cards) {
-      //       console.error(`Start column does not have cards defined.`);
-      //       return;
-      //   }
-    
-      //   // Remove the card from the start column
-      //   startColumn.cards = startColumn.cards.filter(c => c._id !== card._id);
-    
-      //   // Ensure finishColumn has a cards array initialized
-      //   if (!finishColumn.cards) {
-      //       finishColumn.cards = [];
-      //   }
-    
-      //   // Add the card to the finish column
-      //   finishColumn.cards.splice(finishTaskIndex, 0, card);
-      // })
+      
       
       .addCase(updateStatusLocalThunk.pending, handlePending)
       .addCase(updateStatusLocalThunk.rejected, handleRejected)
       .addCase(updateStatusLocalThunk.fulfilled, (state, action) => {
           const { card, currentColumnId, newColumnId, newCardIdx } = action.payload;
           const columns = state.columns;
-                const currentColumnIdx = columns.findIndex(column => column._id === currentColumnId);
-          columns[currentColumnIdx].cards = columns[currentColumnIdx].cards.filter(
-              ({ _id }) => _id !== card._id
-          );
-                const newColumnIdx = columns.findIndex(column => column._id === newColumnId);
-          if (!columns[newColumnIdx].cards) {
+          const currentColumnIdx = columns.findIndex(column => column._id === currentColumnId);
+          if (currentColumnIdx !== -1) {
+            columns[currentColumnIdx].cards = columns[currentColumnIdx].cards.filter(
+              ({ _id }) => _id !== card._id);
+          }
+          
+          const newColumnIdx = columns.findIndex(column => column._id === newColumnId);
+          if (newColumnIdx !== -1) {
+            if (!columns[newColumnIdx].cards) {
               columns[newColumnIdx].cards = [];
           }
           columns[newColumnIdx].cards.splice(newCardIdx, 0, card);
+          }
+          state.columns = [...columns];
       });
-    
   },
 });
 

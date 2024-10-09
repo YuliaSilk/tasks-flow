@@ -1,13 +1,12 @@
 import React from "react";
 import {useSelector} from "react-redux";
 import CardColumn from "../CardColumn/CardColumn";
-import {DragDropContext, DropResult} from "react-beautiful-dnd";
+import {DragDropContext} from "react-beautiful-dnd";
 import {useDispatch} from "react-redux";
 import {dndMovement} from "../../redux/cards/operations";
 import {AppDispatch} from "../../redux/store";
-import {BoardProps, ColumnProps} from "../../types/types"; // Import your types
-
-const Board: React.FC<BoardProps> = () => {
+import {getBoardById} from "../../redux/boards/operations";
+const Board = () => {
  const currentBoard = useSelector((state: any) => state.boards.currentBoard);
  console.log("Current board data:", currentBoard);
  const dispatch = useDispatch<AppDispatch>();
@@ -23,67 +22,45 @@ const Board: React.FC<BoardProps> = () => {
  }
  const {columns} = currentBoard;
 
- const onDragEnd = (result: DropResult) => {
-  const {destination, source} = result;
+ const onDragEnd = (result) => {
+  const {source, destination, draggableId} = result;
 
   if (!destination) return;
-  //   const {columns} = currentBoard;
-  console.log("Columns data:", columns);
 
-  if (!columns || columns.length === 0) {
-   console.error("Columns are not available or empty.");
+  const cardId = typeof draggableId === "object" ? draggableId._id : draggableId;
+
+  console.log("Dragging card with id:", cardId);
+  console.log("From column:", source.droppableId);
+  console.log("To column:", destination.droppableId);
+
+  if (
+   typeof cardId !== "string" ||
+   typeof source.droppableId !== "string" ||
+   typeof destination.droppableId !== "string"
+  ) {
+   console.error("Invalid IDs detected:", cardId, source.droppableId, destination.droppableId);
    return;
   }
-  const startColumn = columns.find((col: ColumnProps) => col._id === source.droppableId);
-
-  const finishColumn = columns.find((col: ColumnProps) => col._id === destination.droppableId);
-
-  if (!startColumn || !finishColumn) {
-   console.error("Invalid column identifiers");
+  if (source.droppableId === destination.droppableId && source.index === destination.index) {
    return;
   }
-
-  const draggableCard = startColumn.cards[source.index];
-
-  if (!draggableCard) {
-   console.error("Draggable card not found.");
-   return;
-  }
-
-  if (startColumn._id === finishColumn._id && source.index === destination.index) {
-   return;
-  }
-
-  const draggableId = startColumn.cards[source.index];
-  //   console.log("Draggable ID for card:", cardId);
-  if (!draggableId) {
-   console.error("Draggable card not found.");
-   return;
-  }
-  console.log(`Dragging card with id: ${draggableId} from ${source.droppableId} to ${destination.droppableId}`);
-
-  const finishColumnCards = finishColumn.cards ? [...finishColumn.cards] : [];
-
-  if (startColumn._id === finishColumn._id && source.index === destination.index) {
-   return;
-  }
-
-  const startColumnCards = [...(startColumn.cards || [])];
-  startColumnCards.splice(source.index, 1);
-
-  finishColumnCards.splice(destination.index, 0, draggableId);
-
   dispatch(
    dndMovement({
+    cardId,
+    sourceColumnId: source.droppableId,
+    destinationColumnId: destination.droppableId,
     boardId: currentBoard._id,
-    startColumnID: source.droppableId,
-    finishColumnID: destination.droppableId,
-    cardId: draggableId._id,
     destinationIndex: destination.index,
-    finishCardIndex: destination.index,
    })
-  );
+  )
+   .then(() => {
+    dispatch(getBoardById(currentBoard._id));
+   })
+   .catch((error) => {
+    console.error("Error during drag and drop movement:", error);
+   });
  };
+
  return (
   <DragDropContext onDragEnd={onDragEnd}>
    <div className=" w-[96%] h-[80vh] p-3 mx-auto">

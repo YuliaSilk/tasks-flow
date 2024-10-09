@@ -8,7 +8,7 @@ import {selectColumns} from "../../redux/columns/selectors"; // your path to sel
 interface CardColumnProps {
  boardId: string;
  columnId: string;
- column: {};
+ column: {cards};
  name: string;
  cards: {
   _id: string;
@@ -36,8 +36,9 @@ const CardColumn: React.FC<CardColumnProps> = ({boardId, columnId = "", column, 
       >
        <CardList
         columnId={columnId}
+        cards={column.cards}
         // cards={cards}
-        cards={cards.length > 0 ? cards : fetchedCards || []}
+        // cards={cards.length > 0 ? cards : fetchedCards || []}
        />
        {provided.placeholder}
       </div>
