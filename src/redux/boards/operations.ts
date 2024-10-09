@@ -40,14 +40,14 @@ export const getBoardById = createAsyncThunk<BoardProps, string>(
  });
 
 
-//  export const createBoard = createAsyncThunk(
-//   "boards/createBoard",
-//   async (boardData: { title: string; columns: any[] }, thunkAPI) => {
-//     try {
-//       const res = await axios.post("/api/boards/", boardData); // Передай boardData
-//       return res.data;
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(error.message);
-//     }
-//   }
-// );
+export const deleteBoard = createAsyncThunk(
+ "boards/deleteBoard",
+ async (_id: string, thunkAPI) => {
+  try {
+    const res = await axios.delete(`/api/boards/${_id}`);
+    return res.data;
+  } catch(error) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+ },
+);

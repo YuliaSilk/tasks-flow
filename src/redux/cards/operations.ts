@@ -32,6 +32,20 @@ interface DeleteCardProps {
   _id: string;
 }
 
+interface DndMovementPayload {
+  // cardID: string;
+  finishCardIndex: number;
+  startColumnID: string;
+  finishColumnID: string;
+  boardId: string;
+  // columnId: string;
+  cardId: string;
+  // sourceColumnId: string;
+  // destinationColumnId: string;
+  destinationIndex: number;
+
+}
+
 
 export const fetchCards = createAsyncThunk<CardProps[]>(
  "cards/fetchTitleStatus",
@@ -96,3 +110,55 @@ export const deleteCard = createAsyncThunk<CardProps, DeleteCardProps>(
     }
   }
 );
+
+
+
+export const dndMovement = createAsyncThunk(
+  'cards/dndMovement',
+  async (
+      { boardId, cardId: _id, finishCardIndex, startColumnID, finishColumnID }: DndMovementPayload,
+      thunkAPI
+  ) => {
+      try {
+          const res = await axios.patch(`/api/boards/${boardId}/columns/${finishColumnID}/cards/dnd/${_id}`, {
+              finishCardIndex,
+              startColumnID,
+              finishColumnID,
+          });
+          return res.data;  
+      } catch (error) {
+          return thunkAPI.rejectWithValue(error.message);  
+      }
+  }
+);
+
+export const updateStatusLocalThunk = createAsyncThunk<
+  { card: CardProps; currentColumnId: string; newColumnId: string; newCardIdx: number }, 
+  { _id: string } 
+>(
+  'cards/updateStatusLocal',
+  async ({ _id }, thunkAPI) => {
+      try {
+        const response = await axios.patch(`/api/cards/${_id}`, { _id });
+        
+        const { card, currentColumnId, newColumnId, newCardIdx } = response.data;
+
+        return { card, currentColumnId, newColumnId, newCardIdx }; 
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);  // Повертаємо помилку, якщо запит не вдалий
+    }
+});
+// export const updateStatusLocalThunk = createAsyncThunk<
+// { card: CardProps, currentColumnId: string, newColumnId: string, newCardIdx: number },
+// { cardID: string }
+// >(
+//   'cards/updateCardStatusLocal',
+//   (data, thunkAPI) => {
+//     try {
+//       return data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error);
+//     }
+//   }
+// );
+

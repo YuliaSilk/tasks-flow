@@ -17,6 +17,7 @@ export type ColumnProps = {
     _id: string;
     name: string;
     card?: CardProps[];
+    cards: CardProps[];
     boardId: number | string;
 }
 

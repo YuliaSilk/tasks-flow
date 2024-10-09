@@ -3,23 +3,25 @@ import Card from "../Card/Card";
 
 interface CardListProps {
  columnId: string;
- cards: {
+ cards?: {
   _id: string;
   title: string;
   description: string;
+  //   ref: any;
  }[];
 }
-const CardList: React.FC<CardListProps> = ({columnId, cards}) => {
+const CardList = React.forwardRef<HTMLDivElement, CardListProps>(({columnId, cards = []}, ref) => {
  console.log("Rendering CardList component");
 
  return (
-  <div>
+  <div ref={ref}>
    <ul className="flex flex-col gap-4 ">
     {cards.length > 0 ? (
-     cards.map((card) => (
+     cards.map((card, index) => (
       <li key={card._id}>
        <Card
         _id={card._id}
+        index={index}
         title={card.title}
         description={card.description}
         onEdit={() => {}}
@@ -36,6 +38,6 @@ const CardList: React.FC<CardListProps> = ({columnId, cards}) => {
    </ul>
   </div>
  );
-};
+});
 
 export default CardList;

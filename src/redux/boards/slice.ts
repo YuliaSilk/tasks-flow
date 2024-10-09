@@ -3,7 +3,8 @@ import { BoardProps } from '../../types/types';
 import {
   fetchBoards,
   createBoard,
-  getBoardById
+  getBoardById,
+  deleteBoard,
 
 } from './operations';
 
@@ -64,6 +65,14 @@ const boardsSlice = createSlice({
               state.isLoading = false;
               state.error = null;
               state.boards = action.payload;
+              const selectedBoardId = state.currentBoard?._id;
+              const currentBoard = action.payload.find(board => board._id === selectedBoardId);
+              if (currentBoard) {
+                state.currentBoard = {
+                  ...currentBoard,
+                  columns: currentBoard.columns || [],
+                };
+              }
           })
 
             .addCase(getBoardById.fulfilled, (state, action) => {
@@ -90,6 +99,15 @@ const boardsSlice = createSlice({
                 state.error = null;
                 state.boards.push(action.payload);
             })
+
+            .addCase(deleteBoard.pending, handlePending)
+            .addCase(deleteBoard.rejected, handleRejected)
+            .addCase(deleteBoard.fulfilled, (state, action) => {
+                console.log('deleteBoard.fulfilled: ', action.payload);
+                state.isLoading = false;
+                state.error = null;
+                state.boards = state.boards.filter((board) => board._id !== action.payload);
+            });   
     }
 });
 
