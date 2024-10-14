@@ -1,15 +1,7 @@
 import React from "react";
 import Card from "../Card/Card";
+import {CardListProps} from "../../types/interfaces";
 
-interface CardListProps {
- columnId: string;
- cards?: {
-  _id: string;
-  title: string;
-  description: string;
-  //   ref: any;
- }[];
-}
 const CardList = React.forwardRef<HTMLDivElement, CardListProps>(({columnId, cards = []}, ref) => {
  console.log("Rendering CardList component");
 
@@ -24,11 +16,9 @@ const CardList = React.forwardRef<HTMLDivElement, CardListProps>(({columnId, car
         index={index}
         title={card.title}
         description={card.description}
-        onEdit={() => {}}
-        onDelete={() => {}}
         columnId={columnId}
         boardId={""}
-        open={() => {}}
+        // open={() => {}}
        />
       </li>
      ))

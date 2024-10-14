@@ -1,22 +1,15 @@
 import axios from "axios";
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {CardProps} from "../../types/types";
+import {CardProps} from "../../types/interfaces";
 
-axios.defaults.baseURL = "http://localhost:3001";
-
-// interface CreateCardProps {
-//   title: string;
-//   description: string;
-//   boardId: string; 
-//   columnId: string; 
-// }
+// axios.defaults.baseURL = "http://localhost:3001";
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
 interface GetCardByIdProps {
   boardId: string; 
   columnId: string; 
   _id: string;
 }
-
 
 interface EditCardProps {
   boardId: string ; 
@@ -33,19 +26,13 @@ interface DeleteCardProps {
 }
 
 interface DndMovementPayload {
-  // cardID: string;
-  // finishCardIndex: number;
-  // startColumnID: string;
-  // finishColumnID: string;
   boardId: string;
-  // columnId: string;
   cardId: string;
   sourceColumnId: string;
   destinationColumnId: string;
   destinationIndex: number;
 
 }
-
 
 export const fetchCards = createAsyncThunk<CardProps[]>(
  "cards/fetchTitleStatus",
@@ -111,8 +98,6 @@ export const deleteCard = createAsyncThunk<CardProps, DeleteCardProps>(
   }
 );
 
-
-
 export const dndMovement = createAsyncThunk(
   'cards/dndMovement',
   async (
@@ -147,17 +132,5 @@ export const updateStatusLocalThunk = createAsyncThunk<
         return thunkAPI.rejectWithValue(error.message);  // Повертаємо помилку, якщо запит не вдалий
     }
 });
-// export const updateStatusLocalThunk = createAsyncThunk<
-// { card: CardProps, currentColumnId: string, newColumnId: string, newCardIdx: number },
-// { cardID: string }
-// >(
-//   'cards/updateCardStatusLocal',
-//   (data, thunkAPI) => {
-//     try {
-//       return data;
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(error);
-//     }
-//   }
-// );
+
 

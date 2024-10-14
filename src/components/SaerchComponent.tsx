@@ -3,9 +3,8 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, fetchBoards} from "../redux/boards/operations";
-import {BoardProps} from "../types/types";
+import {BoardProps, CardProps} from "../types/interfaces";
 import {AppDispatch} from "../redux/store";
-import {CardProps} from "../types/types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {IconButton} from "@mui/material";
 
@@ -30,6 +29,7 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
 
  const dispatch = useDispatch<AppDispatch>();
  const {currentBoard, boards} = useSelector((state: any) => state.boards);
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const [selectedBoard, setSelectedBoard] = React.useState<BoardProps | null>(null);
 
  useEffect(() => {

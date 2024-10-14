@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ColumnProps } from '../../types/types';
-axios.defaults.baseURL = 'http://localhost:3001';
-
-//  const BOARD_ID = getBoardByID(currentBoard?._id);
+import { ColumnProps } from '../../types/interfaces';
+// axios.defaults.baseURL = 'http://localhost:3001';
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+console.log("BASE_URL:", process.env.BASE_URL);
 
 export const getAllColumns = createAsyncThunk<ColumnProps[]>(
   'columns/getAllColumns',
@@ -21,7 +21,6 @@ export const getAllColumns = createAsyncThunk<ColumnProps[]>(
   }
 );
 
-
 export const getColumnsById = createAsyncThunk<ColumnProps, string>(
     'columns/getById',
     async (columnId, thunkAPI) => {
@@ -36,7 +35,6 @@ export const getColumnsById = createAsyncThunk<ColumnProps, string>(
     }
   );
   
-
   export const getColumnsAndCardsByBoardId = createAsyncThunk(
     "boards/getColumnsAndCards",
     async (_id: string, thunkAPI) => {

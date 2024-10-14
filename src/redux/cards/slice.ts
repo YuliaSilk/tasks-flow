@@ -1,21 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchCards, createCard, getCardById, editCard, deleteCard } from './operations';
-import { CardProps, ColumnProps } from '../../types/types';
+import { CardProps, CardsState, UpdateColumnCardsPayload } from '../../types/interfaces';
 import {  dndMovement, updateStatusLocalThunk } from '../cards/operations';
 
-interface CardsState {
-  cards: CardProps[];
-  isLoading: boolean;
-  error: string | null;
-  filter: string;
-  columns: ColumnProps[];
-  
-}
-
-interface UpdateColumnCardsPayload {
-  columnId: string;
-  newCards: CardProps[];
-}
 
 const initialState: CardsState = {
   cards: [{

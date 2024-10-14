@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { BoardProps } from '../../types/types';
+import {  BoardsState } from '../../types/interfaces';
 import {
   fetchBoards,
   createBoard,
@@ -17,30 +17,7 @@ const handleRejected = (state, action) => {
   state.error = action.payload;
 };
 
-interface ColumnProps {
-  _id: string | number;
-  name: string;
-  cards: {
-    _id: string | number;
-    title: string;
-    description: string;
-    boardId: string | number;
-    columnId: string | number;
-  } [];
-}
 
-interface CurrentBoard {
-  _id: string | number;
-  title: string;
-  columns: ColumnProps[];
-}
-
-interface BoardsState {
-  currentBoard: CurrentBoard | null; 
-  boards: BoardProps[]; 
-  isLoading: boolean;
-  error: string | null;
-}
 
 const initialState: BoardsState = {
   boards: [],

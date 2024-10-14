@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction  } from '@reduxjs/toolkit';
-import { ColumnProps } from '../../types/types';
+import { ColumnProps, ColumnsState } from '../../types/interfaces';
 import { getAllColumns, getColumnsById, getColumnsAndCardsByBoardId } from './operations';
 
 const handlePending = (state) => {
@@ -10,11 +10,7 @@ const handleRejected = (state, action) => {
   state.isLoading = false;
   state.error = action.payload;
 };
-interface ColumnsState {
-  columns: ColumnProps[];
-  isLoading: boolean;
-  error: string | null;
-}
+
 const initialState: ColumnsState = {
   columns: [] as ColumnProps[], 
   isLoading: false,

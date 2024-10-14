@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-import {CardProps} from "../../types/types";
+import {CardProps} from "../../types/interfaces";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 
@@ -18,12 +18,9 @@ interface CardComponentProps extends CardProps {
  index: number;
  title: string;
  description: string;
- onEdit: (_id: string) => void;
- onDelete: (_id: string) => void;
- open: () => void;
 }
 
-const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, onEdit, onDelete, index}) => {
+const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, index}) => {
  // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const [isDialogOpen, setDialogOpen] = useState(false);
  const [isEditModalOpen, setIsEditModalOpen] = useState(false);

@@ -18,8 +18,8 @@ interface CardColumnProps {
 }
 const CardColumn: React.FC<CardColumnProps> = ({boardId, columnId = "", column, name = "", cards = []}) => {
  const [, setSelectedBoardId] = useState("");
- const fetchedCards = useSelector((state: any) => state.cards[columnId]);
- const columns = useSelector(selectColumns); // Keep this if you plan to use it
+ //  const fetchedCards = useSelector((state: any) => state.cards[columnId]);
+ const columns = useSelector(selectColumns);
  const handleOpenModal = (boardId: string, columnId: string) => {
   setSelectedBoardId(boardId);
  };

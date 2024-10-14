@@ -1,8 +1,9 @@
 import axios from "axios";
 import { createAsyncThunk} from "@reduxjs/toolkit";
-import {BoardProps} from "../../types/types";
+import {BoardProps} from "../../types/interfaces";
 
-axios.defaults.baseURL = "http://localhost:3001";
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+console.log("BASE_URL:", process.env.REACT_APP_BASE_URL);
 
 export const fetchBoards = createAsyncThunk(
  "boards/getAllBoards",
@@ -38,7 +39,6 @@ export const getBoardById = createAsyncThunk<BoardProps, string>(
     return thunkAPI.rejectWithValue(error.message);
   }
  });
-
 
 export const deleteBoard = createAsyncThunk(
  "boards/deleteBoard",
