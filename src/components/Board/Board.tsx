@@ -16,8 +16,6 @@ const Board: React.FC = () => {
 
  const currentBoard = useSelector((state: any) => state.boards.currentBoard);
 
- console.log("Current board data:", currentBoard);
-
  if (!currentBoard) {
   return (
    <div className="w-[96%] h-auto p-3 m-auto my-40 flex justify-center items-center align-middle ">
@@ -35,10 +33,6 @@ const Board: React.FC = () => {
   if (!destination) return;
 
   const cardId = typeof draggableId === "object" ? draggableId._id : draggableId;
-
-  console.log("Dragging card with id:", cardId);
-  console.log("From column:", source.droppableId);
-  console.log("To column:", destination.droppableId);
 
   if (
    typeof cardId !== "string" ||
