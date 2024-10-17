@@ -85,7 +85,7 @@ const Board: React.FC = () => {
  return (
   <>
    {loading && (
-    <div className="">
+    <div className="flex items-center justify-center h-screen">
      <DotLoader
       color="#910A67"
       loading={loading}
