@@ -1,23 +1,42 @@
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
+import React, {useState, useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {createBoard} from "../../../redux/boards/operations";
 import BaseModal from "./BaseModal";
 import {Button, TextField, Typography} from "@mui/material";
+import {useSnackbar} from "notistack";
+import {AppDispatch} from "../../../redux/store";
+
 const CreateBoardModal: React.FC<{isOpen: boolean; onClose: () => void}> = ({isOpen, onClose}) => {
+ const dispatch = useDispatch<AppDispatch>();
+ const {enqueueSnackbar} = useSnackbar();
+
+ const [error, setError] = useState("");
  const [boardTitle, setBoardTitle] = useState("");
- const dispatch = useDispatch();
 
- const handleCreateBoard = () => {
-  dispatch<any>(
-   createBoard({
-    title: boardTitle,
-    columns: [],
-   })
-  );
+ const boards = useSelector((state: any) => state.boards.boards);
 
-  onClose();
+ const handleCreateBoard = async () => {
+  try {
+   const isDuplicate = boards.some((board: {title: string}) => board.title === boardTitle.trim());
+   if (isDuplicate) {
+    setError("A board with this title already exists. Please choose another title.");
+    return;
+   }
+   await dispatch<any>(
+    createBoard({
+     title: boardTitle,
+     columns: [],
+    })
+   );
+   enqueueSnackbar("Board created successfully!", {variant: "success"});
+   onClose();
+  } catch (error) {
+   enqueueSnackbar("Error creating board!", {variant: "error"});
+  }
  };
-
+ useEffect(() => {
+  setError("");
+ }, [boardTitle]);
  if (!isOpen) return null;
 
  return (
@@ -40,6 +59,8 @@ const CreateBoardModal: React.FC<{isOpen: boolean; onClose: () => void}> = ({isO
        placeholder="Enter your new board title"
        value={boardTitle}
        onChange={(e) => setBoardTitle(e.target.value)}
+       error={!!error}
+       helperText={error}
       ></TextField>
      </div>
      <div className="flex flex-end gap-4 justify-between">

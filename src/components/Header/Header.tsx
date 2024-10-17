@@ -23,24 +23,20 @@ const Header: React.FC = () => {
  };
 
  return (
-  <div className="w-full h-[120px]  flex flex-col gap-4">
-   <div className="p-5 w-full h-[80px] flex  gap-4 justify-between items-center">
-    <h1 className="text-primary-accent text-[48px] font-bold">Tasks Flow</h1>
-    <div className="flex gap-4">
-     <SearchComponent onBoardSelected={handleBoardSelected} />
-     <ButtonLoad onClick={handleLoadBoard} />
-     <ButtonAdd
-      actionType="board"
-      title="Create new board"
-      columnId=""
-      boardId=""
-     />
-    </div>
+  <div className=" w-full h-auto flex flex-col mb-20w-full  pt-4 px-4 lg:px-5 lg:mb-10 lg:flex-row  gap-4 justify-between items-center">
+   <h1 className="text-primary-accent text-[24px] md:text-[36px] lg:text-[48px] font-bold">Tasks Flow</h1>
+   <div className="flex flex-col md:flex-row gap-4 md:align-baseline items-center mb-4">
+    <SearchComponent onBoardSelected={handleBoardSelected} />
+    <ButtonLoad onClick={handleLoadBoard} />
+    <ButtonAdd
+     actionType="board"
+     title="Create new board"
+     columnId=""
+     boardId=""
+    />
    </div>
-   <div className="reletive w-full h-[28px] bg-gradient-to-r from-primary-tertiary via-transparent to-primary-tertiary">
-    <p className="abolute inset-x-0 bottom-1 text-primary-tertiary text-[18px] font-bold text-center">
-     Lost time is never found again
-    </p>
+   <div className="lg:absolute top-24 inset-x-0 flex justify-center items-center w-full h-[20px] lg:h-[28px] bg-gradient-to-r from-primary-tertiary via-transparent to-primary-tertiary">
+    <p className=" text-primary-tertiary text-[18px] font-bold text-center">Lost time is never found again</p>
    </div>
   </div>
  );

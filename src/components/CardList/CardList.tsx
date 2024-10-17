@@ -3,8 +3,6 @@ import Card from "../Card/Card";
 import {CardListProps} from "../../types/interfaces";
 
 const CardList = React.forwardRef<HTMLDivElement, CardListProps>(({columnId, cards = []}, ref) => {
- console.log("Rendering CardList component");
-
  return (
   <div ref={ref}>
    <ul className="flex flex-col gap-4 ">
@@ -18,7 +16,6 @@ const CardList = React.forwardRef<HTMLDivElement, CardListProps>(({columnId, car
         description={card.description}
         columnId={columnId}
         boardId={""}
-        // open={() => {}}
        />
       </li>
      ))

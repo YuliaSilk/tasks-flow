@@ -1,52 +1,47 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, fetchBoards} from "../redux/boards/operations";
 import {BoardProps, CardProps} from "../types/interfaces";
 import {AppDispatch} from "../redux/store";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {IconButton} from "@mui/material";
-
-interface SearchFieldProps {
- onBoardSelected: (boardTitle: string) => void;
-}
-
-interface BoardOption {
- title: string;
- _id: string;
- columns: {
-  cards: never[];
-  name: string;
-  _id: string;
-  boardId: string;
-  key: any;
- }[];
-}
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import {IconButton, Typography} from "@mui/material";
+import {SearchFieldProps, BoardOption} from "../types/interfaces";
+import DeleteDialog from "./UI/ModalWindodws/DeleteDialogBasic";
+import {useSnackbar} from "notistack";
 
 const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
- // const dispatch: ThunkDispatch<RootState, void, AnyAction> = useDispatch();
-
  const dispatch = useDispatch<AppDispatch>();
+ const {enqueueSnackbar} = useSnackbar();
+
+ const [isDialogOpen, setDialogOpen] = useState(false);
+
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const {currentBoard, boards} = useSelector((state: any) => state.boards);
  // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const [selectedBoard, setSelectedBoard] = React.useState<BoardProps | null>(null);
+ const [boardToDelete, setBoardToDelete] = useState<string | null>(null);
 
  useEffect(() => {
   const getBoards = () => {
    dispatch(fetchBoards());
   };
   getBoards();
- }, [dispatch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, []);
 
- const handleDeleteBoard = (boardId: string) => {
-  dispatch(deleteBoard(boardId)).then(() => {
+ const handleDeleteBoard = async (boardId: string) => {
+  try {
+   await dispatch(deleteBoard(boardId)).unwrap();
+   enqueueSnackbar("Board deleted successfully!", {variant: "success"});
    dispatch(fetchBoards());
-  });
+   setSelectedBoard(null);
+   onBoardSelected("");
+  } catch (error) {
+   enqueueSnackbar("Error deleting board!", {variant: "error"});
+  }
  };
-
- const board = boards.find((board: BoardProps) => board._id === currentBoard?._id);
- console.log("Board before updating:", board);
 
  const boardOptions: BoardOption[] = boards
   .filter(
@@ -64,13 +59,13 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
    columns: board.columns.map((column) => ({...column, cards: column.cards || []})),
   }));
 
- console.log("BoardOptions:", boardOptions);
  const mapToBoardProps = (option: BoardOption): BoardProps => ({
   _id: option._id,
   title: option.title,
   columns: option.columns.map((column) => ({
    ...column,
    cards: column.cards || [],
+   key: column._id,
   })),
  });
 
@@ -80,24 +75,18 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
     freeSolo
     id="free-solo-2-demo"
     disableClearable
+    value={currentBoard || null} // Використовуємо undefined, якщо selectedBoard є null
     options={boardOptions}
     getOptionLabel={(option) => (typeof option === "string" ? option : option.title)}
-    // onChange={(event, value) => {
-    //  console.log("SearchField:onChange", event, value);
-    //  if (value && typeof value !== "string") {
-    //   setSelectedBoard(value);
-    //   onBoardSelected(value._id);
-    //  } else {
-    //   setSelectedBoard(null);
-    //  }
-    // }}
     onChange={(event, value) => {
      if (value && typeof value !== "string") {
       const boardProps = mapToBoardProps(value);
-      setSelectedBoard(boardProps);
+      //   setSelectedBoard(boardProps);
+      setSelectedBoard(value);
       onBoardSelected(boardProps._id);
      } else {
       setSelectedBoard(null);
+      onBoardSelected("");
      }
     }}
     renderOption={(props, option) => {
@@ -106,15 +95,16 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
       <li
        key={key}
        {...restOfProps}
+       className="p-2 flex justify-between"
       >
        <span>{option.title}</span>
        <IconButton
-        onClick={(event) => {
-         event.stopPropagation();
-         handleDeleteBoard(option._id);
+        onClick={() => {
+         setDialogOpen(true);
+         setBoardToDelete(option._id);
         }}
        >
-        <DeleteIcon />
+        <RemoveCircleOutlineIcon className="hover:text-red-700 focus:text-red-700" />
        </IconButton>
       </li>
      );
@@ -132,6 +122,23 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
      />
     )}
    />
+   <DeleteDialog
+    isOpen={isDialogOpen}
+    onClose={() => setDialogOpen(false)}
+    title="Delete Board"
+    onClick={() => {
+     if (boardToDelete) {
+      handleDeleteBoard(boardToDelete);
+     }
+     setDialogOpen(false);
+    }}
+    // onClick={(event) => {
+    //  event.stopPropagation();
+    //  handleDeleteBoard(option._id);
+    // }}
+   >
+    <Typography>Are you sure you want to delete this board ?</Typography>
+   </DeleteDialog>
   </div>
  );
 };

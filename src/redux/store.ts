@@ -40,7 +40,7 @@ export const store = configureStore({
 
 });
 export type AppDispatch = typeof store.dispatch;
-
+export const RootState = store;
 export const persistor = persistStore(store);
 
 

@@ -57,10 +57,6 @@ const cardSlice = createSlice({
 
       .addCase(createCard.pending, handlePending)
       .addCase(createCard.rejected, handleRejected)
-      // .addCase(createCard.fulfilled, (state, action: PayloadAction<CardProps>) => {
-      //   console.log('Card successfully created: ', action.payload);
-      //   state.cards.push(action.payload);
-        // getColumnsById(action.payload.boardId);
       .addCase(createCard.fulfilled, (state, action) => {
           const { card, columnId } = action.payload;
               if (state[columnId]) {
@@ -90,7 +86,6 @@ const cardSlice = createSlice({
 
       .addCase(deleteCard.pending, handlePending)
       .addCase(deleteCard.rejected, handleRejected)
-
       .addCase(deleteCard.fulfilled, (state, action: PayloadAction<CardProps>) => {
         const id = typeof action.payload === 'string' ? action.payload : action.payload._id;
         state.cards = state.cards.filter(card => card._id !== id);

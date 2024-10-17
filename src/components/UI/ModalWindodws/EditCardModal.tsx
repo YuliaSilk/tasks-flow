@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import BaseModal from "./BaseModal";
-import {TextField, Typography} from "@mui/material";
+import {TextField} from "@mui/material";
 import {Button} from "@mui/material";
 
 const EditCardModal: React.FC<{
@@ -27,12 +27,6 @@ const EditCardModal: React.FC<{
     onClose={onClose}
     title={"Edit Card"}
    >
-    <Typography
-     variant="h6"
-     component="h2"
-    >
-     Edit Card
-    </Typography>
     <TextField
      label="Title"
      fullWidth
@@ -50,14 +44,24 @@ const EditCardModal: React.FC<{
      value={editedDescription}
      onChange={(e) => setEditedDescription(e.target.value)}
     />
-    <Button
-     onClick={handleSave}
-     variant="contained"
-     color="primary"
-     sx={{mt: 2}}
-    >
-     Save
-    </Button>
+    <div className="flex justify-between">
+     <Button
+      onClick={handleSave}
+      variant="contained"
+      color="primary"
+      sx={{mt: 2}}
+     >
+      Save
+     </Button>
+     <Button
+      onClick={onClose}
+      variant="contained"
+      color="primary"
+      sx={{mt: 2}}
+     >
+      Cancel
+     </Button>
+    </div>
    </BaseModal>
   </div>
  );

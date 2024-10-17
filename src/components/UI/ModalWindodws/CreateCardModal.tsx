@@ -4,6 +4,7 @@ import {Typography, TextField, Button} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {createCard} from "../../../redux/cards/operations";
 import {getBoardById} from "../../../redux/boards/operations";
+import {useSnackbar} from "notistack";
 
 interface CreateCardModalProps {
  open: boolean;
@@ -13,34 +14,39 @@ interface CreateCardModalProps {
 }
 
 const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnId, boardId}) => {
+ const dispatch = useDispatch();
+ const {enqueueSnackbar} = useSnackbar();
  const [cardTitle, setCardTitle] = useState("");
  const [cardDescription, setCardDescription] = useState("");
- const dispatch = useDispatch();
 
- const handleCreateCard = () => {
-  if (!cardTitle || !cardDescription) {
-   alert("Please enter both a card title and description.");
-   return;
-  }
+ const handleCreateCard = async () => {
+  try {
+   if (!cardTitle || !cardDescription) {
+    alert("Please enter both a card title and description.");
+    return;
+   }
 
-  console.log("Creating card with:", {cardTitle, cardDescription, columnId, boardId});
-  dispatch<any>(
-   createCard({
-    title: cardTitle,
-    description: cardDescription,
-    columnId,
-    boardId,
-   })
-  ).then(() => {
+   await dispatch<any>(
+    createCard({
+     title: cardTitle,
+     description: cardDescription,
+     columnId,
+     boardId,
+    })
+   ).unwrap();
+   enqueueSnackbar("Card created successfully!", {variant: "success"});
    dispatch<any>(getBoardById(boardId));
-  });
-
-  setCardTitle("");
-  setCardDescription("");
-  onClose();
+   setCardTitle("");
+   setCardDescription("");
+   onClose();
+   if (!open) return null;
+  } catch (error) {
+   enqueueSnackbar("Error creating card!", {variant: "error"});
+  }
+  //   setCardTitle("");
+  //   setCardDescription("");
+  //   onClose();
  };
-
- if (!open) return null;
 
  return (
   <BaseModal

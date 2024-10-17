@@ -6,6 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import {PersistGate} from "redux-persist/integration/react";
 import {Provider} from "react-redux";
 import {store, persistor} from "./redux/store";
+import {ThemeProvider} from "@mui/material/styles";
+import theme from "./theme";
 
 const rootElement = document.getElementById("root");
 
@@ -18,7 +20,9 @@ if (rootElement) {
      loading={null}
      persistor={persistor}
     >
-     <App />
+     <ThemeProvider theme={theme}>
+      <App />
+     </ThemeProvider>
     </PersistGate>
    </Provider>
   </React.StrictMode>

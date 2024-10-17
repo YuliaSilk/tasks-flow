@@ -3,18 +3,8 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-
-interface DeleteDialogProps {
- isOpen: boolean;
- onClose: () => void;
- children: React.ReactNode;
- title?: string;
- width?: number;
- onClick: () => void;
-}
-
+import {DeleteDialogProps} from "../../../types/interfaces";
 const DeleteDialog: React.FC<DeleteDialogProps> = ({isOpen, onClose, children, title, onClick}) => {
  return (
   <Dialog
@@ -22,13 +12,22 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({isOpen, onClose, children, t
    onClose={onClose}
    aria-labelledby="alert-dialog-title"
    aria-describedby="alert-dialog-description"
+   sx={{
+    "& .MuiPaper-root": {
+     borderRadius: "20px",
+    },
+   }}
   >
-   <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+   <DialogTitle
+    id="alert-dialog-title"
+    className="text-center"
+   >
+    {title}
+   </DialogTitle>
    <DialogContent>
-    <DialogContentText id="alert-dialog-description">{children}</DialogContentText>
+    <div>{children}</div>
    </DialogContent>
-   <DialogActions>
-    <Button onClick={onClose}>No, keep it</Button>
+   <DialogActions className="flex  flex-row  gap-12">
     <Button
      onClick={() => {
       onClick();
@@ -38,6 +37,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({isOpen, onClose, children, t
     >
      Yes, I want to delete
     </Button>
+    <Button onClick={onClose}>No, keep it</Button>
    </DialogActions>
   </Dialog>
  );

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ColumnProps } from '../../types/interfaces';
-// axios.defaults.baseURL = 'http://localhost:3001';
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 console.log("BASE_URL:", process.env.BASE_URL);
 
@@ -13,7 +12,7 @@ export const getAllColumns = createAsyncThunk<ColumnProps[]>(
       const boardId = state.boards.currentBoard?._id;
 
       const response = await axios.get(`/api/boards/${boardId}/columns`);
-      console.log('getAllColumns: ', response.data);
+      // console.log('getAllColumns: ', response.data);
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
@@ -62,7 +61,6 @@ export const getColumnsById = createAsyncThunk<ColumnProps, string>(
       try {
         const state = thunkAPI.getState() as any;
         const boardId = state.boards.currentBoard?._id;
-
         const response = await axios.post(`/api/boards/${boardId}/columns`, { name });
         return response.data;
       } catch (error: any) {

@@ -46,6 +46,7 @@ const BaseModal: React.FC<BaseModalProps> = ({open, onClose, children, title, wi
        id="modal-title"
        variant="h6"
        component="h2"
+       textAlign="center"
       >
        {title}
       </Typography>

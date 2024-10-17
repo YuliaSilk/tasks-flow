@@ -17,14 +17,13 @@ const handleRejected = (state, action) => {
   state.error = action.payload;
 };
 
-
-
 const initialState: BoardsState = {
   boards: [],
   currentBoard: null,
   isLoading: false,
   error: null,
 };
+
 const boardsSlice = createSlice({
     name: 'boards',
     initialState,
@@ -38,7 +37,7 @@ const boardsSlice = createSlice({
             .addCase(fetchBoards.pending, handlePending)
             .addCase(fetchBoards.rejected, handleRejected)
             .addCase(fetchBoards.fulfilled, (state, action) => {
-              console.log('fetchBoards.fulfilled: ', action.payload);
+              // console.log('fetchBoards.fulfilled: ', action.payload);
               state.isLoading = false;
               state.error = null;
               state.boards = action.payload;
@@ -53,7 +52,7 @@ const boardsSlice = createSlice({
           })
 
             .addCase(getBoardById.fulfilled, (state, action) => {
-              console.log('Full API response:', action.payload); 
+              // console.log('Full API response:', action.payload); 
               state.isLoading = false;
               state.error = null;
            
@@ -71,7 +70,7 @@ const boardsSlice = createSlice({
             .addCase(createBoard.pending, handlePending)
             .addCase(createBoard.rejected, handleRejected)
             .addCase(createBoard.fulfilled, (state, action) => {
-                console.log('createBoard.fulfilled: ', action.payload);
+                // console.log('createBoard.fulfilled: ', action.payload);
                 state.isLoading = false;
                 state.error = null;
                 state.boards.push(action.payload);
@@ -80,7 +79,7 @@ const boardsSlice = createSlice({
             .addCase(deleteBoard.pending, handlePending)
             .addCase(deleteBoard.rejected, handleRejected)
             .addCase(deleteBoard.fulfilled, (state, action) => {
-                console.log('deleteBoard.fulfilled: ', action.payload);
+                // console.log('deleteBoard.fulfilled: ', action.payload);
                 state.isLoading = false;
                 state.error = null;
                 state.boards = state.boards.filter((board) => board._id !== action.payload);
