@@ -12,7 +12,6 @@ export const getAllColumns = createAsyncThunk<ColumnProps[]>(
       const boardId = state.boards.currentBoard?._id;
 
       const response = await axios.get(`/api/boards/${boardId}/columns`);
-      // console.log('getAllColumns: ', response.data);
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);

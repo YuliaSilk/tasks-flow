@@ -3,7 +3,6 @@ import { fetchCards, createCard, getCardById, editCard, deleteCard } from './ope
 import { CardProps, CardsState, UpdateColumnCardsPayload } from '../../types/interfaces';
 import {  dndMovement, updateStatusLocalThunk } from '../cards/operations';
 
-
 const initialState: CardsState = {
   cards: [{
     _id: '',
@@ -66,7 +65,6 @@ const cardSlice = createSlice({
           }
       })
 
-  
       .addCase(getCardById.pending, handlePending)
       .addCase(getCardById.rejected, handleRejected)
       .addCase(getCardById.fulfilled, (state, action: PayloadAction<CardProps>) => {
@@ -126,7 +124,6 @@ const cardSlice = createSlice({
         finishColumn.cards.splice(finishTaskIndex, 0, card);
       })
       
-      
       .addCase(updateStatusLocalThunk.pending, handlePending)
       .addCase(updateStatusLocalThunk.rejected, handleRejected)
       .addCase(updateStatusLocalThunk.fulfilled, (state, action) => {
@@ -153,23 +150,3 @@ const cardSlice = createSlice({
 export const { setFilter } = cardSlice.actions;
 
 export const cardsReducer = cardSlice.reducer;
-// .addCase(dndMovement.fulfilled, (state, action) => {
-      //     state.isLoading = false;
-      //     state.error = null;
-      //     const { card, finishTaskIndex, startColumnID, finishColumnID } = action.payload;
-      
-      //     const startColumnIndex = state.columns.findIndex(column => column._id === startColumnID);
-      //     const finishColumnIndex = state.columns.findIndex(column => column._id === finishColumnID);
-      
-      //     // Видалення картки зі стартової колонки
-      //     state.columns[startColumnIndex].cards = state.columns[startColumnIndex].cards.filter(
-      //         (c) => c._id !== card._id
-      //     );
-      
-      //     // Додавання картки у фінальну колонку
-      //     if (!state.columns[finishColumnIndex].cards) {
-      //         state.columns[finishColumnIndex].cards = [];
-      //     }
-      
-      //     state.columns[finishColumnIndex].cards.splice(finishTaskIndex, 0, card);
-      // })

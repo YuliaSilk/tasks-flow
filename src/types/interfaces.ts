@@ -5,7 +5,12 @@ export interface CardProps  {
     columnId: string;
     boardId: string;
 }
-
+export interface CardComponentProps extends CardProps {
+    _id: string;
+    index: number;
+    title: string;
+    description: string;
+   }
 export interface CardsState {
     cards: CardProps[];
     isLoading: boolean;

@@ -60,7 +60,6 @@ export const deleteCard = createAsyncThunk<CardProps, DeleteCardProps>(
   async ({ boardId, columnId, _id }, thunkAPI) => {
     try {
       const res = await axios.delete(`/api/boards/${boardId}/columns/${columnId}/cards/${_id}`);
-      // console.log('deleteCard: ', res.data);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);

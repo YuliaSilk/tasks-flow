@@ -34,8 +34,6 @@ const columnSlice = createSlice({
         } else {
           state.columns[existingColumnIndex] = action.payload;
         }
-
-        // console.log('getColumnsById.fulfilled: ', action.payload);
       })
     
       .addCase(getAllColumns.pending, handlePending)
@@ -44,7 +42,6 @@ const columnSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.columns = action.payload;
-        // console.log('getAllColumns.fulfilled: ', action.payload);
       })
       .addCase(getColumnsAndCardsByBoardId.pending, handlePending)
       .addCase(getColumnsAndCardsByBoardId.fulfilled, handleRejected)

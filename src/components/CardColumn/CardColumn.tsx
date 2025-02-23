@@ -3,7 +3,7 @@ import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../redux/store";
 import ButtonAdd from "../UI/Buttons/ButtonAdd";
 import CardList from "../CardList/CardList";
-import {Droppable} from "react-beautiful-dnd";
+import {Droppable} from "@hello-pangea/dnd";
 import DotLoader from "react-spinners/DotLoader";
 
 interface CardColumnProps {

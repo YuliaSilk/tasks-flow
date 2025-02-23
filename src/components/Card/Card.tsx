@@ -11,25 +11,17 @@ import {deleteCard, editCard} from "../../redux/cards/operations";
 import DeleteDialog from "../../components/UI/ModalWindodws/DeleteDialogBasic";
 import {getBoardById} from "../../redux/boards/operations";
 import EditCardModal from "../../components/UI/ModalWindodws/EditCardModal";
-import {Draggable} from "react-beautiful-dnd";
+import {Draggable} from "@hello-pangea/dnd";
 import {useSnackbar} from "notistack";
-
-interface CardComponentProps extends CardProps {
- _id: string;
- index: number;
- title: string;
- description: string;
-}
+import {CardComponentProps} from "../../types/interfaces";
 
 const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, index}) => {
  const dispatch: AppDispatch = useDispatch();
  const {enqueueSnackbar} = useSnackbar();
 
- // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const [isDialogOpen, setDialogOpen] = useState(false);
  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
- // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const card: CardProps = useSelector((state: any) => state.cards.cards.find((c) => c._id === cardId));
  const columnId = useSelector((state: any) => state.boards.currentBoard?.columns[0]._id);
  const boardId = useSelector((state: any) => state.boards.currentBoard?._id);
@@ -70,11 +62,11 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
     >
      <h3 className="text-primary-tertiary text-[24px] font-bold">
       {" "}
-      <span className="font-light">My task:</span> {title}
+      <span className="font-light">My task:</span> {card?.title}
      </h3>
      <div className="w-full h-[160px] p-1 overflow-hidden hover:cursor-pointer hover:bg-primary-main/5 focus:bg-primary-main/5 rounded-lg">
       <p className="text-text text-[16px] font-bold"> What I want to do:</p>
-      <p className="text-text text-[16px]">{description} </p>
+      <p className="text-text text-[16px]">{card?.description} </p>
      </div>
      <div className="flex w-full justify-end gap-4 items-center">
       <IconButton

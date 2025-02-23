@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useSelector} from "react-redux";
 import CardColumn from "../CardColumn/CardColumn";
-import {DragDropContext} from "react-beautiful-dnd";
+import {DragDropContext} from "@hello-pangea/dnd";
 import {useDispatch} from "react-redux";
 import {dndMovement} from "../../redux/cards/operations";
 import {AppDispatch} from "../../redux/store";
@@ -9,12 +9,16 @@ import DotLoader from "react-spinners/DotLoader";
 import {getBoardById} from "../../redux/boards/operations";
 
 const Board: React.FC = () => {
- // eslint-disable-next-line @typescript-eslint/no-unused-vars
- const [state, setState] = useState<AppDispatch>();
- const [loading, setLoading] = useState(false);
+ const [loading] = useState(false);
  const dispatch = useDispatch<AppDispatch>();
 
  const currentBoard = useSelector((state: any) => state.boards.currentBoard);
+ const {columns} = currentBoard || {columns: []};
+
+ const [localColumns, setLocalColumns] = useState(columns);
+ useEffect(() => {
+  setLocalColumns(columns);
+ }, [columns]);
 
  if (!currentBoard) {
   return (
@@ -25,43 +29,31 @@ const Board: React.FC = () => {
    </div>
   );
  }
- const {columns} = currentBoard;
 
  const onDragEnd = async (result) => {
   const {source, destination, draggableId} = result;
-
   if (!destination) return;
 
-  const cardId = typeof draggableId === "object" ? draggableId._id : draggableId;
+  const cardId = draggableId;
+  const sourceColumnIndex = localColumns.findIndex((column) => column._id === source.droppableId);
+  const destinationColumnIndex = localColumns.findIndex((column) => column._id === destination.droppableId);
 
-  if (
-   typeof cardId !== "string" ||
-   typeof source.droppableId !== "string" ||
-   typeof destination.droppableId !== "string"
-  ) {
-   console.error("Invalid IDs detected:", cardId, source.droppableId, destination.droppableId);
-   return;
-  }
-  if (source.droppableId === destination.droppableId && source.index === destination.index) {
-   return;
-  }
-  const sourceColumnIndex = columns.findIndex((column) => column._id === source.droppableId);
-  const destinationColumnIndex = columns.findIndex((column) => column._id === destination.droppableId);
+  if (sourceColumnIndex === -1 || destinationColumnIndex === -1) return;
 
-  const sourceColumn = columns[sourceColumnIndex];
-  const destinationColumn = columns[destinationColumnIndex];
+  const sourceColumn = localColumns[sourceColumnIndex];
+  const destinationColumn = localColumns[destinationColumnIndex];
 
-  const sourceCards = Array.from(sourceColumn.cards);
-  const destinationCards = Array.from(destinationColumn.cards);
+  const sourceCards = [...sourceColumn.cards];
+  const destinationCards = [...destinationColumn.cards];
 
   const [movedCard] = sourceCards.splice(source.index, 1);
   destinationCards.splice(destination.index, 0, movedCard);
 
-  const newColumns = [...columns];
+  const newColumns = [...localColumns];
   newColumns[sourceColumnIndex] = {...sourceColumn, cards: sourceCards};
   newColumns[destinationColumnIndex] = {...destinationColumn, cards: destinationCards};
 
-  setState({...currentBoard, columns: newColumns});
+  setLocalColumns(newColumns);
 
   try {
    await dispatch(
@@ -77,8 +69,7 @@ const Board: React.FC = () => {
    await dispatch(getBoardById(currentBoard._id));
   } catch (error) {
    console.error("Error during drag and drop movement:", error);
-  } finally {
-   setLoading(false);
+   dispatch(getBoardById(currentBoard._id));
   }
  };
 
@@ -99,7 +90,7 @@ const Board: React.FC = () => {
       {currentBoard.title}
      </h2>
      <div className=" flex  flex-col md:flex-row  gap-5 mx-auto md:justify-center">
-      {columns.map((column) => (
+      {localColumns.map((column) => (
        <CardColumn
         key={column._id}
         column={column}
