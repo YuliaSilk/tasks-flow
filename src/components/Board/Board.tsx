@@ -16,9 +16,12 @@ const Board: React.FC = () => {
  const {columns} = currentBoard || {columns: []};
 
  const [localColumns, setLocalColumns] = useState(columns);
+
  useEffect(() => {
-  setLocalColumns(columns);
- }, [columns]);
+  if (JSON.stringify(localColumns) !== JSON.stringify(columns)) {
+   setLocalColumns(columns);
+  }
+ }, [columns, localColumns]);
 
  if (!currentBoard) {
   return (
@@ -29,7 +32,7 @@ const Board: React.FC = () => {
    </div>
   );
  }
-
+ 
  const onDragEnd = async (result) => {
   const {source, destination, draggableId} = result;
   if (!destination) return;

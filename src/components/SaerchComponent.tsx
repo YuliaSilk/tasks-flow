@@ -75,13 +75,12 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
     freeSolo
     id="free-solo-2-demo"
     disableClearable
-    value={currentBoard || null} // Використовуємо undefined, якщо selectedBoard є null
+    value={currentBoard || null}
     options={boardOptions}
     getOptionLabel={(option) => (typeof option === "string" ? option : option.title)}
     onChange={(event, value) => {
      if (value && typeof value !== "string") {
       const boardProps = mapToBoardProps(value);
-      //   setSelectedBoard(boardProps);
       setSelectedBoard(value);
       onBoardSelected(boardProps._id);
      } else {
@@ -132,10 +131,6 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
      }
      setDialogOpen(false);
     }}
-    // onClick={(event) => {
-    //  event.stopPropagation();
-    //  handleDeleteBoard(option._id);
-    // }}
    >
     <Typography>Are you sure you want to delete this board ?</Typography>
    </DeleteDialog>
