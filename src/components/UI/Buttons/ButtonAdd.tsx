@@ -4,13 +4,7 @@ import {styled} from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CreateBoardModal from "../ModalWindodws/CreateBoardModal";
 import CreateCardModal from "../ModalWindodws/CreateCardModal";
-interface AddButtonProps {
- actionType: "board" | "card";
- title: string;
- columnId: string;
- boardId: string;
- onClick?: () => void;
-}
+import {AddButtonProps} from "../../../types/interfaces";
 
 const StyledButtonAdd = styled(Button)(({theme}) => ({
  "&.MuiButton-root": {
@@ -37,8 +31,8 @@ const ButtonAdd: React.FC<AddButtonProps> = ({actionType, title, columnId, board
  return (
   <>
    <StyledButtonAdd onClick={handleOpen}>
-    <AddRoundedIcon />
-    <span>{title}</span>
+    <AddRoundedIcon className="text-text-light dark:text-text-dark" />
+    <span className="text-text-light dark:text-text-dark">{title}</span>
    </StyledButtonAdd>
 
    {actionType === "board" ? (

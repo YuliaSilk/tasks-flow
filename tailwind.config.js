@@ -21,12 +21,12 @@ module.exports = {
           dark: "#89b9eb",
         },
         background: {
-          light: "#e5eefa",
+          light: "#FDFFFC",
           dark: "#050e1a",
         },
         secondary: {
           light: "#fe62fe",
-          dark: "#9e019e", // Fixed missing #
+          dark: "#9e019e", 
         },
         accent: {
           light: "#e802a3",

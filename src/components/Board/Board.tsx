@@ -26,13 +26,13 @@ const Board: React.FC = () => {
  if (!currentBoard) {
   return (
    <div className="w-[96%] h-auto p-3 m-auto my-40 flex justify-center items-center align-middle ">
-    <p className="text-primary-main text-[28px] font-bold text-center">
+    <p className="text-accent-lite dark:text-accent text-[20px] md:text-[28px] font-bold text-center">
      No board selected. <br /> Please, select a board.
     </p>
    </div>
   );
  }
- 
+
  const onDragEnd = async (result) => {
   const {source, destination, draggableId} = result;
   if (!destination) return;
@@ -89,7 +89,7 @@ const Board: React.FC = () => {
    )}
    <DragDropContext onDragEnd={onDragEnd}>
     <div className=" w-[100%] p-3 md:p-4 lg:p-5 mx-auto items-center">
-     <h2 className="text-primary-main text-[24px] md:text-[36px] lg:text-[48px] font-bold text-center mb-5">
+     <h2 className="text-accent-light dark:text-accent-dark text-[24px] md:text-[36px] lg:text-[48px] font-bold text-center mb-5">
       {currentBoard.title}
      </h2>
      <div className=" flex  flex-col md:flex-row  gap-5 mx-auto md:justify-center">

@@ -17,7 +17,6 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
 
  const [isDialogOpen, setDialogOpen] = useState(false);
 
- // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const {currentBoard, boards} = useSelector((state: any) => state.boards);
  // eslint-disable-next-line @typescript-eslint/no-unused-vars
  const [selectedBoard, setSelectedBoard] = React.useState<BoardProps | null>(null);
@@ -72,6 +71,7 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
  return (
   <div className="w-[300px]">
    <Autocomplete
+    className=" bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark rounded-[10px]"
     freeSolo
     id="free-solo-2-demo"
     disableClearable
@@ -94,7 +94,7 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
       <li
        key={key}
        {...restOfProps}
-       className="p-2 flex justify-between"
+       className="p-2 flex justify-between transition-colors rounded-[20px]"
       >
        <span>{option.title}</span>
        <IconButton
@@ -103,7 +103,7 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
          setBoardToDelete(option._id);
         }}
        >
-        <RemoveCircleOutlineIcon className="hover:text-red-700 focus:text-red-700" />
+        <RemoveCircleOutlineIcon className="text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors" />
        </IconButton>
       </li>
      );
@@ -112,10 +112,26 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
      <TextField
       {...params}
       label="Search your dashboard"
-      slotProps={{
-       input: {
-        ...params.InputProps,
-        type: "search",
+      className="bg-background-light dark:bg-background-dark rounded-[20px]"
+      sx={{
+       "& .MuiOutlinedInput-root": {
+        borderRadius: "20px",
+        "& fieldset": {
+         border: "1px solid #89b9eb",
+        },
+        "&:hover fieldset": {
+         border: "1px solid #89b9eb",
+        },
+        "&.Mui-focused fieldset": {
+         border: "2px solid #89b9eb",
+        },
+       },
+       "& .MuiInputLabel-root": {
+        color: "#89b9eb",
+       },
+       "& .MuiInputLabel-root.Mui-focused": {
+        color: "#89b9eb",
+        transition: "color 0.3s",
        },
       }}
      />

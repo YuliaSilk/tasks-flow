@@ -29,46 +29,48 @@ const CardColumn: React.FC<CardColumnProps> = memo(({boardId, columnId = "", col
  }, [dispatch, columnId]);
 
  return (
-  <div className="min-w-[300px] md:min-w-[300px] lg:min-w-[440px] h-[74vh] p-3 bg-cyan-400/10 rounded-lg flex flex-col gap-6 items-center border-solid border-[1px] border-secondary">
-   <h2 className="text-primary-accent text-[24px] font-bold mb-3">{name}</h2>
-   <div className="h-[60vh] overflow-y-auto scroll-smooth">
-    {loading ? (
-     <div className="flex items-center justify-center h-screen">
-      <DotLoader
-       color="#910A67"
-       loading={loading}
-       size={60}
+  <div className=" min-w-[300px] md:min-w-[240px] lg:min-w-[440px] h-auto md:h-[74vh] p-3 rounded-lg flex flex-col gap-6 lg:gap-8 items-center ">
+   <div className="w-[calc((min(100vw,1440px)-24px)/3)] min-w-[240px] max-w-[280px] md:max-w-[440px] h-auto md:h-[74vh] p-3 rounded-lg flex flex-col gap-6  items-center  bg-secondary-dark/10 dark:bg-secondary-dark/20">
+    <h2 className="text-primary-light dark:text-primary-dark text-[24px] font-bold mb-3">{name}</h2>
+    <div className="h-auto max-h-[70vh] overflow-y-auto scroll-smooth w-full">
+     {loading ? (
+      <div className="flex items-center justify-center h-screen">
+       <DotLoader
+        color="#910A67"
+        loading={loading}
+        size={60}
+       />
+      </div>
+     ) : (
+      <Droppable droppableId={columnId}>
+       {(provided) => (
+        <div
+         {...provided.droppableProps}
+         ref={provided.innerRef}
+        >
+         <CardList
+          columnId={columnId}
+          cards={column.cards}
+         />
+         {provided.placeholder}
+        </div>
+       )}
+      </Droppable>
+     )}
+    </div>
+
+    {name === "To Do" && (
+     <div className="w-full h-14 rounded-full flex justify-center items-center text-secondary-light dark:text-secondary-dark">
+      <ButtonAdd
+       actionType="card"
+       title="Create a new card"
+       columnId={columnId}
+       boardId={boardId}
+       onClick={() => handleOpenModal(boardId, columnId)}
       />
      </div>
-    ) : (
-     <Droppable droppableId={columnId}>
-      {(provided) => (
-       <div
-        {...provided.droppableProps}
-        ref={provided.innerRef}
-       >
-        <CardList
-         columnId={columnId}
-         cards={column.cards}
-        />
-        {provided.placeholder}
-       </div>
-      )}
-     </Droppable>
     )}
    </div>
-
-   {name === "To Do" && (
-    <div className="w-full h-14 rounded-full flex justify-center items-center">
-     <ButtonAdd
-      actionType="card"
-      title="Create a new card"
-      columnId={columnId}
-      boardId={boardId}
-      onClick={() => handleOpenModal(boardId, columnId)}
-     />
-    </div>
-   )}
   </div>
  );
 });

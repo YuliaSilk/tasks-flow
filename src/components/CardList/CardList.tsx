@@ -5,7 +5,7 @@ import {CardListProps} from "../../types/interfaces";
 const CardList = React.forwardRef<HTMLDivElement, CardListProps>(({columnId, cards = []}, ref) => {
  return (
   <div ref={ref}>
-   <ul className="flex flex-col gap-4 ">
+   <ul className="flex flex-col gap-4 w-full">
     {cards.length > 0 ? (
      cards.map((card, index) => (
       <li key={card._id}>
@@ -20,7 +20,7 @@ const CardList = React.forwardRef<HTMLDivElement, CardListProps>(({columnId, car
       </li>
      ))
     ) : (
-     <div>No cards available</div>
+     <div className="text-center text-text-light dark:text-text-dark">No tasks available</div>
     )}
    </ul>
   </div>

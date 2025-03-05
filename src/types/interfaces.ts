@@ -126,4 +126,27 @@ export interface DeleteDialogProps {
     title?: string;
     width?: number;
     onClick: () => void;
-   }
+}
+
+export interface AddButtonProps {
+    actionType: "board" | "card";
+    title: string;
+    columnId: string;
+    boardId: string;
+    onClick?: () => void;
+}  
+
+export interface BaseModalProps {
+    open: boolean;
+    onClose: () => void;
+    children: React.ReactNode;
+    title?: string;
+    width?: number;
+}
+
+export interface CreateCardModalProps {
+    open: boolean;
+    onClose: () => void;
+    columnId: string;
+    boardId: string;
+}

@@ -4,14 +4,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
-
-interface BaseModalProps {
- open: boolean;
- onClose: () => void;
- children: React.ReactNode;
- title?: string;
- width?: number;
-}
+import {BaseModalProps} from "../../../types/interfaces";
 
 const BaseModal: React.FC<BaseModalProps> = ({open, onClose, children, title, width = 400}) => {
  const style = {

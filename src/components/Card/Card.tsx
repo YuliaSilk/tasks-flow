@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 
-import {CardProps} from "../../types/interfaces";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 
@@ -22,7 +21,7 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
  const [isDialogOpen, setDialogOpen] = useState(false);
  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
- const card: CardProps = useSelector((state: any) => state.cards.cards.find((c) => c._id === cardId));
+ // const card: CardProps = useSelector((state: any) => state.cards.cards.find((c) => c._id === cardId));
  const columnId = useSelector((state: any) => state.boards.currentBoard?.columns[0]._id);
  const boardId = useSelector((state: any) => state.boards.currentBoard?._id);
 
@@ -47,6 +46,9 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
   });
  };
 
+ console.log("Card ID:", cardId);
+ console.log("Props title:", title, "Props description:", description);
+
  return (
   <Draggable
    draggableId={cardId.toString()}
@@ -58,15 +60,13 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
      {...provided.draggableProps}
      {...provided.dragHandleProps}
      ref={provided.innerRef}
-     className="w-[260px] md:w-[280px] lg:w-[340px] h-[220px] p-3 bg-white rounded-lg flex flex-col gap-4 border-solid border-[1px] border-secondary shadow-card-shadow hover:border-[3px] hover:border-primary-main/10 focus:border-[3px] focus:border-primary-main/10 transition-all duration-200"
+     className="w-full min-w-0 h-[220px] p-3 bg-background-light/60 dark:bg-background-dark/50 rounded-lg flex flex-col gap-4 shadow-card-shadow dark:shadow-sm hover:border-[1px] hover:border-primary-light/50 dark:hover:border-primary-dark/50 focus:border-[3px] focus:border-secondary-light/10 dark:focus:border-secondary-dark/10 transition-all duration-200"
     >
-     <h3 className="text-primary-tertiary text-[24px] font-bold">
-      {" "}
-      <span className="font-light">My task:</span> {card?.title}
-     </h3>
+     {/* <h3 className="text-text-lite dark:text-text-dark text-[20px] font-light">My task:</h3> */}
+     <p className="font-bold text-text dark:text-text-dark text-[24px] ">{title}</p>
      <div className="w-full h-[160px] p-1 overflow-hidden hover:cursor-pointer hover:bg-primary-main/5 focus:bg-primary-main/5 rounded-lg">
-      <p className="text-text text-[16px] font-bold"> What I want to do:</p>
-      <p className="text-text text-[16px]">{card?.description} </p>
+      <p className="text-text text-[16px] font-bold"> to be done:</p>
+      <p className="text-text text-[16px]">{description} </p>
      </div>
      <div className="flex w-full justify-end gap-4 items-center">
       <IconButton
@@ -89,7 +89,7 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
       title="Delete Card"
       onClick={handleDelete}
      >
-      <p>Are you sure you want to delete this card?</p>
+      <p className="text-text dark:text-text-dark">Are you sure you want to delete this card?</p>
      </DeleteDialog>
      {isEditModalOpen && (
       <EditCardModal

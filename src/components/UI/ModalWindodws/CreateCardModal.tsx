@@ -5,13 +5,7 @@ import {useDispatch} from "react-redux";
 import {createCard} from "../../../redux/cards/operations";
 import {getBoardById} from "../../../redux/boards/operations";
 import {useSnackbar} from "notistack";
-
-interface CreateCardModalProps {
- open: boolean;
- onClose: () => void;
- columnId: string;
- boardId: string;
-}
+import {CreateCardModalProps} from "../../../types/interfaces";
 
 const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnId, boardId}) => {
  const dispatch = useDispatch();
