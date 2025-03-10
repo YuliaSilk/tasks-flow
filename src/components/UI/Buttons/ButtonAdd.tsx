@@ -13,12 +13,26 @@ const StyledButtonAdd = styled(Button)(({theme}) => ({
   borderRadius: "20px",
   width: "auto",
   height: "50px",
+  cursor: "pointer",
+  transition: "color 0.3s ease-in-out",
   "&:hover": {
    backgroundColor: "transparent",
+   color: theme.palette.secondary.main,
   },
  },
  "& .MuiSvgIcon-root": {
   fontSize: "2rem",
+  transition: "color 0.3s ease-in-out",
+ },
+ "&:hover .MuiSvgIcon-root": {
+  color: theme.palette.secondary.main,
+ },
+ "& span": {
+  transition: "color 0.3s ease-in-out",
+ },
+
+ "&:hover span": {
+  color: theme.palette.secondary.main,
  },
 }));
 
@@ -31,8 +45,8 @@ const ButtonAdd: React.FC<AddButtonProps> = ({actionType, title, columnId, board
  return (
   <>
    <StyledButtonAdd onClick={handleOpen}>
-    <AddRoundedIcon className="text-text-light dark:text-text-dark" />
-    <span className="text-text-light dark:text-text-dark">{title}</span>
+    <AddRoundedIcon className="text-primary-light dark:text-primary-dark" />
+    <span className="text-primary-light dark:text-primary-dark">{title}</span>
    </StyledButtonAdd>
 
    {actionType === "board" ? (

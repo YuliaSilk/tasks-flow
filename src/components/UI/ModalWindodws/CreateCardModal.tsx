@@ -37,9 +37,6 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
   } catch (error) {
    enqueueSnackbar("Error creating card!", {variant: "error"});
   }
-  //   setCardTitle("");
-  //   setCardDescription("");
-  //   onClose();
  };
 
  return (
@@ -60,6 +57,12 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
      fullWidth
      value={cardTitle}
      onChange={(e) => setCardTitle(e.target.value)}
+     InputProps={{
+      className: "text-text-light dark:text-text-dark text-[14px] md:text-[16px] lg:text-[18px]",
+     }}
+     InputLabelProps={{
+      className: "text-gray-700 dark:text-gray-300 text-[14px] md:text-[20px] lg:text-[24px]",
+     }}
     />
     <TextField
      label="Card Description"
@@ -67,6 +70,12 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
      fullWidth
      value={cardDescription}
      onChange={(e) => setCardDescription(e.target.value)}
+     InputProps={{
+      className: "text-black dark:text-white",
+     }}
+     InputLabelProps={{
+      className: "text-gray-700 dark:text-gray-300",
+     }}
     />
    </div>
    <div className="flex justify-between">

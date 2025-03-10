@@ -7,18 +7,18 @@ import Typography from "@mui/material/Typography";
 import {BaseModalProps} from "../../../types/interfaces";
 
 const BaseModal: React.FC<BaseModalProps> = ({open, onClose, children, title, width = 400}) => {
- const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: width,
-  bgcolor: "background.paper",
-  border: "none",
-  borderRadius: "20px",
-  boxShadow: 24,
-  p: 4,
- };
+ //  const style = {
+ //   position: "absolute",
+ //   top: "50%",
+ //   left: "50%",
+ //   transform: "translate(-50%, -50%)",
+ //   width: width,
+ //   bgcolor: "background.paper",
+ //   border: "none",
+ //   borderRadius: "20px",
+ //   boxShadow: 24,
+ //   p: 4,
+ //  };
 
  return (
   <Modal
@@ -33,18 +33,28 @@ const BaseModal: React.FC<BaseModalProps> = ({open, onClose, children, title, wi
    }}
   >
    <Fade in={open}>
-    <Box sx={style}>
+    <Box
+     className="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark 
+                     absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                     rounded-2xl shadow-lg p-4 w-[400px] max-w-full"
+    >
      {title && (
       <Typography
        id="modal-title"
        variant="h6"
        component="h2"
        textAlign="center"
+       className="text-text-light dark:text-text-dark text-center"
       >
        {title}
       </Typography>
      )}
-     <Box mt={2}>{children}</Box>
+     <Box
+      mt={2}
+      className="text-text-light dark:text-text-dark"
+     >
+      {children}
+     </Box>
     </Box>
    </Fade>
   </Modal>

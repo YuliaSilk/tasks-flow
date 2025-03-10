@@ -34,6 +34,12 @@ const EditCardModal: React.FC<{
      margin="normal"
      value={editedTitle}
      onChange={(e) => setEditedTitle(e.target.value)}
+     InputProps={{
+      className: "text-black dark:text-white",
+     }}
+     InputLabelProps={{
+      className: "text-gray-700 dark:text-gray-300",
+     }}
     />
     <TextField
      label="Description"
@@ -43,6 +49,12 @@ const EditCardModal: React.FC<{
      multiline
      value={editedDescription}
      onChange={(e) => setEditedDescription(e.target.value)}
+     InputProps={{
+      className: "text-black dark:text-white",
+     }}
+     InputLabelProps={{
+      className: "text-gray-700 dark:text-gray-300",
+     }}
     />
     <div className="flex justify-between">
      <Button

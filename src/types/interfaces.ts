@@ -47,6 +47,8 @@ export  interface DeleteCardProps {
 export interface DndMovementPayload {
     boardId: string;
     cardId: string;
+    card: CardProps; 
+    finishTaskIndex: number;
     sourceColumnId: string;
     destinationColumnId: string;
     destinationIndex: number;

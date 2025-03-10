@@ -71,7 +71,21 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
  return (
   <div className="w-[300px]">
    <Autocomplete
-    className=" bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark rounded-[10px]"
+    slotProps={{
+     paper: {
+      style: {
+       borderRadius: "20px",
+       boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+      },
+      className:
+       "bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark rounded-[20px] shadow-md",
+     },
+     listbox: {
+      className:
+       "bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark rounded-[20px] shadow-md",
+     },
+    }}
+    className=" bg-background-light dark:bg-background-dark  text-text-light dark:text-text-dark rounded-[20px] shadow-md"
     freeSolo
     id="free-solo-2-demo"
     disableClearable
@@ -94,7 +108,7 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
       <li
        key={key}
        {...restOfProps}
-       className="p-2 flex justify-between transition-colors rounded-[20px]"
+       className="p-2 flex justify-between transition-colors rounded-[20px] hover:bg-secondary-light/30 dark:hover:bg-secondary-dark/70"
       >
        <span>{option.title}</span>
        <IconButton
@@ -103,7 +117,7 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
          setBoardToDelete(option._id);
         }}
        >
-        <RemoveCircleOutlineIcon className="text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors" />
+        <RemoveCircleOutlineIcon className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-300" />
        </IconButton>
       </li>
      );
@@ -117,20 +131,20 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
        "& .MuiOutlinedInput-root": {
         borderRadius: "20px",
         "& fieldset": {
-         border: "1px solid #89b9eb",
+         border: "1px solid #255DC1",
         },
         "&:hover fieldset": {
-         border: "1px solid #89b9eb",
+         border: "1px solid #bc00dd",
         },
         "&.Mui-focused fieldset": {
-         border: "2px solid #89b9eb",
+         border: "2px solid #B3ABF9",
         },
        },
        "& .MuiInputLabel-root": {
-        color: "#89b9eb",
+        color: "#B3ABF9",
        },
        "& .MuiInputLabel-root.Mui-focused": {
-        color: "#89b9eb",
+        color: "#bc00dd",
         transition: "color 0.3s",
        },
       }}

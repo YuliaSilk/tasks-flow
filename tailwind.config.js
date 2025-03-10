@@ -17,15 +17,15 @@ module.exports = {
       },
       colors: {
         primary: {
-          light: "#144376",
-          dark: "#89b9eb",
+          light: "#255DC1",
+          dark: "#B3ABF9",
         },
         background: {
           light: "#FDFFFC",
           dark: "#050e1a",
         },
         secondary: {
-          light: "#fe62fe",
+          light: "#bc00dd",
           dark: "#9e019e", 
         },
         accent: {
@@ -34,7 +34,7 @@ module.exports = {
         },
         text: {
           light: "#000229",
-          dark: "#d7d9ff",
+          dark: "#d7d9ff"
         },
         error: {
           light: "#d51950",
@@ -65,90 +65,3 @@ module.exports = {
   },
   plugins: [],
 };
-// module.exports = {
-//   darkMode: "class", // або "media" для автоматичного визначення теми
-//   theme: {
-//     extend: {
-//       colors: {
-//         primary: {
-//           light: "#144376",
-//           dark: "#89b9eb",
-//         },
-//         background: {
-//           light: "#e5eefa",
-//           dark: "#050e1a",
-//         },
-//         text: {
-//           light: "#000229",
-//           dark: "#e5f1fa",
-//         },
-//       },
-//     },
-//   },
-//   plugins: [],
-// };
-// :root[data-theme="light"] {
-//   --text: #000229;
-//   --background: #ebebff;
-//   --primary: #010a7e;
-//   --secondary: #fe62fe;
-//   --accent: #e802a3;
-// }
-// :root[data-theme="dark"] {
-//   --text: #d7d9ff;
-//   --background: #000012;
-//   --primary: #8089fe;
-//   --secondary: #9e019e;
-//   --accent: #fd14b6;
-// }
-
-
-// :root[data-theme="light"] {
-//   --text: #05111a;
-//   --background: #e5eefa;
-//   --primary: #144376;
-//   --secondary: #e779e4;
-//   --accent: #cc2461;
-// }
-// :root[data-theme="dark"] {
-//   --text: #e5f1fa;
-//   --background: #050e1a;
-//   --primary: #89b9eb;
-//   --secondary: #861883;
-//   --accent: #db3371;
-// }
-// fontSize: {
-//   sm: '0.800rem',
-//   base: '1rem',
-//   xl: '1.250rem',
-//   '2xl': '1.563rem',
-//   '3xl': '1.954rem',
-//   '4xl': '2.442rem',
-//   '5xl': '3.053rem',
-// },
-// fontFamily: {
-//   heading: 'LXGW WenKai TC',
-//   body: 'LXGW WenKai TC',
-// },
-// fontWeight: {
-//   normal: '400',
-//   bold: '700',
-// },
-
-// fontSize: {
-//   sm: '0.800rem',
-//   base: '1rem',
-//   xl: '1.250rem',
-//   '2xl': '1.563rem',
-//   '3xl': '1.954rem',
-//   '4xl': '2.442rem',
-//   '5xl': '3.053rem',
-// },
-// fontFamily: {
-//   heading: 'Griffy',
-//   body: 'Griffy',
-// },
-// fontWeight: {
-//   normal: '400',
-//   bold: '700',
-// },

@@ -32,7 +32,7 @@ const CardColumn: React.FC<CardColumnProps> = memo(({boardId, columnId = "", col
   <div className=" min-w-[300px] md:min-w-[240px] lg:min-w-[440px] h-auto md:h-[74vh] p-3 rounded-lg flex flex-col gap-6 lg:gap-8 items-center ">
    <div className="w-[calc((min(100vw,1440px)-24px)/3)] min-w-[240px] max-w-[280px] md:max-w-[440px] h-auto md:h-[74vh] p-3 rounded-lg flex flex-col gap-6  items-center  bg-secondary-dark/10 dark:bg-secondary-dark/20">
     <h2 className="text-primary-light dark:text-primary-dark text-[24px] font-bold mb-3">{name}</h2>
-    <div className="h-auto max-h-[70vh] overflow-y-auto scroll-smooth w-full">
+    <div className="h-auto max-h-[60vh] overflow-y-auto scroll-smooth w-full">
      {loading ? (
       <div className="flex items-center justify-center h-screen">
        <DotLoader

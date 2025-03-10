@@ -21,7 +21,6 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
  const [isDialogOpen, setDialogOpen] = useState(false);
  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
- // const card: CardProps = useSelector((state: any) => state.cards.cards.find((c) => c._id === cardId));
  const columnId = useSelector((state: any) => state.boards.currentBoard?.columns[0]._id);
  const boardId = useSelector((state: any) => state.boards.currentBoard?._id);
 
@@ -46,9 +45,6 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
   });
  };
 
- console.log("Card ID:", cardId);
- console.log("Props title:", title, "Props description:", description);
-
  return (
   <Draggable
    draggableId={cardId.toString()}
@@ -60,27 +56,27 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
      {...provided.draggableProps}
      {...provided.dragHandleProps}
      ref={provided.innerRef}
-     className="w-full min-w-0 h-[220px] p-3 bg-background-light/60 dark:bg-background-dark/50 rounded-lg flex flex-col gap-4 shadow-card-shadow dark:shadow-sm hover:border-[1px] hover:border-primary-light/50 dark:hover:border-primary-dark/50 focus:border-[3px] focus:border-secondary-light/10 dark:focus:border-secondary-dark/10 transition-all duration-200"
+     className="w-full min-w-0 h-[220px] p-3 bg-background-light/60 dark:bg-primary-dark/20 rounded-lg flex flex-col gap-4 shadow-card-shadow dark:shadow-sm hover:border-[1px] hover:border-primary-light/50 dark:hover:border-primary-dark/50 focus:border-[3px] focus:border-secondary-light/10 dark:focus:border-secondary-dark/10 transition-all duration-200"
     >
      {/* <h3 className="text-text-lite dark:text-text-dark text-[20px] font-light">My task:</h3> */}
      <p className="font-bold text-text dark:text-text-dark text-[24px] ">{title}</p>
      <div className="w-full h-[160px] p-1 overflow-hidden hover:cursor-pointer hover:bg-primary-main/5 focus:bg-primary-main/5 rounded-lg">
-      <p className="text-text text-[16px] font-bold"> to be done:</p>
-      <p className="text-text text-[16px]">{description} </p>
+      <p className="text-text text-[16px] md:text-[18px] lg:text-[20px] font-bold"> to be done:</p>
+      <p className="text-text text-[16px md:text-[18px] lg:text-[20px]">{description} </p>
      </div>
      <div className="flex w-full justify-end gap-4 items-center">
       <IconButton
        onClick={openEditModal}
-       className="w-8 h-8 text-primary-main hover:text-primary-secondary focus:text-primary-secondary bg-transparent hover:bg-transparent focus:bg-transparent transition-all translate-x-2 duration-200"
+       className="w-8 h-8  text-text-light dark:text-text-dark  bg-transparent hover:bg-transparent focus:bg-transparent transition-all translate-x-2 duration-200"
       >
-       <EditNoteRoundedIcon />
+       <EditNoteRoundedIcon className="hover:text-secondary-light focus:text-secondary-dark" />
       </IconButton>
 
       <IconButton
        onClick={() => setDialogOpen(true)}
-       className=" w-8 h-8  text-primary-main  hover:text-primary-red focus:text-primary-red bg-transparent hover:bg-transparent focus:bg-transparent transition-all translate-x-2 duration-200"
+       className=" w-8 h-8  text-text-light dark:text-text-dark  hover:text-red-400 focus:text-red-600 bg-transparent hover:bg-transparent focus:bg-transparent transition-all translate-x-2 duration-300"
       >
-       <DeleteRoundedIcon />
+       <DeleteRoundedIcon className="hover:text-red-400 focus:text-red-600" />
       </IconButton>
      </div>
      <DeleteDialog

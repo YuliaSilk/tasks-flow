@@ -4,13 +4,6 @@ import { CardProps, CardsState, UpdateColumnCardsPayload } from '../../types/int
 import {  dndMovement, updateStatusLocalThunk } from '../cards/operations';
 
 const initialState: CardsState = {
-  // cards: [{
-  //   _id: '',
-  //   title: '',
-  //   description: '',
-  //   boardId: '',
-  //   columnId: '',
-  // }],
   cards: [],
   columns:[],
   isLoading: false,
@@ -34,6 +27,7 @@ const cardSlice = createSlice({
     setFilter: (state, action: PayloadAction<string>) => {
       state.filter = action.payload;
     },
+    
     updateColumnCards: (state, action: PayloadAction<UpdateColumnCardsPayload>) => {
       const { columnId, newCards } = action.payload;
       state.columns = state.columns.map((column) =>
@@ -43,28 +37,22 @@ const cardSlice = createSlice({
       );
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchCards.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(fetchCards.rejected, handleRejected)
-      .addCase(fetchCards.fulfilled, (state, action: PayloadAction<CardProps[]>) => {
+      .addCase(fetchCards.fulfilled, (state, action)=> {
         state.isLoading = false;
         state.error = null;
-        state.cards = action.payload;
+        state.cards = action.payload.cards || [];
+        state.columns = action.payload.columns || [];
       })
 
       .addCase(createCard.pending, handlePending)
       .addCase(createCard.rejected, handleRejected)
-      // .addCase(createCard.fulfilled, (state, action) => {
-      //     const { card, columnId } = action.payload;
-      //         if (state[columnId]) {
-      //       state[columnId].push(card);
-      //     } else {
-      //       state[columnId] = [card]; 
-      //     }
-      // })
       .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardProps; columnId: string }>) => {
         const { card } = action.payload;
         state.cards.push(card);
@@ -81,13 +69,7 @@ const cardSlice = createSlice({
         } else {
           state.cards.push(action.payload);
         }
-        console.log("Redux cards state after getCardById:", state.cards);
       })
-      // .addCase(getCardById.fulfilled, (state, action: PayloadAction<CardProps>) => {
-      //   state.isLoading = false;
-      //   state.error = null;
-      //   state.cards = [action.payload];
-      // })
      
       .addCase(editCard.pending, handlePending)
       .addCase(editCard.rejected, handleRejected)
@@ -111,30 +93,14 @@ const cardSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         const { card, finishTaskIndex, startColumnID, finishColumnID } = action.payload;
-      
-        // const startColumn = state.columns.find((column) => column._id === startColumnID) || {cards: []};
-        // const finishColumn = state.columns.find((column) => column._id === finishColumnID) || {cards: []};
-      
-        // if (!startColumn || !finishColumn) {
-        //   console.error(`One of the columns does not exist: ${startColumnID}, ${finishColumnID}`);
-        //   return;
-        // }
+    
         const startColumn = state.columns.find((column) => column._id === startColumnID);
         const finishColumn = state.columns.find((column) => column._id === finishColumnID);
         
         if (!startColumn || !finishColumn) {
-          console.error(`One of the columns does not exist: ${startColumnID}, ${finishColumnID}`);
           return;
         }
-        if (!startColumn.cards) {
-          startColumn.cards = [];
-          console.error(`Start column does not have cards defined.`);
-          return;
-        }
-        if (!finishColumn.cards) {
-          finishColumn.cards = [];
-        }
-      
+        
         const cardIndex = startColumn.cards.findIndex((c) => c._id === card._id);
         if (cardIndex !== -1) {
           startColumn.cards.splice(cardIndex, 1);
@@ -145,6 +111,7 @@ const cardSlice = createSlice({
         }
         finishColumn.cards.splice(finishTaskIndex, 0, card);
         
+        state.columns = [...state.columns];
       })
       
       .addCase(updateStatusLocalThunk.pending, handlePending)
@@ -167,11 +134,21 @@ const cardSlice = createSlice({
           }
           state.columns = [...columns];
           console.log("Redux cards state after DnD:", state.cards);
+      })
+
+      .addCase(updateColumnCards, (state, action: PayloadAction<{ columnId: string; newCards: CardProps[] }>) => {
+        const { columnId, newCards } = action.payload;
+        const columnIndex = state.columns.findIndex((column) => column._id === columnId);
+        if (columnIndex !== -1) {
+          state.columns[columnIndex].cards = newCards;
+        }
       });
       
   },
 });
 
 export const { setFilter } = cardSlice.actions;
+
+export const { updateColumnCards } = cardSlice.actions; 
 
 export const cardsReducer = cardSlice.reducer;

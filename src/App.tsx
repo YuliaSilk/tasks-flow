@@ -4,7 +4,7 @@ import Header from "./components/Header/Header";
 import Board from "./components/Board/Board";
 import {SnackbarProvider} from "notistack";
 import {ThemeProvider} from "@mui/material/styles";
-import useMuiTheme from "./hooks/theme";
+import {useMuiTheme} from "./hooks";
 
 const App: React.FC = () => {
  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");

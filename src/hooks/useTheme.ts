@@ -19,7 +19,7 @@ const useMuiTheme = () => {
         palette: {
           mode: theme,
           primary: {
-            main: theme === "dark" ? "#89b9eb" : "#144376",
+            main: theme === "dark" ? "#B3ABF9" : "#255DC1",
           },
           background: {
             default: theme === "dark" ? "#050e1a" : "#FDFFFC",
@@ -30,7 +30,7 @@ const useMuiTheme = () => {
             // secondary: theme === "dark" ? "#9e019e" : "#fe62fe",
           },
           secondary: {
-            main: theme === "dark" ? "#9e019e" : "#fe62fe",
+            main: theme === "dark" ? "#bc00dd" : "#bc00dd",
           },
         },
       }),

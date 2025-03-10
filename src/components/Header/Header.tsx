@@ -52,6 +52,8 @@ const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
        <svg
         width="24"
         height="24"
+        fill="#B3ABF9"
+        className="hover:fill-secondary-light dark:hover:fill-secondary-dark transition-all duration-200"
        >
         <use href="/images/sprite.svg#icon-moon" />
        </svg>
@@ -60,7 +62,10 @@ const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
         width="24"
         height="24"
        >
-        <use href="/images/sprite.svg#icon-sun" />
+        <use
+         className="hover:fill-secondary-light dark:hover:fill-secondary-dark transition-all duration-200"
+         href="/images/sprite.svg#icon-sun"
+        />
        </svg>
       )}
      </div>
@@ -68,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
    </div>
    <div
     className="lg:absolute top-[128px] inset-x-0 flex justify-center items-center w-full h-[20px] lg:h-[28px] 
-bg-gradient-to-r from-accent-light via-transparent to-accent-light dark:from-accent-dark dark:via-transparent dark:to-accent-dark shadow-lg"
+bg-gradient-to-r from-accent-light via-transparent to-accent-light dark:from-accent-dark/50 dark:via-transparent dark:to-accent-dark/50 shadow-lg"
    >
     <p className="font-dancing text-primary text-[18px] md:text-[24px]  xl:text-[32px] font-bold text-center">
      Lost time is never found again

@@ -52,7 +52,7 @@ const CreateBoardModal: React.FC<{isOpen: boolean; onClose: () => void}> = ({isO
      >
       Create New Board
      </Typography>
-     <div className="flex flex-col gap-4 mb-5">
+     <div className="flex flex-col gap-4 mb-5 text-text-light dark:text-text-dark">
       <TextField
        label="Enter your new board title"
        variant="standard"
@@ -61,6 +61,13 @@ const CreateBoardModal: React.FC<{isOpen: boolean; onClose: () => void}> = ({isO
        onChange={(e) => setBoardTitle(e.target.value)}
        error={!!error}
        helperText={error}
+       className="text-text-light dark:text-text-dark"
+       InputProps={{
+        className: "text-black dark:text-white",
+       }}
+       InputLabelProps={{
+        className: "text-gray-700 dark:text-gray-300",
+       }}
       ></TextField>
      </div>
      <div className="flex flex-end gap-4 justify-between">

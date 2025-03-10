@@ -1,20 +1,23 @@
 import axios from "axios";
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {CardProps, GetCardByIdProps, EditCardProps, DeleteCardProps, DndMovementPayload} from "../../types/interfaces";
+import {CardProps, GetCardByIdProps, EditCardProps, DeleteCardProps, DndMovementPayload, ColumnProps} from "../../types/interfaces";
+import { updateColumnCards } from './slice';
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
-export const fetchCards = createAsyncThunk<CardProps[]>(
- "cards/fetchTitleStatus",
- async (_, thunkAPI) => {
-  try {
-    const res = await axios.get(`/api/cards`);
-    console.log('fetchCards: ', res.data);
-    return res.data;  
-  } catch(error) {
-    return thunkAPI.rejectWithValue(error.message);
+export const fetchCards = createAsyncThunk <{ cards: CardProps[]; columns: ColumnProps[] }, void, { rejectValue: string } >(
+  "cards/fetchTitleStatus",
+  async (_, thunkAPI) => {
+    try {
+      const res = await axios.get(`/api/cards`);
+      return {
+        cards: res.data.cards, 
+        columns: res.data.columns, 
+      };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message); 
+    }
   }
- },
 );
 
 export const createCard = createAsyncThunk(
@@ -102,4 +105,12 @@ export const updateStatusLocalThunk = createAsyncThunk<
     }
 });
 
+
+export const updateCardsOrder = createAsyncThunk(
+  'cards/updateOrder',
+  async (payload: { columnId: string; newCards: CardProps[] }, { dispatch }) => {
+    dispatch(updateColumnCards(payload)); 
+    return payload;
+  }
+);
 
