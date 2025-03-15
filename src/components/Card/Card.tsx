@@ -56,12 +56,11 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
      {...provided.draggableProps}
      {...provided.dragHandleProps}
      ref={provided.innerRef}
-     className="w-full min-w-0 h-[220px] p-3 bg-background-light/60 dark:bg-primary-dark/20 rounded-lg flex flex-col gap-4 shadow-card-shadow dark:shadow-sm hover:border-[1px] hover:border-primary-light/50 dark:hover:border-primary-dark/50 focus:border-[3px] focus:border-secondary-light/10 dark:focus:border-secondary-dark/10 transition-all duration-200"
+     className="w-[96%] min-w-0 h-[220px] m-4 p-3 bg-background-light/60 dark:bg-primary-dark/20 rounded-lg flex flex-col gap-4 shadow-card-shadow dark:shadow-sm hover:shadow-card-hover hover:border-[1px] hover:border-primary-light/50 dark:hover:border-primary-dark/50 focus:border-[3px] focus:border-secondary-light/10 dark:focus:border-secondary-dark/10 transition-all duration-200"
     >
-     {/* <h3 className="text-text-lite dark:text-text-dark text-[20px] font-light">My task:</h3> */}
-     <p className="font-bold text-text dark:text-text-dark text-[24px] ">{title}</p>
+     <p className="font-bold text-text dark:text-text-dark text-[24px] underline">{title}</p>
      <div className="w-full h-[160px] p-1 overflow-hidden hover:cursor-pointer hover:bg-primary-main/5 focus:bg-primary-main/5 rounded-lg">
-      <p className="text-text text-[16px] md:text-[18px] lg:text-[20px] font-bold"> to be done:</p>
+      <p className="text-text text-[16px] md:text-[18px] lg:text-[20px] font-bold"> to do:</p>
       <p className="text-text text-[16px md:text-[18px] lg:text-[20px]">{description} </p>
      </div>
      <div className="flex w-full justify-end gap-4 items-center">
@@ -83,10 +82,10 @@ const Card: React.FC<CardComponentProps> = ({_id: cardId, title, description, in
       isOpen={isDialogOpen}
       onClose={() => setDialogOpen(false)}
       title="Delete Card"
-      onClick={handleDelete}
-     >
-      <p className="text-text dark:text-text-dark">Are you sure you want to delete this card?</p>
-     </DeleteDialog>
+      content="Are you sure you want to delete this card?"
+      onDelete={handleDelete}
+     ></DeleteDialog>
+
      {isEditModalOpen && (
       <EditCardModal
        open={isEditModalOpen}

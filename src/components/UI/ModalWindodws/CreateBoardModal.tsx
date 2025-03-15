@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {createBoard} from "../../../redux/boards/operations";
+import {createBoard, fetchBoards} from "../../../redux/boards/operations";
 import BaseModal from "./BaseModal";
 import {Button, TextField, Typography} from "@mui/material";
 import {useSnackbar} from "notistack";
@@ -28,6 +28,8 @@ const CreateBoardModal: React.FC<{isOpen: boolean; onClose: () => void}> = ({isO
      columns: [],
     })
    );
+   dispatch(fetchBoards());
+   setBoardTitle("");
    enqueueSnackbar("Board created successfully!", {variant: "success"});
    onClose();
   } catch (error) {
@@ -49,6 +51,7 @@ const CreateBoardModal: React.FC<{isOpen: boolean; onClose: () => void}> = ({isO
      <Typography
       variant="h6"
       component="h2"
+      sx={{textAlign: "center", textTransform: "capitalize", fontSize: "1.5rem"}}
      >
       Create New Board
      </Typography>
@@ -61,18 +64,23 @@ const CreateBoardModal: React.FC<{isOpen: boolean; onClose: () => void}> = ({isO
        onChange={(e) => setBoardTitle(e.target.value)}
        error={!!error}
        helperText={error}
+       key={boardTitle.length}
        className="text-text-light dark:text-text-dark"
-       InputProps={{
-        className: "text-black dark:text-white",
-       }}
-       InputLabelProps={{
-        className: "text-gray-700 dark:text-gray-300",
-       }}
       ></TextField>
      </div>
      <div className="flex flex-end gap-4 justify-between">
-      <Button onClick={handleCreateBoard}>Create</Button>
-      <Button onClick={onClose}>Close</Button>
+      <Button
+       onClick={handleCreateBoard}
+       className="bg-primary-light dark:bg-primary-dark text-text-light dark:text-text-dark p-1 rounded-[20px] hover:bg-primary-light/10 hover:dark:bg-primary-dark/10 hover:border-primary-light dark:hover:border-primary-dark hover:border-1 hover:border-solid hover:text-primary-light dark:hover:text-primary-dark transition-all duration-200"
+      >
+       Create
+      </Button>
+      <Button
+       onClick={onClose}
+       className="bg-primary-light dark:bg-primary-dark text-text-light dark:text-text-dark p-1 rounded-[20px] hover:bg-primary-light/10 hover:dark:bg-primary-dark/10 hover:border-primary-light dark:hover:border-primary-dark hover:border-1 hover:border-solid hover:text-primary-light dark:hover:text-primary-dark transition-all duration-200"
+      >
+       Close
+      </Button>
      </div>
     </BaseModal>
    </div>

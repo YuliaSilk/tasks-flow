@@ -7,19 +7,6 @@ import Typography from "@mui/material/Typography";
 import {BaseModalProps} from "../../../types/interfaces";
 
 const BaseModal: React.FC<BaseModalProps> = ({open, onClose, children, title, width = 400}) => {
- //  const style = {
- //   position: "absolute",
- //   top: "50%",
- //   left: "50%",
- //   transform: "translate(-50%, -50%)",
- //   width: width,
- //   bgcolor: "background.paper",
- //   border: "none",
- //   borderRadius: "20px",
- //   boxShadow: 24,
- //   p: 4,
- //  };
-
  return (
   <Modal
    open={open}

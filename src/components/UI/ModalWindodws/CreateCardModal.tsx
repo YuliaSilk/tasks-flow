@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import BaseModal from "./BaseModal";
 import {Typography, TextField, Button} from "@mui/material";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {createCard} from "../../../redux/cards/operations";
 import {getBoardById} from "../../../redux/boards/operations";
 import {useSnackbar} from "notistack";
@@ -12,14 +12,36 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
  const {enqueueSnackbar} = useSnackbar();
  const [cardTitle, setCardTitle] = useState("");
  const [cardDescription, setCardDescription] = useState("");
+ const [titleError, setTitleError] = useState("");
+
+ const cards = useSelector(
+  (state: any) => state.boards.currentBoard?.columns.find((col) => col._id === columnId)?.cards || []
+ );
+
+ useEffect(() => {
+  setTitleError("");
+ }, [cardTitle]);
 
  const handleCreateCard = async () => {
   try {
    if (!cardTitle || !cardDescription) {
-    alert("Please enter both a card title and description.");
+    enqueueSnackbar("Please enter both a card title and description.", {variant: "error"});
     return;
    }
+   const isDuplicateTitle = cards.some((card: {title: string}) => card.title.toLowerCase() === cardTitle.toLowerCase());
 
+   if (isDuplicateTitle) {
+    setTitleError("A card with this title already exists!");
+    return;
+   }
+   if (cardTitle.length > 50) {
+    enqueueSnackbar("Card title must be less than 50 characters.", {variant: "error"});
+    return;
+   }
+   if (cardDescription.length > 500) {
+    enqueueSnackbar("Card description must be less than 500 characters.", {variant: "error"});
+    return;
+   }
    await dispatch<any>(
     createCard({
      title: cardTitle,
@@ -57,6 +79,8 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
      fullWidth
      value={cardTitle}
      onChange={(e) => setCardTitle(e.target.value)}
+     error={!!titleError}
+     helperText={titleError}
      InputProps={{
       className: "text-text-light dark:text-text-dark text-[14px] md:text-[16px] lg:text-[18px]",
      }}

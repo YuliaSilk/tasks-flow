@@ -1,18 +1,10 @@
-import { useMemo, useEffect, useState } from "react";
+import { useMemo} from "react";
 import { createTheme, Theme } from "@mui/material/styles";
+import { useThemeContext } from './useThemeContext';
 
 const useMuiTheme = () => {
-  const [theme, setTheme] = useState<"light" | "dark">(
-    (localStorage.getItem("theme") as "light" | "dark") || "light"
-  );
-
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme") as "light" | "dark";
-    if (storedTheme) {
-      setTheme(storedTheme);
-    }
-  }, []);
-
+  const {theme} = useThemeContext();
+ 
   const muiTheme: Theme = useMemo(
     () =>
       createTheme({
@@ -30,7 +22,10 @@ const useMuiTheme = () => {
             // secondary: theme === "dark" ? "#9e019e" : "#fe62fe",
           },
           secondary: {
-            main: theme === "dark" ? "#bc00dd" : "#bc00dd",
+            main: theme === "dark" ? "#9e019e" : "#bc00dd",
+          },
+          error: {
+            main: theme === "dark" ? "#F7023B" : "#ff0000",
           },
         },
       }),

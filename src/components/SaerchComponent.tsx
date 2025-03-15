@@ -6,7 +6,7 @@ import {deleteBoard, fetchBoards} from "../redux/boards/operations";
 import {BoardProps, CardProps} from "../types/interfaces";
 import {AppDispatch} from "../redux/store";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import {IconButton, Typography} from "@mui/material";
+import {IconButton} from "@mui/material";
 import {SearchFieldProps, BoardOption} from "../types/interfaces";
 import DeleteDialog from "./UI/ModalWindodws/DeleteDialogBasic";
 import {useSnackbar} from "notistack";
@@ -18,8 +18,7 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
  const [isDialogOpen, setDialogOpen] = useState(false);
 
  const {currentBoard, boards} = useSelector((state: any) => state.boards);
- // eslint-disable-next-line @typescript-eslint/no-unused-vars
- const [selectedBoard, setSelectedBoard] = React.useState<BoardProps | null>(null);
+ const [, setSelectedBoard] = React.useState<BoardProps | null>(null);
  const [boardToDelete, setBoardToDelete] = useState<string | null>(null);
 
  useEffect(() => {
@@ -71,6 +70,7 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
  return (
   <div className="w-[300px]">
    <Autocomplete
+    key={boards.length}
     slotProps={{
      paper: {
       style: {
@@ -155,15 +155,14 @@ const SearchComponent = ({onBoardSelected}: SearchFieldProps) => {
     isOpen={isDialogOpen}
     onClose={() => setDialogOpen(false)}
     title="Delete Board"
-    onClick={() => {
+    content="Are you sure you want to delete this board?"
+    onDelete={() => {
      if (boardToDelete) {
       handleDeleteBoard(boardToDelete);
      }
      setDialogOpen(false);
     }}
-   >
-    <Typography>Are you sure you want to delete this board ?</Typography>
-   </DeleteDialog>
+   ></DeleteDialog>
   </div>
  );
 };

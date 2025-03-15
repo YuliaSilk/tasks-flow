@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "rootDir": "./src",
     "outDir": "./dist",
     "allowJs": false,
@@ -16,5 +17,5 @@
     "target": "es2019",
     "sourceMap": true
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "src/hooks/useThemeContext.tsx"]
 }

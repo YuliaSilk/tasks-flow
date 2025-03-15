@@ -8,7 +8,7 @@ import SearchComponent from "../SaerchComponent";
 
 interface HeaderProps {
  theme: string;
- setTheme: React.Dispatch<React.SetStateAction<string>>;
+ setTheme: React.Dispatch<React.SetStateAction<any>>;
 }
 const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
  const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
@@ -29,13 +29,13 @@ const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
  return (
   <div className=" w-full h-auto md:h-[160px] flex flex-col mb-10 lg:flex-row  gap-4 justify-between items-center">
    <h1 className="hidden">Tasks Flow - your personal task manager</h1>
-   <div className="flex flex-col md:flex-row gap-4 items-center md:mb-4 w-full  p-4 md:p-5">
+   <div className="flex flex-col md:flex-row gap-4 items-center md:mb-4 w-full  p-4 md:p-5 lg:px-44">
     <img
      src="/images/tasks-flow-logo-min.png"
      alt="Tasks Flow Logo"
      className="w-[160px] md:w-[160px] h-[auto]"
     />
-    <div className="flex flex-col md:flex-row gap-4 lg:gap-8 w-full items-center justify-center mb-4">
+    <div className="flex flex-col md:flex-row gap-4 lg:gap-8 w-full items-center justify-center md:justify-end mb-4">
      <SearchComponent onBoardSelected={handleBoardSelected} />
      <ButtonLoad onClick={handleLoadBoard} />
      <ButtonAdd
@@ -50,22 +50,21 @@ const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
      >
       {theme === "light" ? (
        <svg
-        width="24"
-        height="24"
-        fill="#B3ABF9"
+        width="24px"
+        height="24px"
+        fill="#461CE2"
         className="hover:fill-secondary-light dark:hover:fill-secondary-dark transition-all duration-200"
        >
         <use href="/images/sprite.svg#icon-moon" />
        </svg>
       ) : (
        <svg
-        width="24"
-        height="24"
+        width="24px"
+        height="24px"
+        fill="#B3ABF9"
+        className="hover:fill-secondary-light dark:hover:fill-secondary-dark transition-all duration-200"
        >
-        <use
-         className="hover:fill-secondary-light dark:hover:fill-secondary-dark transition-all duration-200"
-         href="/images/sprite.svg#icon-sun"
-        />
+        <use href="/images/sprite.svg#icon-sun" />
        </svg>
       )}
      </div>

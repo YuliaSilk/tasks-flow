@@ -124,11 +124,15 @@ export  interface BoardOption {
 export interface DeleteDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    children: React.ReactNode;
-    title?: string;
+    onDelete: () => void;
+    title: string;
+    content: string;
+    // onClick: () => void;
+    children?: React.ReactNode;
     width?: number;
-    onClick: () => void;
 }
+
+
 
 export interface AddButtonProps {
     actionType: "board" | "card";
@@ -151,4 +155,8 @@ export interface CreateCardModalProps {
     onClose: () => void;
     columnId: string;
     boardId: string;
+}
+
+export interface ButtonLoadProps {
+ onClick: () => void;
 }

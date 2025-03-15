@@ -17,7 +17,7 @@ module.exports = {
       },
       colors: {
         primary: {
-          light: "#255DC1",
+          light: "#461CE2",
           dark: "#B3ABF9",
         },
         background: {
@@ -37,8 +37,8 @@ module.exports = {
           dark: "#d7d9ff"
         },
         error: {
-          light: "#d51950",
-          dark: "#d51950",
+          light: "#F7023B",
+          dark: "#F7023B",
         },
       },
       fontFamily: {
@@ -59,9 +59,11 @@ module.exports = {
       },
       boxShadow: {
         "main-shadow": "0px 5px 15px 0px rgba(0, 0, 0, 0.35)",
-        "card-shadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+        "card-shadow": "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+        "card-hover": "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;",
       },
     },
   },
   plugins: [],
 };
+
