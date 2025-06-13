@@ -1,93 +1,42 @@
-// import React, {useEffect, useState} from "react";
-// import "./App.css";
-// import Header from "./components/Header/Header";
-// import Board from "./components/Board/Board";
-// import {SnackbarProvider} from "notistack";
-// import {ThemeProvider} from "@mui/material/styles";
-// import {useMuiTheme} from "./hooks";
-
-// const App: React.FC = () => {
-//  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
-
-//  useEffect(() => {
-//   localStorage.setItem("theme", theme);
-//   if (theme === "dark") {
-//    document.documentElement.classList.add("dark");
-//   } else {
-//    document.documentElement.classList.remove("dark");
-//   }
-//  }, [theme]);
-
-//  const muiTheme = useMuiTheme();
-
-//  return (
-//   <ThemeProvider theme={muiTheme}>
-//    <SnackbarProvider
-//     maxSnack={2}
-//     anchorOrigin={{
-//      vertical: "top",
-//      horizontal: "right",
-//     }}
-//    >
-//     <div
-//      className={`min-h-screen flex flex-col gap-2 md:gap-4 lg:gap-6 transition-colors duration-300 ${
-//       theme === "light" ? "text-text-light bg-background-light" : "dark:text-text-dark dark:bg-background-dark"
-//      }`}
-//     >
-//      <Header
-//       theme={theme}
-//       setTheme={setTheme}
-//      />
-//      <Board />
-//     </div>
-//    </SnackbarProvider>
-//   </ThemeProvider>
-//  );
-// };
-
-// export default App;
-import React from "react";
+import React, {useEffect, useState, lazy, Suspense} from "react";
 import "./App.css";
-import Header from "./components/Header/Header";
-import Board from "./components/Board/Board";
 import {SnackbarProvider} from "notistack";
-import {ThemeProvider as MuiThemeProvider} from "@mui/material/styles";
-import {useMuiTheme} from "./hooks";
-import {ThemeProvider, useThemeContext} from "./hooks/useThemeContext"; // Переконайтесь, що контекст імпортується правильно
 
+const Header = lazy(() => import("./components/Header/Header"));
+const Board = lazy(() => import("./components/Board/Board"));
 const App: React.FC = () => {
- const {theme, setTheme} = useThemeContext(); // Отримуємо тему з контексту
- const muiTheme = useMuiTheme(); // Передаємо тему в MUI через кастомний хук
+ const [theme, setTheme] = useState<string>(() => localStorage.getItem("theme") || "light");
+
+ useEffect(() => {
+  document.documentElement.classList.toggle("dark", theme === "dark");
+  localStorage.setItem("theme", theme);
+ }, [theme]);
 
  return (
-  <MuiThemeProvider theme={muiTheme}>
-   <SnackbarProvider
-    maxSnack={2}
-    anchorOrigin={{
-     vertical: "top",
-     horizontal: "right",
-    }}
+  <SnackbarProvider
+   maxSnack={2}
+   anchorOrigin={{
+    vertical: "top",
+    horizontal: "right",
+   }}
+  >
+   <div
+    className={`min-h-screen flex flex-col gap-2 md:gap-4 lg:gap-6 transition-colors duration-300 ${
+     theme === "light" ? "text-text-light bg-background-light" : "dark:text-text-dark dark:bg-background-dark"
+    }`}
    >
-    <div
-     className={`min-h-screen flex flex-col gap-2 md:gap-4 lg:gap-6 transition-colors duration-300 ${
-      theme === "light" ? "text-text-light bg-background-light" : "dark:text-text-dark dark:bg-background-dark"
-     }`}
-    >
+    <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
      <Header
       theme={theme}
       setTheme={setTheme}
      />
+    </Suspense>
+    <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
      <Board />
-    </div>
-   </SnackbarProvider>
-  </MuiThemeProvider>
+    </Suspense>
+   </div>
+  </SnackbarProvider>
  );
 };
 
-const Root: React.FC = () => (
- <ThemeProvider>
-  <App />
- </ThemeProvider>
-);
-
-export default Root;
+export default App;

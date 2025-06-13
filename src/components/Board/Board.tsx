@@ -20,7 +20,7 @@ const Board: React.FC = () => {
   return (
    <div className="w-[96%] h-auto p-3 m-auto my-40 flex justify-center items-center align-middle ">
     <p className="text-accent-lite dark:text-accent text-[20px] md:text-[28px] font-bold text-center">
-     No board selected. <br /> Please, select a board or crseate a new one.
+     No board selected. <br /> Please, select a board or create a new one.
     </p>
    </div>
   );

@@ -1,13 +1,12 @@
-import React from "react";
+import React, {Suspense} from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import {PersistGate} from "redux-persist/integration/react";
 import {Provider} from "react-redux";
 import {store, persistor} from "./redux/store";
-import {ThemeProvider} from "@mui/material/styles";
-import theme from "./theme";
+
+const App = React.lazy(() => import("./App"));
 
 const rootElement = document.getElementById("root");
 
@@ -20,9 +19,9 @@ if (rootElement) {
      loading={null}
      persistor={persistor}
     >
-     <ThemeProvider theme={theme}>
+     <Suspense fallback={<div>Loading...</div>}>
       <App />
-     </ThemeProvider>
+     </Suspense>
     </PersistGate>
    </Provider>
   </React.StrictMode>

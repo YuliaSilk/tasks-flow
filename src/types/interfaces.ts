@@ -107,6 +107,8 @@ export interface BoardProps  {
 
 export interface SearchFieldProps {
     onBoardSelected: (boardTitle: string) => void;
+    theme: string;
+    
 }
    
 export  interface BoardOption {
@@ -159,4 +161,9 @@ export interface CreateCardModalProps {
 
 export interface ButtonLoadProps {
  onClick: () => void;
+}
+
+export interface HeaderProps {
+ theme: string;
+ setTheme: React.Dispatch<React.SetStateAction<any>>;
 }

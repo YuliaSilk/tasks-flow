@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx",
     "rootDir": "./src",
     "outDir": "./dist",
     "allowJs": false,
@@ -9,13 +9,17 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "lib": ["dom", "ES2021"], 
-    "module": "es2020",
+    "module": "ESNext",
     "moduleResolution": "node",
     "preserveConstEnums": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
-    "target": "es2019",
-    "sourceMap": true
+    "target": "ESNext",
+    "sourceMap": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["**/*.ts", "src/hooks/useThemeContext.tsx"]
 }

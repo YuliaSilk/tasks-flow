@@ -1,82 +1,32 @@
-import React, {useEffect} from "react";
-import {Dialog, DialogTitle, DialogContent, DialogActions, Button} from "@mui/material";
-import useMuiTheme from "../../../hooks/useTheme";
-import {ThemeProvider, useThemeContext} from "../../../hooks/useThemeContext";
-import {DeleteDialogProps} from "../../../types/interfaces";
-const DeleteDialog: React.FC<DeleteDialogProps> = ({isOpen, onClose, onDelete, title, content}) => {
- const theme = useThemeContext();
- const muiTheme = useMuiTheme();
+import React from "react";
 
- useEffect(() => {
-  const updateTheme = () => {};
-  updateTheme();
- }, [muiTheme]);
+const DeleteDialog = ({isOpen, onClose, onDelete, title, content}) => {
+ if (!isOpen) return null;
 
  return (
-  <ThemeProvider>
-   <Dialog
-    open={isOpen}
-    onClose={onClose}
-    sx={{
-     "& .MuiPaper-root": {
-      backgroundColor: muiTheme.palette.background.default,
-      color: muiTheme.palette.text.primary,
-      border: theme.theme === "dark" ? "1px solid #444" : "1px solid #ccc",
-      borderRadius: "20px",
-      boxShadow:
-       muiTheme.palette.mode === "dark" ? "0px 4px 12px rgba(255, 255, 255, 0.08)" : "0px 4px 12px rgba(0, 0, 0, 0.15)",
-      transition: "all 0.3s ease-in-out",
-     },
-    }}
-   >
-    <DialogTitle
-     sx={{
-      textAlign: "center",
-      textTransform: "capitalize",
-      fontSize: "1.5rem",
-      color: muiTheme.palette.text.primary,
-     }}
-    >
-     {title}
-    </DialogTitle>
-    <DialogContent sx={{color: muiTheme.palette.text.primary}}>{content}</DialogContent>
-    <DialogActions sx={{justifyContent: "space-between"}}>
-     <Button
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+   <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-2xl shadow-lg w-96 p-6 transition-transform transform scale-95 animate-fade-in">
+    <h2 className="text-xl font-semibold text-center mb-4">{title}</h2>
+    <p className="text-center mb-6">{content}</p>
+    <div className="flex justify-between">
+     <button
       onClick={onClose}
-      sx={{
-       borderRadius: "20px",
-       color: muiTheme.palette.text.primary,
-       "&:hover": {
-        backgroundColor: (muiTheme) =>
-         muiTheme.palette.mode === "dark" ? "rgba(54, 9, 169, 0.414)" : "rgba(74, 47, 211, 0.49)",
-       },
-       transition: "all 0.3s ease-in-out",
-      }}
+      className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
      >
       No, keep it
-     </Button>
-     <Button
+     </button>
+     <button
       onClick={() => {
        onDelete();
        onClose();
       }}
-      color="error"
-      autoFocus
-      sx={{
-       borderRadius: "20px",
-       color: muiTheme.palette.error.main,
-       "&:hover": {
-        backgroundColor: (muiTheme) =>
-         muiTheme.palette.mode === "dark" ? "rgba(255, 105, 97, 0.2)" : "rgba(211, 47, 47, 0.2)",
-       },
-       transition: "all 0.3s ease-in-out",
-      }}
+      className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
      >
       Yes, I want to delete
-     </Button>
-    </DialogActions>
-   </Dialog>
-  </ThemeProvider>
+     </button>
+    </div>
+   </div>
+  </div>
  );
 };
 

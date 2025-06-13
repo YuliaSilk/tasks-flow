@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ColumnProps } from '../../types/interfaces';
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
-console.log("BASE_URL:", process.env.BASE_URL);
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 export const getAllColumns = createAsyncThunk<ColumnProps[]>(
   'columns/getAllColumns',

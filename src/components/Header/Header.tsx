@@ -4,12 +4,9 @@ import ButtonLoad from "../UI/Buttons/ButtonLoad";
 import {useDispatch} from "react-redux";
 import {getBoardById} from "../../redux/boards/operations";
 import {AppDispatch} from "../../redux/store";
-import SearchComponent from "../SaerchComponent";
+import SearchComponent from "../SearchComponent/SaerchComponent";
+import {HeaderProps} from "../../types/interfaces";
 
-interface HeaderProps {
- theme: string;
- setTheme: React.Dispatch<React.SetStateAction<any>>;
-}
 const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
  const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
  const dispatch = useDispatch<AppDispatch>();
@@ -36,14 +33,21 @@ const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
      className="w-[160px] md:w-[160px] h-[auto]"
     />
     <div className="flex flex-col md:flex-row gap-4 lg:gap-8 w-full items-center justify-center md:justify-end mb-4">
-     <SearchComponent onBoardSelected={handleBoardSelected} />
-     <ButtonLoad onClick={handleLoadBoard} />
-     <ButtonAdd
-      actionType="board"
-      title="Create new board"
-      columnId=""
-      boardId=""
-     />
+     <div className="flex flex-col md:flex-row items-center  w-[480px] gap-4  ">
+      <SearchComponent
+       onBoardSelected={handleBoardSelected}
+       theme={theme}
+      />
+      <ButtonLoad onClick={handleLoadBoard} />
+     </div>
+     <div className="flex flex-col md:flex-row items-center  w-[180px]  ">
+      <ButtonAdd
+       actionType="board"
+       title="Create new board"
+       columnId=""
+       boardId=""
+      />
+     </div>
      <div
       className="cursor-pointer"
       onClick={() => setTheme((prev) => (prev === "light" ? "dark" : "light"))}
@@ -74,7 +78,7 @@ const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
     className="lg:absolute top-[128px] inset-x-0 flex justify-center items-center w-full h-[20px] lg:h-[28px] 
 bg-gradient-to-r from-accent-light via-transparent to-accent-light dark:from-accent-dark/50 dark:via-transparent dark:to-accent-dark/50 shadow-lg"
    >
-    <p className="font-dancing text-primary text-[18px] md:text-[24px]  xl:text-[32px] font-bold text-center">
+    <p className="font-dancing text-primary text-[18px] md:text-[24px]  xl:text-[32px] font-normal text-center">
      Lost time is never found again
     </p>
    </div>

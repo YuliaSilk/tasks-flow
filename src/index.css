@@ -1,8 +1,7 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap");
 
 body {
   margin: 0;
@@ -50,59 +49,4 @@ code {
 .css-1tlcqt-MuiAutocomplete-root {
   border-radius: 20px !important;
 }
-
-/* .css-xj1m5z-MuiInputBase-root-MuiOutlinedInput-root {
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  line-height: 1.4375em;
-  letter-spacing: 0.00938em;
-  color: #d7d9ff;
-  /* box-sizing: border-box;
-  position: relative;
-  cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 100%;
-  position: relative; */
-  /* border-radius: 20px;
-/* } */ 
-
-/* .css-1tlcqt-MuiAutocomplete-root .MuiOutlinedInput-root {
-  padding: 9px;
-  border-radius: 20px;
-  /* color: #d7d9ff;
-  border: none;
-  background: transparent; */
-
-/* } */  
-/* .dark .css-1tlcqt-MuiAutocomplete-root .MuiOutlinedInput-root {
-  border-radius: 20px;; 
-}
-::after {
-  content: "";
-  display: table;
-  clear: both;
-  border: transparent;
-  border-radius: 20px;
-  background: transparent;
-}  */
-
-/* .css-1tlcqt-MuiAutocomplete-root .MuiOutlinedInput-root fieldset {
-  border-radius: 20px !important;
-}
-
-.css-1tlcqt-MuiAutocomplete-root .MuiOutlinedInput-root:hover fieldset {
-  border-radius: 20px;
-}
-
-.css-1tlcqt-MuiAutocomplete-root .MuiOutlinedInput-root.Mui-focused fieldset {
-  border-radius: 20px;
-} */
 

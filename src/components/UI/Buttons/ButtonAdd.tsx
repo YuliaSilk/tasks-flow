@@ -1,40 +1,8 @@
 import React, {useState} from "react";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import {styled} from "@mui/material/styles";
-import Button from "@mui/material/Button";
+// import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CreateBoardModal from "../ModalWindodws/CreateBoardModal";
 import CreateCardModal from "../ModalWindodws/CreateCardModal";
 import {AddButtonProps} from "../../../types/interfaces";
-
-const StyledButtonAdd = styled(Button)(({theme}) => ({
- "&.MuiButton-root": {
-  backgroundColor: "transparent",
-  color: theme.palette.primary.main,
-  borderRadius: "20px",
-  width: "auto",
-  height: "50px",
-  cursor: "pointer",
-  transition: "color 0.3s ease-in-out",
-  "&:hover": {
-   backgroundColor: "transparent",
-   color: theme.palette.secondary.main,
-  },
- },
- "& .MuiSvgIcon-root": {
-  fontSize: "2rem",
-  transition: "color 0.3s ease-in-out",
- },
- "&:hover .MuiSvgIcon-root": {
-  color: theme.palette.secondary.main,
- },
- "& span": {
-  transition: "color 0.3s ease-in-out",
- },
-
- "&:hover span": {
-  color: theme.palette.secondary.main,
- },
-}));
 
 const ButtonAdd: React.FC<AddButtonProps> = ({actionType, title, columnId, boardId}) => {
  const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,10 +12,14 @@ const ButtonAdd: React.FC<AddButtonProps> = ({actionType, title, columnId, board
 
  return (
   <>
-   <StyledButtonAdd onClick={handleOpen}>
-    <AddRoundedIcon className="text-primary-light dark:text-primary-dark" />
-    <span className="text-primary-light dark:text-primary-dark">{title}</span>
-   </StyledButtonAdd>
+   <button
+    onClick={handleOpen}
+    className="flex items-center h-14 w-auto gap-2 p-2 rounded-lg bg-transparent  hover:bg-primary-main/5 focus:bg-primary-main/5 transition-all duration-200 group"
+   >
+    <span className="text-primary-light dark:text-primary-dark group-hover:text-secondary-light group-hover:dark:text-secondary-dark">
+     {title}
+    </span>
+   </button>
 
    {actionType === "board" ? (
     <CreateBoardModal

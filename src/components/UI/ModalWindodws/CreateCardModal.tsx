@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import BaseModal from "./BaseModal";
-import {Typography, TextField, Button} from "@mui/material";
+import {useForm, Controller} from "react-hook-form";
+// import {Typography, TextField, Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {createCard} from "../../../redux/cards/operations";
 import {getBoardById} from "../../../redux/boards/operations";
@@ -10,20 +11,33 @@ import {CreateCardModalProps} from "../../../types/interfaces";
 const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnId, boardId}) => {
  const dispatch = useDispatch();
  const {enqueueSnackbar} = useSnackbar();
- const [cardTitle, setCardTitle] = useState("");
- const [cardDescription, setCardDescription] = useState("");
+ const {
+  control,
+  handleSubmit,
+  setValue,
+  formState: {errors},
+  reset,
+ } = useForm<{cardTitle: string; cardDescription: string}>();
+
+ //  const [cardTitle, setCardTitle] = useState("");
+ //  const [cardDescription, setCardDescription] = useState("");
  const [titleError, setTitleError] = useState("");
 
  const cards = useSelector(
   (state: any) => state.boards.currentBoard?.columns.find((col) => col._id === columnId)?.cards || []
  );
 
+ //  useEffect(() => {
+ //   setTitleError("");
+ //  }, [cardTitle]);
  useEffect(() => {
-  setTitleError("");
- }, [cardTitle]);
+  reset({cardTitle: "", cardDescription: ""});
+ }, [open, onreset]);
 
- const handleCreateCard = async () => {
+ const onSubmit = async (data: {cardTitle: string; cardDescription: string}) => {
   try {
+   const {cardTitle, cardDescription} = data;
+
    if (!cardTitle || !cardDescription) {
     enqueueSnackbar("Please enter both a card title and description.", {variant: "error"});
     return;
@@ -52,8 +66,9 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
    ).unwrap();
    enqueueSnackbar("Card created successfully!", {variant: "success"});
    dispatch<any>(getBoardById(boardId));
-   setCardTitle("");
-   setCardDescription("");
+   reset();
+   //    setCardTitle("");
+   //    setCardDescription("");
    onClose();
    if (!open) return null;
   } catch (error) {
@@ -66,14 +81,82 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
    open={open}
    onClose={onClose}
   >
-   <Typography
-    variant="h6"
-    gutterBottom
+   <h2 className="text-xl font-semibold mb-4">Create New Card</h2>
+   <form
+    onSubmit={handleSubmit(onSubmit)}
+    className="flex flex-col gap-4 mb-5"
    >
-    Create New Card
-   </Typography>
-   <div className="flex flex-col gap-4 mb-5">
-    <TextField
+    <div>
+     <label
+      htmlFor="cardTitle"
+      className="block text-sm text-gray-700 dark:text-gray-300 mb-2"
+     >
+      Card Title
+     </label>
+     <Controller
+      name="cardTitle"
+      control={control}
+      rules={{
+       required: "Card title is required",
+       maxLength: {value: 50, message: "Title must be less than 50 characters"},
+      }}
+      render={({field}) => (
+       <input
+        {...field}
+        id="cardTitle"
+        type="text"
+        className={`w-full border border-gray-300 rounded-md p-2 ${
+         errors.cardTitle ? "border-red-500" : "focus:ring-2 focus:ring-blue-500"
+        } dark:bg-gray-700 dark:text-white`}
+       />
+      )}
+     />
+     {errors.cardTitle && <p className="text-red-500 text-sm mt-1">{errors.cardTitle.message}</p>}
+    </div>
+
+    <div>
+     <label
+      htmlFor="cardDescription"
+      className="block text-sm text-gray-700 dark:text-gray-300 mb-2"
+     >
+      Card Description
+     </label>
+     <Controller
+      name="cardDescription"
+      control={control}
+      rules={{
+       required: "Card description is required",
+       maxLength: {value: 500, message: "Description must be less than 500 characters"},
+      }}
+      render={({field}) => (
+       <textarea
+        {...field}
+        id="cardDescription"
+        rows={4}
+        className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+       />
+      )}
+     />
+     {errors.cardDescription && <p className="text-red-500 text-sm mt-1">{errors.cardDescription.message}</p>}
+    </div>
+
+    <div className="flex justify-between">
+     <button
+      type="submit"
+      className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+     >
+      Create
+     </button>
+     <button
+      type="button"
+      onClick={onClose}
+      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-200 dark:text-white dark:border-gray-600 dark:hover:bg-gray-500"
+     >
+      Close
+     </button>
+    </div>
+   </form>
+   {/* <TextField
      label="Card Title"
      variant="standard"
      fullWidth
@@ -115,8 +198,7 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
      onClick={onClose}
     >
      Close
-    </Button>
-   </div>
+    </Button> */}
   </BaseModal>
  );
 };

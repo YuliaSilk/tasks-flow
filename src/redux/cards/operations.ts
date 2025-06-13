@@ -3,7 +3,7 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {CardProps, GetCardByIdProps, EditCardProps, DeleteCardProps, DndMovementPayload, ColumnProps} from "../../types/interfaces";
 import { updateColumnCards } from './slice';
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 export const fetchCards = createAsyncThunk <{ cards: CardProps[]; columns: ColumnProps[] }, void, { rejectValue: string } >(
   "cards/fetchTitleStatus",

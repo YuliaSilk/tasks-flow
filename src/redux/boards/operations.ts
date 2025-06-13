@@ -2,8 +2,7 @@ import axios from "axios";
 import { createAsyncThunk} from "@reduxjs/toolkit";
 import {BoardProps} from "../../types/interfaces";
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
-console.log("BASE_URL:", process.env.REACT_APP_BASE_URL);
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 export const fetchBoards = createAsyncThunk(
  "boards/getAllBoards",
@@ -51,3 +50,6 @@ export const deleteBoard = createAsyncThunk(
   }
  },
 );
+
+// axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+// console.log("BASE_URL:", import.meta.env.VITE_BASE_URL);
