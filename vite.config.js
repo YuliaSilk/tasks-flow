@@ -1,19 +1,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-
 export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
+    plugins: [react()],
+    build: {
+        outDir: 'build', // Змінюємо вихідну директорію на 'build'
+        sourcemap: true
     },
-  },
-  define: {
-    global: {},
-  },
-  build: {
-    minify: 'esbuild',
-    treeShaking: true,
-  },
-})
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, './src')
+        }
+    }
+});

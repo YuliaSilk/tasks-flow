@@ -1,7 +1,6 @@
 import axios from "axios";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {CardProps, GetCardByIdProps, EditCardProps, DeleteCardProps, DndMovementPayload, ColumnProps} from "../../types/interfaces";
-import { updateColumnCards } from './slice';
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -20,15 +19,23 @@ export const fetchCards = createAsyncThunk <{ cards: CardProps[]; columns: Colum
   }
 );
 
-export const createCard = createAsyncThunk(
+export const createCard = createAsyncThunk<
+  { card: CardProps; columnId: string },
+  { title: string; description: string; columnId: string; boardId: string },
+  { rejectValue: string }
+>(
   "cards/createCard",
-  async ({ title, description, columnId, boardId }: { title: string; description: string; columnId: string; boardId: string }, { dispatch }) => {
-    const response = await axios.post(`/api/boards/${boardId}/columns/${columnId}/cards`, {
-      title,
-      description,
-    });
+  async ({ title, description, columnId, boardId }, thunkAPI) => {
+    try {
+      const response = await axios.post(`/api/boards/${boardId}/columns/${columnId}/cards`, {
+        title,
+        description,
+      });
 
-    return { card: response.data, columnId };
+      return { card: response.data, columnId };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
 );
 
@@ -72,14 +79,11 @@ export const deleteCard = createAsyncThunk<CardProps, DeleteCardProps>(
 
 export const dndMovement = createAsyncThunk(
   'cards/dndMovement',
-  async (
-      { boardId, cardId: _id, sourceColumnId: startColumnID , destinationColumnId: finishColumnID }: DndMovementPayload,
-      thunkAPI
-  ) => {
+  async (payload: DndMovementPayload, thunkAPI) => {
       try {
-          const res = await axios.patch(`/api/boards/${boardId}/columns/${finishColumnID}/cards/dnd/${_id}`, {
-              startColumnID,
-              finishColumnID,
+          const res = await axios.patch(`/api/boards/${payload.boardId}/columns/${payload.destinationColumnId}/cards/dnd/${payload.cardId}`, {
+              startColumnID: payload.sourceColumnId,
+              finishColumnID: payload.destinationColumnId,
           });
           return res.data;  
       } catch (error) {
@@ -106,10 +110,12 @@ export const updateStatusLocalThunk = createAsyncThunk<
 });
 
 
-export const updateCardsOrder = createAsyncThunk(
+export const updateCardsOrder = createAsyncThunk<
+  { columnId: string; newCards: CardProps[] },
+  { columnId: string; newCards: CardProps[] }
+>(
   'cards/updateOrder',
-  async (payload: { columnId: string; newCards: CardProps[] }, { dispatch }) => {
-    dispatch(updateColumnCards(payload)); 
+  async (payload) => {
     return payload;
   }
 );

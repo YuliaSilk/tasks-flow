@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "./build",
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
@@ -16,10 +15,16 @@
     "strictNullChecks": true,
     "target": "ESNext",
     "sourceMap": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["**/*.ts", "src/hooks/useThemeContext.tsx"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

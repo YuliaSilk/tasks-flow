@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { dndMovement } from '../redux/cards/operations';
+import { DndMovementPayload } from '../types/interfaces';
 
 const useDnd = (localColumns, setLocalColumns, saveColumnOrderToLocalStorage, currentBoardId) => {
     const dispatch = useDispatch<AppDispatch>();
@@ -9,7 +10,6 @@ const useDnd = (localColumns, setLocalColumns, saveColumnOrderToLocalStorage, cu
         const { source, destination, draggableId } = result;
         if (!destination) return;
     
-        const cardId = draggableId;
         const sourceColumnIndex = localColumns.findIndex((column) => column._id === source.droppableId);
         const destinationColumnIndex = localColumns.findIndex((column) => column._id === destination.droppableId);
     
@@ -20,7 +20,7 @@ const useDnd = (localColumns, setLocalColumns, saveColumnOrderToLocalStorage, cu
         const destinationCards = [...destinationColumn.cards];
     
         const [movedCard] = sourceCards.splice(source.index, 1);
-        let updatedColumns = [...localColumns];
+        const updatedColumns = [...localColumns];
     
         if (source.droppableId === destination.droppableId) {
           sourceCards.splice(destination.index, 0, movedCard);
@@ -35,17 +35,17 @@ const useDnd = (localColumns, setLocalColumns, saveColumnOrderToLocalStorage, cu
         saveColumnOrderToLocalStorage(updatedColumns);
     
         try {
-          await dispatch(
-            dndMovement({
-              cardId,
-              card: movedCard,
-              finishTaskIndex: destination.index,
-              sourceColumnId: source.droppableId,
-              destinationColumnId: destination.droppableId,
-              boardId: currentBoardId,
-              destinationIndex: destination.index,
-            })
-          );
+          const payload: DndMovementPayload = {
+            cardId: draggableId,
+            card: movedCard,
+            finishTaskIndex: destination.index,
+            sourceColumnId: source.droppableId,
+            destinationColumnId: destination.droppableId,
+            boardId: currentBoardId,
+            destinationIndex: destination.index,
+          };
+          
+          await dispatch(dndMovement(payload));
         } catch (error) {
           console.error("Error during drag and drop movement:", error);
         }

@@ -60,9 +60,12 @@ export interface DragItem {
 
 export interface DndMovementPayload {
   card: CardProps;
+  cardId: string;
   finishTaskIndex: number;
-  startColumnID: string;
-  finishColumnID: string;
+  sourceColumnId: string;
+  destinationColumnId: string;
+  boardId: string;
+  destinationIndex: number;
 }
 
 // API Response Types
@@ -215,4 +218,9 @@ export interface CardFiltersProps {
   onFilterChange: (filters: FilterOptions) => void;
   theme: 'light' | 'dark';
   columns: { _id: string; name: string; }[];
+}
+
+export interface GetCardByIdProps extends BaseProps {
+  boardId: string;
+  columnId: string;
 }

@@ -50,6 +50,13 @@ const cardsSlice = createSlice({
     },
     setFilter(state, action: PayloadAction<string>) {
       state.filter = action.payload;
+    },
+    updateColumnCards(state, action: PayloadAction<{ columnId: string; newCards: CardProps[] }>) {
+      const { columnId, newCards } = action.payload;
+      const columnIndex = state.columns.findIndex(col => col._id === columnId);
+      if (columnIndex !== -1) {
+        state.columns[columnIndex].cards = newCards;
+      }
     }
   },
   extraReducers: (builder) => {
@@ -111,5 +118,5 @@ const cardsSlice = createSlice({
   },
 });
 
-export const { setCards, setFilter } = cardsSlice.actions;
+export const { setCards, setFilter, updateColumnCards } = cardsSlice.actions;
 export const cardsReducer = cardsSlice.reducer;
