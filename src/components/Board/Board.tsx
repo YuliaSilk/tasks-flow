@@ -4,12 +4,17 @@ import CardColumn from "../CardColumn/CardColumn";
 import {DragDropContext} from "@hello-pangea/dnd";
 import DotLoader from "react-spinners/DotLoader";
 import {useCardsOrder, useDnd} from "../../hooks";
+import {BoardsState} from "../../types/interfaces";
 
-const Board: React.FC = () => {
+interface BoardProps {
+ theme: "light" | "dark";
+}
+
+const Board: React.FC<BoardProps> = ({theme}) => {
  const [loading] = useState(false);
 
- const currentBoard = useSelector((state: any) => state.boards.currentBoard);
- const isLoading = useSelector((state: any) => state.boards.isLoading);
+ const currentBoard = useSelector((state: {boards: BoardsState}) => state.boards.currentBoard);
+ const isLoading = useSelector((state: {boards: BoardsState}) => state.boards.isLoading);
  const {columns} = currentBoard || {columns: []};
 
  const {localColumns, setLocalColumns, saveColumnOrderToLocalStorage} = useCardsOrder(columns, currentBoard?._id);
@@ -50,6 +55,7 @@ const Board: React.FC = () => {
         name={column.name}
         columnId={column._id}
         boardId={currentBoard._id}
+        theme={theme}
        />
       ))}
      </div>

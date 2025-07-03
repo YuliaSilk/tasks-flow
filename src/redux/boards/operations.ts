@@ -1,10 +1,10 @@
 import axios from "axios";
 import { createAsyncThunk} from "@reduxjs/toolkit";
-import {BoardProps} from "../../types/interfaces";
+import {BoardProps, ColumnProps} from "../../types/interfaces";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
-export const fetchBoards = createAsyncThunk(
+export const fetchBoards = createAsyncThunk<BoardProps[], void>(
  "boards/getAllBoards",
  async (_, thunkAPI) => {
   try {
@@ -18,7 +18,7 @@ export const fetchBoards = createAsyncThunk(
 
 export const createBoard = createAsyncThunk(
  "boards/createBoard",
- async (boardData: { title: string; columns: any[] }, thunkAPI) => {
+ async (boardData: { title: string; columns: ColumnProps[] }, thunkAPI) => {
   try {
     const res = await axios.post("/api/boards/", boardData);
     return res.data;
@@ -51,5 +51,3 @@ export const deleteBoard = createAsyncThunk(
  },
 );
 
-// axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
-// console.log("BASE_URL:", import.meta.env.VITE_BASE_URL);

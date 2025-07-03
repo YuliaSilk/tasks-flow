@@ -1,23 +1,20 @@
 import React, {useState, useCallback, memo} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../redux/store";
 import {deleteCard, editCard} from "../../redux/cards/operations";
-import DeleteDialog from "../../components/UI/ModalWindodws/DeleteDialogBasic";
 import {getBoardById} from "../../redux/boards/operations";
-import EditCardModal from "../../components/UI/ModalWindodws/EditCardModal";
 import {Draggable} from "@hello-pangea/dnd";
 import {useSnackbar} from "notistack";
-import {CardComponentProps, BoardsState} from "../../types/interfaces";
+import {CardComponentProps} from "../../types/interfaces";
+import {EditCardModal} from "../UI/ModalWindodws";
+import DeleteDialogBasic from "../UI/ModalWindodws/DeleteDialogBasic";
 
-const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, description, index}) => {
+const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, description, index, boardId, columnId}) => {
  const dispatch: AppDispatch = useDispatch();
  const {enqueueSnackbar} = useSnackbar();
 
  const [isDialogOpen, setDialogOpen] = useState(false);
  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
- const columnId = useSelector((state: {boards: BoardsState}) => state.boards.currentBoard?.columns[0]._id);
- const boardId = useSelector((state: {boards: BoardsState}) => state.boards.currentBoard?._id);
 
  const boardIdStr = boardId ? String(boardId) : "";
  const columnIdStr = columnId ? String(columnId) : "";
@@ -41,19 +38,19 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
  }, [boardIdStr, columnIdStr, cardId, dispatch, enqueueSnackbar]);
 
  const handleEdit = useCallback(
-  (cardId: string, newTitle: string, newDescription: string) => {
+  async (cardId: string, newTitle: string, newDescription: string) => {
    if (!boardIdStr || !columnIdStr) return;
 
-   dispatch(
-    editCard({boardId: boardIdStr, columnId: columnIdStr, _id: cardId, title: newTitle, description: newDescription})
-   )
-    .then(() => {
-     dispatch(getBoardById(boardIdStr));
-    })
-    .catch((error) => {
-     console.error("Error editing card:", error);
-     enqueueSnackbar("Error editing card!", {variant: "error"});
-    });
+   try {
+    await dispatch(
+     editCard({boardId: boardIdStr, columnId: columnIdStr, _id: cardId, title: newTitle, description: newDescription})
+    ).unwrap();
+    dispatch(getBoardById(boardIdStr));
+    setIsEditModalOpen(false);
+   } catch (error) {
+    console.error("Error editing card:", error);
+    enqueueSnackbar("Error editing card!", {variant: "error"});
+   }
   },
   [boardIdStr, columnIdStr, dispatch, enqueueSnackbar]
  );
@@ -119,7 +116,7 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
        </svg>
       </button>
      </div>
-     <DeleteDialog
+     <DeleteDialogBasic
       isOpen={isDialogOpen}
       onClose={() => setDialogOpen(false)}
       title="Delete Card"
@@ -127,17 +124,15 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
       onDelete={handleDelete}
      />
 
-     {isEditModalOpen && (
-      <EditCardModal
-       open={isEditModalOpen}
-       onClose={() => setIsEditModalOpen(false)}
-       cardId={cardId}
-       title={title}
-       description={description}
-       onEdit={handleEdit}
-       boardId={boardIdStr}
-      />
-     )}
+     <EditCardModal
+      open={isEditModalOpen}
+      onClose={() => setIsEditModalOpen(false)}
+      cardId={cardId}
+      title={title}
+      description={description}
+      onEdit={handleEdit}
+      boardId={boardIdStr}
+     />
     </div>
    )}
   </Draggable>

@@ -1,54 +1,69 @@
-import { createSlice, PayloadAction  } from '@reduxjs/toolkit';
-import { ColumnProps, ColumnsState } from '../../types/interfaces';
-import { getAllColumns, getColumnsById, getColumnsAndCardsByBoardId } from './operations';
+import { createSlice, PayloadAction, SerializedError } from '@reduxjs/toolkit';
+import { ColumnsStateWithStatus } from '../types';
+import {
+  getAllColumns,
+  getColumnsById,
+  getColumnsAndCardsByBoardId,
+} from './operations';
+import { ColumnProps } from '../../types/interfaces';
 
-const handlePending = (state) => {
+const handlePending = (state: ColumnsStateWithStatus) => {
   state.isLoading = true;
+  state.error = null;
 };
 
-const handleRejected = (state, action) => {
+const handleRejected = (
+  state: ColumnsStateWithStatus,
+  action: { error: SerializedError; payload: unknown }
+) => {
   state.isLoading = false;
-  state.error = action.payload;
+  state.error = action.error.message || (action.payload as string) || 'An error occurred';
 };
 
-const initialState: ColumnsState = {
-  columns: [] as ColumnProps[], 
+const initialState: ColumnsStateWithStatus = {
+  columns: [],
   isLoading: false,
-  error: null as string | null,
+  error: null,
 };
 
-const columnSlice = createSlice({
+const columnsSlice = createSlice({
   name: 'columns',
-  initialState, 
-  reducers: {},
+  initialState,
+  reducers: {
+    setColumns(state, action: PayloadAction<ColumnProps[]>) {
+      state.columns = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
+      .addCase(getAllColumns.pending, handlePending)
+      .addCase(getAllColumns.rejected, handleRejected)
+      .addCase(getAllColumns.fulfilled, (state, action: PayloadAction<ColumnProps[]>) => {
+        state.isLoading = false;
+        state.error = null;
+        state.columns = action.payload;
+      })
+
       .addCase(getColumnsById.pending, handlePending)
       .addCase(getColumnsById.rejected, handleRejected)
       .addCase(getColumnsById.fulfilled, (state, action: PayloadAction<ColumnProps>) => {
         state.isLoading = false;
         state.error = null;
-        const existingColumnIndex = state.columns.findIndex(column => column._id === action.payload._id);
-        if (existingColumnIndex === -1) {
-          state.columns.push(action.payload);
-        } else {
-          state.columns[existingColumnIndex] = action.payload;
+        const index = state.columns.findIndex(column => column._id === action.payload._id);
+        if (index !== -1) {
+          state.columns[index] = action.payload;
         }
       })
-    
-      .addCase(getAllColumns.pending, handlePending)
-      .addCase(getAllColumns.rejected, handleRejected)
-      .addCase(getAllColumns.fulfilled, (state, action) => {
+
+      .addCase(getColumnsAndCardsByBoardId.pending, handlePending)
+      .addCase(getColumnsAndCardsByBoardId.rejected, handleRejected)
+      .addCase(getColumnsAndCardsByBoardId.fulfilled, (state, action: PayloadAction<ColumnProps[]>) => {
         state.isLoading = false;
         state.error = null;
         state.columns = action.payload;
-      })
-      .addCase(getColumnsAndCardsByBoardId.pending, handlePending)
-      .addCase(getColumnsAndCardsByBoardId.fulfilled, handleRejected)
-      .addCase(getColumnsAndCardsByBoardId.rejected, (state, action) => {
-        state.error = action.error.message || 'Failed to load columns and cards';
       });
   },
 });
 
-export const columnReducer = columnSlice.reducer;
+export const { setColumns } = columnsSlice.actions;
+export const columnsReducer = columnsSlice.reducer;

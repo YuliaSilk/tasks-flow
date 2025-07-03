@@ -1,67 +1,63 @@
 import React from "react";
-import {render, screen, fireEvent, waitFor} from "@testing-library/react";
+import {render, screen, fireEvent, waitFor, act} from "@testing-library/react";
 import {Provider} from "react-redux";
-import {configureStore, AnyAction} from "@reduxjs/toolkit";
+import {configureStore} from "@reduxjs/toolkit";
 import {DragDropContext, Droppable} from "@hello-pangea/dnd";
 import Card from "../Card";
 import {SnackbarProvider} from "notistack";
-import {deleteCard, editCard} from "../../../redux/cards/operations";
+import {DeleteCardProps, EditCardProps} from "../../../types/interfaces";
 
-interface BoardState {
- currentBoard: {
-  _id: string;
-  columns: Array<{
-   _id: string;
-   cards?: Array<{_id: string}>;
-  }>;
- };
-}
+const mockDeleteCard = jest.fn().mockImplementation(() => Promise.resolve({unwrap: () => Promise.resolve()}));
+const mockEditCard = jest.fn().mockImplementation(() => Promise.resolve({unwrap: () => Promise.resolve()}));
+const mockGetBoardById = jest.fn().mockImplementation(() => Promise.resolve({unwrap: () => Promise.resolve()}));
 
 jest.mock("../../../redux/cards/operations", () => ({
- deleteCard: jest.fn(),
- editCard: jest.fn(),
+ deleteCard: (args: DeleteCardProps) => mockDeleteCard(args),
+ editCard: (args: EditCardProps) => mockEditCard(args),
 }));
+
 jest.mock("../../../redux/boards/operations", () => ({
- getBoardById: jest.fn(),
+ getBoardById: (id: string) => mockGetBoardById(id),
 }));
 
-// Create a mock store
-const createMockStore = (initialState = {}) =>
- configureStore({
-  reducer: {
-   boards: (
-    state: BoardState = {
-     currentBoard: {
-      _id: "board-1",
-      columns: [{_id: "column-1"}],
-     },
-     ...initialState,
+const mockDispatch = jest.fn((action) => {
+ if (typeof action === "function") {
+  const result = action(mockDispatch);
+  if (result && typeof result.then === "function") {
+   return Promise.resolve({
+    unwrap: () => result,
+   });
+  }
+  return result;
+ }
+ return action;
+});
+
+const mockStore = configureStore({
+ reducer: {
+  boards: (
+   state = {
+    currentBoard: {
+     _id: "board-1",
+     columns: [{_id: "column-1"}],
     },
-    action: AnyAction
-   ) => {
-    if (action.type === "boards/deleteCard/fulfilled" || action.type === "boards/editCard/fulfilled") {
-     return {
-      ...state,
-      currentBoard: {
-       ...state.currentBoard,
-       columns: state.currentBoard.columns.map((col) => ({
-        ...col,
-        cards: (col.cards || []).filter((card) => card._id !== action.payload?._id),
-       })),
-      },
-     };
-    }
-    return state;
+   }
+  ) => state,
+  cards: (state = {}) => state,
+ },
+ middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware({
+   thunk: {
+    extraArgument: {
+     dispatch: mockDispatch,
+    },
    },
-  },
- });
+  }),
+});
 
-const mockStore = createMockStore();
-
-// Mock dispatch function
 jest.mock("react-redux", () => ({
  ...jest.requireActual("react-redux"),
- useDispatch: () => jest.fn(),
+ useDispatch: () => mockDispatch,
 }));
 
 const renderWithProviders = (component: React.ReactElement) => {
@@ -92,15 +88,21 @@ describe("Card Component", () => {
   title: "Test Card",
   description: "Test Description",
   index: 0,
-  columnId: "column-1",
   boardId: "board-1",
+  columnId: "column-1",
  };
 
- it("renders card with title and description", () => {
+ beforeEach(() => {
+  jest.clearAllMocks();
+ });
+
+ it("renders card with title and description", async () => {
   renderWithProviders(<Card {...mockProps} />);
 
-  expect(screen.getByText("Test Card")).toBeInTheDocument();
-  expect(screen.getByText("Test Description")).toBeInTheDocument();
+  await waitFor(() => {
+   expect(screen.getByText("Test Card")).toBeInTheDocument();
+   expect(screen.getByText("Test Description")).toBeInTheDocument();
+  });
  });
 
  it("opens edit modal when edit button is clicked", () => {
@@ -123,8 +125,7 @@ describe("Card Component", () => {
  });
 
  it("calls deleteCard when confirming deletion", async () => {
-  const mockDeleteCard = jest.fn().mockResolvedValueOnce(mockProps);
-  (deleteCard as unknown as jest.Mock).mockReturnValue(mockDeleteCard);
+  mockDeleteCard.mockResolvedValueOnce({success: true});
 
   renderWithProviders(<Card {...mockProps} />);
 
@@ -135,6 +136,7 @@ describe("Card Component", () => {
   fireEvent.click(confirmButton);
 
   await waitFor(() => {
+   expect(mockDispatch).toHaveBeenCalled();
    expect(mockDeleteCard).toHaveBeenCalledWith({
     boardId: mockProps.boardId,
     columnId: mockProps.columnId,
@@ -147,12 +149,11 @@ describe("Card Component", () => {
   const updatedTitle = "Updated Title";
   const updatedDescription = "Updated Description";
 
-  const mockEditCard = jest.fn().mockResolvedValueOnce({
+  mockEditCard.mockResolvedValueOnce({
    ...mockProps,
    title: updatedTitle,
    description: updatedDescription,
   });
-  (editCard as unknown as jest.Mock).mockReturnValue(mockEditCard);
 
   renderWithProviders(<Card {...mockProps} />);
 
@@ -169,6 +170,7 @@ describe("Card Component", () => {
   fireEvent.click(saveButton);
 
   await waitFor(() => {
+   expect(mockDispatch).toHaveBeenCalled();
    expect(mockEditCard).toHaveBeenCalledWith({
     boardId: mockProps.boardId,
     columnId: mockProps.columnId,
@@ -180,52 +182,60 @@ describe("Card Component", () => {
  });
 
  it("handles error when deleting card fails", async () => {
-  const mockError = new Error("Failed to delete card");
-  const mockDeleteCard = jest.fn().mockRejectedValueOnce(mockError);
-  (deleteCard as unknown as jest.Mock).mockReturnValue(mockDeleteCard);
+  mockDeleteCard.mockImplementationOnce(() =>
+   Promise.resolve({
+    unwrap: () => Promise.reject(new Error("Failed to delete card")),
+   })
+  );
 
   renderWithProviders(<Card {...mockProps} />);
 
-  const deleteButton = screen.getByLabelText("Delete card");
+  const deleteButton = screen.getByRole("button", {name: /delete card/i});
   fireEvent.click(deleteButton);
 
-  const confirmButton = screen.getByText("Yes, I want to delete");
-  fireEvent.click(confirmButton);
+  const confirmButton = screen.getByRole("button", {name: /yes, i want to delete/i});
+  await act(async () => {
+   fireEvent.click(confirmButton);
+  });
+
+  expect(mockDeleteCard).toHaveBeenCalledWith({
+   boardId: mockProps.boardId,
+   columnId: mockProps.columnId,
+   _id: mockProps._id,
+  });
 
   await waitFor(() => {
-   expect(mockDeleteCard).toHaveBeenCalledWith({
-    boardId: mockProps.boardId,
-    columnId: mockProps.columnId,
-    _id: mockProps._id,
-   });
+   expect(screen.getByText("Error deleting card!")).toBeInTheDocument();
   });
  });
 
  it("handles error when editing card fails", async () => {
-  const mockError = new Error("Failed to edit card");
-  const mockEditCard = jest.fn().mockRejectedValueOnce(mockError);
-  (editCard as unknown as jest.Mock).mockReturnValue(mockEditCard);
+  mockEditCard.mockImplementationOnce(() =>
+   Promise.resolve({
+    unwrap: () => Promise.reject(new Error("Failed to edit card")),
+   })
+  );
 
   renderWithProviders(<Card {...mockProps} />);
 
-  const editButton = screen.getByLabelText("Edit card");
+  const editButton = screen.getByRole("button", {name: /edit card/i});
   fireEvent.click(editButton);
 
-  const titleInput = screen.getByDisplayValue(mockProps.title);
-  const updatedTitle = "Updated Title";
-  fireEvent.change(titleInput, {target: {value: updatedTitle}});
+  const saveButton = screen.getByRole("button", {name: /save/i});
+  await act(async () => {
+   fireEvent.click(saveButton);
+  });
 
-  const saveButton = screen.getByText("Save");
-  fireEvent.click(saveButton);
+  expect(mockEditCard).toHaveBeenCalledWith({
+   boardId: mockProps.boardId,
+   columnId: mockProps.columnId,
+   _id: mockProps._id,
+   title: mockProps.title,
+   description: mockProps.description,
+  });
 
   await waitFor(() => {
-   expect(mockEditCard).toHaveBeenCalledWith({
-    boardId: mockProps.boardId,
-    columnId: mockProps.columnId,
-    _id: mockProps._id,
-    title: updatedTitle,
-    description: mockProps.description,
-   });
+   expect(screen.getByText("Error editing card!")).toBeInTheDocument();
   });
  });
 });

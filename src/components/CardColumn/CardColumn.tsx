@@ -5,20 +5,19 @@ import ButtonAdd from "../UI/Buttons/ButtonAdd";
 import CardList from "../CardList/CardList";
 import {Droppable} from "@hello-pangea/dnd";
 import DotLoader from "react-spinners/DotLoader";
+import {CardProps} from "../../types/interfaces";
 
 interface CardColumnProps {
  boardId: string;
  columnId: string;
- column: {cards: any[]};
+ column: {cards: CardProps[]};
  name: string;
+ theme: "light" | "dark";
 }
-const CardColumn: React.FC<CardColumnProps> = memo(({boardId, columnId = "", column, name = ""}) => {
+const CardColumn: React.FC<CardColumnProps> = memo(({boardId, columnId = "", column, name = "", theme}) => {
  const dispatch = useDispatch<AppDispatch>();
- const [, setSelectedBoardId] = useState("");
  const [loading, setLoading] = useState(false);
- const handleOpenModal = (boardId: string, columnId: string) => {
-  setSelectedBoardId(boardId);
- };
+
  useEffect(() => {
   const loadCards = async () => {
    setLoading(true);
@@ -51,6 +50,8 @@ const CardColumn: React.FC<CardColumnProps> = memo(({boardId, columnId = "", col
          <CardList
           columnId={columnId}
           cards={column.cards}
+          theme={theme}
+          boardId={boardId}
          />
          {provided.placeholder}
         </div>
@@ -66,7 +67,6 @@ const CardColumn: React.FC<CardColumnProps> = memo(({boardId, columnId = "", col
        title="Create a new card"
        columnId={columnId}
        boardId={boardId}
-       onClick={() => handleOpenModal(boardId, columnId)}
       />
      </div>
     )}

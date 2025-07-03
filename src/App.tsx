@@ -5,7 +5,9 @@ import {SnackbarProvider} from "notistack";
 const Header = lazy(() => import("./components/Header/Header"));
 const Board = lazy(() => import("./components/Board/Board"));
 const App: React.FC = () => {
- const [theme, setTheme] = useState<string>(() => localStorage.getItem("theme") || "light");
+ const [theme, setTheme] = useState<"light" | "dark">(
+  () => (localStorage.getItem("theme") as "light" | "dark") || "light"
+ );
 
  useEffect(() => {
   document.documentElement.classList.toggle("dark", theme === "dark");
@@ -32,7 +34,7 @@ const App: React.FC = () => {
      />
     </Suspense>
     <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
-     <Board />
+     <Board theme={theme} />
     </Suspense>
    </div>
   </SnackbarProvider>

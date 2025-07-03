@@ -1,6 +1,7 @@
 import React from "react";
+import {DeleteDialogProps} from "../../../types/interfaces";
 
-const DeleteDialog = ({isOpen, onClose, onDelete, title, content}) => {
+const DeleteDialog: React.FC<DeleteDialogProps> = ({isOpen, onClose, onDelete, title, content}) => {
  if (!isOpen) return null;
 
  return (

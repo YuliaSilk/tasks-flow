@@ -42,7 +42,7 @@ const getSelectStyles = (theme: "light" | "dark"): StylesConfig<BoardOptionType,
     overflowY: "auto",
   }),
   option: (provided, state) => ({
-    ...provided,
+     ...provided,
     backgroundColor: state.isSelected
       ? colors[theme].optionSelectedBg
       : state.isFocused
@@ -56,9 +56,9 @@ const getSelectStyles = (theme: "light" | "dark"): StylesConfig<BoardOptionType,
     padding: "10px 16px",
     fontWeight: state.isSelected ? 700 : 500,
     transition: "all 0.2s",
-  }),
+    }),
   control: (provided, state) => ({
-    ...provided,
+     ...provided,
     backgroundColor: colors[theme].background,
     color: colors[theme].text,
     borderColor: state.isFocused ? colors[theme].border : colors[theme].borderHover,
@@ -86,11 +86,11 @@ const getSelectStyles = (theme: "light" | "dark"): StylesConfig<BoardOptionType,
     "&:focus": {
       outline: "none",
     },
-  }),
+    }),
   singleValue: (provided) => ({
-    ...provided,
+     ...provided,
     color: colors[theme].text,
-  }),
+    }),
 });
-
+   
 export default getSelectStyles;
