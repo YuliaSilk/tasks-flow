@@ -5,7 +5,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: 'build', // Змінюємо вихідну директорію на 'build'
+    outDir: 'build',
     sourcemap: true
   },
   resolve: {
