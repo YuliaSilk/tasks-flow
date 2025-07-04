@@ -1,25 +1,18 @@
-import React, {useState} from "react";
+import React from "react";
+// import ButtonLoad from "../UI/Buttons/ButtonLoad";
 import ButtonAdd from "../UI/Buttons/ButtonAdd";
-import ButtonLoad from "../UI/Buttons/ButtonLoad";
 import {useDispatch} from "react-redux";
-import {getBoardById} from "../../redux/boards/operations";
 import {AppDispatch} from "../../redux/store";
+import {getBoardById} from "../../redux/boards/operations";
 import SearchComponent from "../SearchComponent/SaerchComponent";
 import {HeaderProps} from "../../types/interfaces";
 
 const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
- const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
  const dispatch = useDispatch<AppDispatch>();
- const handleBoardSelected = (boardId: string) => {
-  setSelectedBoardId(boardId);
- };
 
- const handleLoadBoard = () => {
-  if (selectedBoardId === null) {
-   throw new Error("selectedBoardId is null in handleLoadBoard");
-  }
-  if (selectedBoardId) {
-   dispatch(getBoardById(selectedBoardId));
+ const handleBoardSelected = (boardId: string) => {
+  if (boardId) {
+   dispatch(getBoardById(boardId));
   }
  };
 
@@ -38,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
        onBoardSelected={handleBoardSelected}
        theme={theme}
       />
-      <ButtonLoad onClick={handleLoadBoard} />
+      {/* <ButtonLoad onClick={handleLoadBoard} /> */}
      </div>
      <div className="flex flex-col md:flex-row items-center  w-[180px]  ">
       <ButtonAdd
@@ -85,4 +78,5 @@ bg-gradient-to-r from-accent-light via-transparent to-accent-light dark:from-acc
   </div>
  );
 };
+
 export default Header;

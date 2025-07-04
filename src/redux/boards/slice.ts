@@ -6,8 +6,8 @@ import {
   getBoardById,
   deleteBoard,
 } from './operations';
-import { BoardProps, CardProps, ColumnProps } from '../../types/interfaces';
-import { createCard } from '../cards/operations';
+import { BoardProps, CardProps } from '../../types/interfaces';
+import { createCard, editCard, deleteCard } from '../cards/operations';
 import { fetchCards } from '../cards/operations';
 
 const handlePending = (state: BoardsStateWithStatus) => {
@@ -23,6 +23,14 @@ const handleRejected = (
   state.error = action.error.message || (action.payload as string) || 'An error occurred';
 };
 
+const sortBoardsByDate = (boards: BoardProps[]) => {
+  return [...boards].sort((a, b) => {
+    const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return dateB - dateA; // Сортування від найновіших до найстаріших
+  });
+};
+
 const initialState: BoardsStateWithStatus = {
   boards: [],
   currentBoard: null,
@@ -35,7 +43,10 @@ const boardsSlice = createSlice({
   initialState,
   reducers: {
     setBoards(state, action: PayloadAction<BoardProps[]>) {
-      state.boards = action.payload;
+      state.boards = sortBoardsByDate(action.payload);
+    },
+    clearCurrentBoard(state) {
+      state.currentBoard = null;
     }
   },
   extraReducers: (builder) => {
@@ -45,7 +56,7 @@ const boardsSlice = createSlice({
       .addCase(fetchBoards.fulfilled, (state, action: PayloadAction<BoardProps[]>) => {
         state.isLoading = false;
         state.error = null;
-        state.boards = action.payload;
+        state.boards = sortBoardsByDate(action.payload);
         const selectedBoardId = state.currentBoard?._id;
         const currentBoard = action.payload.find(board => board._id === selectedBoardId);
         if (currentBoard) {
@@ -78,7 +89,12 @@ const boardsSlice = createSlice({
       .addCase(createBoard.fulfilled, (state, action: PayloadAction<BoardProps>) => {
         state.isLoading = false;
         state.error = null;
-        state.boards.push(action.payload);
+        state.boards = sortBoardsByDate([...state.boards, action.payload]);
+        state.currentBoard = {
+          _id: action.payload._id,
+          title: action.payload.title,
+          columns: action.payload.columns || [],
+        };
       })
 
       .addCase(deleteBoard.pending, handlePending)
@@ -86,27 +102,50 @@ const boardsSlice = createSlice({
       .addCase(deleteBoard.fulfilled, (state, action: PayloadAction<string>) => {
         state.isLoading = false;
         state.error = null;
-        state.boards = state.boards.filter((board) => board._id !== action.payload);
-        if (state.currentBoard?._id === action.payload) {
-          state.currentBoard = null;
-        }
+        state.boards = sortBoardsByDate(state.boards.filter((board) => board._id !== action.payload));
+        state.currentBoard = null;
       })
 
       // Handle card creation in the board state
       .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardProps; columnId: string }>) => {
         if (state.currentBoard) {
-          const columnIndex = state.currentBoard.columns.findIndex(col => col._id === action.payload.columnId);
-          if (columnIndex !== -1) {
-            if (!state.currentBoard.columns[columnIndex].cards) {
-              state.currentBoard.columns[columnIndex].cards = [];
+          const column = state.currentBoard.columns.find(col => col._id === action.payload.columnId);
+          if (column) {
+            if (!column.cards) {
+              column.cards = [];
             }
-            state.currentBoard.columns[columnIndex].cards.push(action.payload.card);
+            column.cards.push(action.payload.card);
+          }
+        }
+      })
+
+      // Handle card editing in the board state
+      .addCase(editCard.fulfilled, (state, action: PayloadAction<CardProps>) => {
+        if (state.currentBoard) {
+          const column = state.currentBoard.columns.find(col => col._id === action.payload.columnId);
+          if (column && column.cards) {
+            const cardIndex = column.cards.findIndex(card => card._id === action.payload._id);
+            if (cardIndex !== -1) {
+              column.cards[cardIndex] = action.payload;
+            }
+          }
+        }
+      })
+
+      // Handle card deletion in the board state
+      .addCase(deleteCard.fulfilled, (state, action: PayloadAction<CardProps>) => {
+        if (state.currentBoard) {
+          const column = state.currentBoard.columns.find(col => col._id === action.payload.columnId);
+          if (column && column.cards) {
+            column.cards = column.cards.filter(card => card._id !== action.payload._id);
           }
         }
       })
 
       // Handle cards fetching
-      .addCase(fetchCards.fulfilled, (state, action: PayloadAction<{ cards: CardProps[]; columns: ColumnProps[] }>) => {
+      .addCase(fetchCards.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
         if (state.currentBoard?._id && action.payload?.columns) {
           const boardId = state.currentBoard._id;
           state.currentBoard.columns = action.payload.columns.map(column => ({
@@ -120,5 +159,5 @@ const boardsSlice = createSlice({
   },
 });
 
-export const { setBoards } = boardsSlice.actions;
+export const { setBoards, clearCurrentBoard } = boardsSlice.actions;
 export const boardsReducer = boardsSlice.reducer;

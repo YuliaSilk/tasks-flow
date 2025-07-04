@@ -1,8 +1,7 @@
 import React, {useState, useCallback, memo} from "react";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../redux/store";
-import {deleteCard, editCard} from "../../redux/cards/operations";
-import {getBoardById} from "../../redux/boards/operations";
+import {deleteCard, editCard, fetchCards} from "../../redux/cards/operations";
 import {Draggable} from "@hello-pangea/dnd";
 import {useSnackbar} from "notistack";
 import {CardComponentProps} from "../../types/interfaces";
@@ -28,10 +27,12 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
   }
 
   try {
-   await dispatch(deleteCard({boardId: boardIdStr, columnId: columnIdStr, _id: cardId})).unwrap();
-   enqueueSnackbar("Card deleted successfully!", {variant: "success"});
-   await dispatch(getBoardById(boardIdStr));
-   setDialogOpen(false);
+   const result = await dispatch(deleteCard({boardId: boardIdStr, columnId: columnIdStr, _id: cardId})).unwrap();
+   if (result) {
+    enqueueSnackbar("Card deleted successfully!", {variant: "success"});
+    setDialogOpen(false);
+    await dispatch(fetchCards());
+   }
   } catch (error) {
    console.error("Error deleting card:", error);
    enqueueSnackbar("Error deleting card!", {variant: "error"});
@@ -46,7 +47,7 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
    }
 
    try {
-    await dispatch(
+    const result = await dispatch(
      editCard({
       boardId: boardIdStr,
       columnId: columnIdStr,
@@ -55,9 +56,11 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
       description: newDescription,
      })
     ).unwrap();
-    await dispatch(getBoardById(boardIdStr));
-    setIsEditModalOpen(false);
-    enqueueSnackbar("Card updated successfully!", {variant: "success"});
+    if (result) {
+     setIsEditModalOpen(false);
+     enqueueSnackbar("Card updated successfully!", {variant: "success"});
+     await dispatch(fetchCards());
+    }
    } catch (error) {
     console.error("Error editing card:", error);
     enqueueSnackbar("Error editing card!", {variant: "error"});
@@ -88,7 +91,7 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
     >
      <h3 className="font-bold text-text dark:text-text-dark text-[24px] underline">{title}</h3>
      <div
-      className="w-full min-h-[120px] p-3 overflow-hidden hover:cursor-pointer hover:bg-primary-main/5 focus:bg-primary-main/5 rounded-lg"
+      className="w-full min-h-[160px] p-3 overflow-hidden hover:cursor-pointer hover:bg-primary-main/5 focus:bg-primary-main/5 rounded-lg"
       role="region"
       aria-label="Card description"
      >
