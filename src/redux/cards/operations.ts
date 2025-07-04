@@ -1,20 +1,49 @@
 import axios from "axios";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {CardProps, GetCardByIdProps, EditCardProps, DeleteCardProps, DndMovementPayload, ColumnProps} from "../../types/interfaces";
+import { RootState } from "../store";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
-export const fetchCards = createAsyncThunk <{ cards: CardProps[]; columns: ColumnProps[] }, void, { rejectValue: string } >(
+export const fetchCards = createAsyncThunk<
+  { cards: CardProps[]; columns: ColumnProps[] },
+  void,
+  { state: RootState }
+>(
   "cards/fetchTitleStatus",
   async (_, thunkAPI) => {
     try {
-      const res = await axios.get(`/api/cards`);
+      const state = thunkAPI.getState();
+      const boardId = state.boards.currentBoard?._id;
+      
+      if (!boardId) {
+        throw new Error("No board selected");
+      }
+
+      const res = await axios.get(`/api/boards/${boardId}`);
+      console.log('fetchCards response:', res.data);
+
+      // Get current columns from the board
+      const currentColumns = res.data.columns || [];
+      
+      // Update cards in their respective columns
+      const updatedColumns = currentColumns.map(column => ({
+        ...column,
+        cards: column.card || [] // API returns 'card' instead of 'cards'
+      }));
+
+      // Flatten all cards into a single array
+      const allCards = currentColumns.reduce((acc: CardProps[], col) => {
+        return acc.concat(col.card || []);
+      }, []);
+
       return {
-        cards: res.data.cards, 
-        columns: res.data.columns, 
+        cards: allCards,
+        columns: updatedColumns
       };
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message); 
+      console.error('Error fetching cards:', error);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );

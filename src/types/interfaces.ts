@@ -18,7 +18,8 @@ export interface CardProps extends BaseProps {
 export interface ColumnProps extends BaseProps {
   name: string;
   boardId: string;
-  cards: CardProps[];
+  cards?: CardProps[];
+  card?: CardProps[];
   order?: number;
 }
 

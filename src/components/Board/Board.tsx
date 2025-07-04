@@ -1,21 +1,30 @@
-import React, {useState} from "react";
-import {useSelector} from "react-redux";
+import React, {useState, useEffect} from "react";
+import {useSelector, useDispatch} from "react-redux";
 import CardColumn from "../CardColumn/CardColumn";
 import {DragDropContext} from "@hello-pangea/dnd";
 import DotLoader from "react-spinners/DotLoader";
 import {useCardsOrder, useDnd} from "../../hooks";
 import {BoardsState} from "../../types/interfaces";
+import {fetchCards} from "../../redux/cards/operations";
+import {AppDispatch} from "../../redux/store";
 
 interface BoardProps {
  theme: "light" | "dark";
 }
 
 const Board: React.FC<BoardProps> = ({theme}) => {
+ const dispatch = useDispatch<AppDispatch>();
  const [loading] = useState(false);
 
  const currentBoard = useSelector((state: {boards: BoardsState}) => state.boards.currentBoard);
  const isLoading = useSelector((state: {boards: BoardsState}) => state.boards.isLoading);
  const {columns} = currentBoard || {columns: []};
+
+ useEffect(() => {
+  if (currentBoard?._id) {
+   dispatch(fetchCards());
+  }
+ }, [dispatch, currentBoard?._id]);
 
  const {localColumns, setLocalColumns, saveColumnOrderToLocalStorage} = useCardsOrder(columns, currentBoard?._id);
 

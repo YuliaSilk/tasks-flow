@@ -8,6 +8,7 @@ const EditCardModal: React.FC<{
  title: string;
  description: string;
  boardId: string;
+ columnId: string;
  onEdit: (cardId: string, title: string, description: string) => void;
  onClose: () => void;
  open: boolean;

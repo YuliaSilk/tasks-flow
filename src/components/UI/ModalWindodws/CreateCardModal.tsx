@@ -1,38 +1,30 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect} from "react";
 import BaseModal from "./BaseModal";
 import {useForm, Controller} from "react-hook-form";
 // import {Typography, TextField, Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {createCard} from "../../../redux/cards/operations";
-import {getBoardById} from "../../../redux/boards/operations";
 import {useSnackbar} from "notistack";
 import {CreateCardModalProps} from "../../../types/interfaces";
+import {AppDispatch, RootState} from "../../../redux/store";
 
 const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnId, boardId}) => {
- const dispatch = useDispatch();
+ const dispatch = useDispatch<AppDispatch>();
  const {enqueueSnackbar} = useSnackbar();
  const {
   control,
   handleSubmit,
-  setValue,
   formState: {errors},
   reset,
  } = useForm<{cardTitle: string; cardDescription: string}>();
 
- //  const [cardTitle, setCardTitle] = useState("");
- //  const [cardDescription, setCardDescription] = useState("");
- const [titleError, setTitleError] = useState("");
-
  const cards = useSelector(
-  (state: any) => state.boards.currentBoard?.columns.find((col) => col._id === columnId)?.cards || []
+  (state: RootState) => state.boards.currentBoard?.columns.find((col) => col._id === columnId)?.cards || []
  );
 
- //  useEffect(() => {
- //   setTitleError("");
- //  }, [cardTitle]);
  useEffect(() => {
   reset({cardTitle: "", cardDescription: ""});
- }, [open, onreset]);
+ }, [open, reset]);
 
  const onSubmit = async (data: {cardTitle: string; cardDescription: string}) => {
   try {
@@ -45,7 +37,7 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
    const isDuplicateTitle = cards.some((card: {title: string}) => card.title.toLowerCase() === cardTitle.toLowerCase());
 
    if (isDuplicateTitle) {
-    setTitleError("A card with this title already exists!");
+    enqueueSnackbar("A card with this title already exists!", {variant: "error"});
     return;
    }
    if (cardTitle.length > 50) {
@@ -56,7 +48,7 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
     enqueueSnackbar("Card description must be less than 500 characters.", {variant: "error"});
     return;
    }
-   await dispatch<any>(
+   await dispatch(
     createCard({
      title: cardTitle,
      description: cardDescription,
@@ -65,13 +57,11 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
     })
    ).unwrap();
    enqueueSnackbar("Card created successfully!", {variant: "success"});
-   dispatch<any>(getBoardById(boardId));
    reset();
-   //    setCardTitle("");
-   //    setCardDescription("");
    onClose();
    if (!open) return null;
-  } catch (error) {
+  } catch (error: unknown) {
+   console.error("Error creating card:", error);
    enqueueSnackbar("Error creating card!", {variant: "error"});
   }
  };

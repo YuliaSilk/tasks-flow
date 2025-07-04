@@ -8,10 +8,12 @@ import {useSnackbar} from "notistack";
 import {CardComponentProps} from "../../types/interfaces";
 import {EditCardModal} from "../UI/ModalWindodws";
 import DeleteDialogBasic from "../UI/ModalWindodws/DeleteDialogBasic";
+import {Icon} from "../UI/Icons/Icons";
 
 const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, description, index, boardId, columnId}) => {
  const dispatch: AppDispatch = useDispatch();
  const {enqueueSnackbar} = useSnackbar();
+ console.log("Card render:", {cardId, title, description, index, boardId, columnId});
 
  const [isDialogOpen, setDialogOpen] = useState(false);
  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -19,17 +21,16 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
  const boardIdStr = boardId ? String(boardId) : "";
  const columnIdStr = columnId ? String(columnId) : "";
 
- const openEditModal = useCallback(() => {
-  setIsEditModalOpen(true);
- }, []);
-
  const handleDelete = useCallback(async () => {
-  if (!boardIdStr || !columnIdStr) return;
+  if (!boardIdStr || !columnIdStr) {
+   console.error("Missing boardId or columnId for delete:", {boardIdStr, columnIdStr});
+   return;
+  }
 
   try {
    await dispatch(deleteCard({boardId: boardIdStr, columnId: columnIdStr, _id: cardId})).unwrap();
    enqueueSnackbar("Card deleted successfully!", {variant: "success"});
-   dispatch(getBoardById(boardIdStr));
+   await dispatch(getBoardById(boardIdStr));
    setDialogOpen(false);
   } catch (error) {
    console.error("Error deleting card:", error);
@@ -39,14 +40,24 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
 
  const handleEdit = useCallback(
   async (cardId: string, newTitle: string, newDescription: string) => {
-   if (!boardIdStr || !columnIdStr) return;
+   if (!boardIdStr || !columnIdStr) {
+    console.error("Missing boardId or columnId for edit:", {boardIdStr, columnIdStr});
+    return;
+   }
 
    try {
     await dispatch(
-     editCard({boardId: boardIdStr, columnId: columnIdStr, _id: cardId, title: newTitle, description: newDescription})
+     editCard({
+      boardId: boardIdStr,
+      columnId: columnIdStr,
+      _id: cardId,
+      title: newTitle,
+      description: newDescription,
+     })
     ).unwrap();
-    dispatch(getBoardById(boardIdStr));
+    await dispatch(getBoardById(boardIdStr));
     setIsEditModalOpen(false);
+    enqueueSnackbar("Card updated successfully!", {variant: "success"});
    } catch (error) {
     console.error("Error editing card:", error);
     enqueueSnackbar("Error editing card!", {variant: "error"});
@@ -56,6 +67,7 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
  );
 
  if (!boardId || !columnId) {
+  console.log("Card not rendering due to missing IDs:", {boardId, columnId});
   return null;
  }
 
@@ -70,34 +82,29 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
      {...provided.draggableProps}
      {...provided.dragHandleProps}
      ref={provided.innerRef}
-     className="w-[96%] min-w-0 h-[220px] m-4 p-3 bg-background-light/60 dark:bg-primary-dark/20 rounded-lg flex flex-col gap-4 shadow-card-shadow dark:shadow-sm hover:shadow-card-hover hover:border-[1px] hover:border-primary-light/50 dark:hover:border-primary-dark/50 focus:border-[3px] focus:border-secondary-light/10 dark:focus:border-secondary-dark/10 transition-all duration-200"
+     className="w-[96%] min-w-0 h-auto my-6 mx-4 p-4 bg-background-light/60 dark:bg-primary-dark/20 rounded-lg flex flex-col gap-4 shadow-lg hover:shadow-xl dark:shadow-sm hover:border hover:border-primary-light/50 dark:hover:border-primary-dark/50 focus:border-[3px] focus:border-secondary-light/10 dark:focus:border-secondary-dark/10 transition-all duration-200"
      role="article"
      aria-label={`Card: ${title}`}
     >
      <h3 className="font-bold text-text dark:text-text-dark text-[24px] underline">{title}</h3>
      <div
-      className="w-full h-[160px] p-1 overflow-hidden hover:cursor-pointer hover:bg-primary-main/5 focus:bg-primary-main/5 rounded-lg"
+      className="w-full min-h-[120px] p-3 overflow-hidden hover:cursor-pointer hover:bg-primary-main/5 focus:bg-primary-main/5 rounded-lg"
       role="region"
       aria-label="Card description"
      >
-      <p className="text-text text-[16px] md:text-[18px] lg:text-[20px] font-bold"> to do:</p>
-      <p className="text-text text-[16px md:text-[18px] lg:text-[20px]">{description} </p>
+      <p className="text-text text-[16px] md:text-[18px] lg:text-[20px] font-bold mb-2">to do:</p>
+      <p className="text-text text-[16px] md:text-[18px] lg:text-[20px]">{description}</p>
      </div>
-     <div className="flex w-full justify-end gap-4 items-center">
+     <div className="flex w-full justify-between gap-4 items-center">
       <button
-       onClick={openEditModal}
-       className="w-8 h-8 text-text-light dark:text-text-dark bg-transparent hover:bg-transparent focus:bg-transparent transition-all translate-x-2 duration-200"
+       onClick={() => setIsEditModalOpen(true)}
+       className="w-8 h-8 text-text-light dark:text-text-dark hover:text-secondary-light focus:text-secondary-dark bg-transparent hover:bg-transparent focus:bg-transparent transition-all translate-x-2 duration-200"
        aria-label="Edit card"
       >
-       <svg
-        className="hover:text-secondary-light focus:text-secondary-dark"
-        width="24px"
-        height="24px"
-        fill="#B3ABF9"
-        aria-hidden="true"
-       >
-        <use href="/images/sprite.svg#icon-edit" />
-       </svg>
+       <Icon
+        name="edit"
+        className="w-6 h-6"
+       />
       </button>
 
       <button
@@ -105,15 +112,10 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
        className="w-8 h-8 text-text-light dark:text-text-dark hover:text-red-400 focus:text-red-600 bg-transparent hover:bg-transparent focus:bg-transparent transition-all translate-x-2 duration-300"
        aria-label="Delete card"
       >
-       <svg
-        width="24px"
-        height="24px"
-        fill="#B3ABF9"
-        className="hover:text-red-400 focus:text-red-600"
-        aria-hidden="true"
-       >
-        <use href="/images/sprite.svg#icon-bin" />
-       </svg>
+       <Icon
+        name="trash"
+        className="w-6 h-6"
+       />
       </button>
      </div>
      <DeleteDialogBasic
@@ -132,6 +134,7 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
       description={description}
       onEdit={handleEdit}
       boardId={boardIdStr}
+      columnId={columnIdStr}
      />
     </div>
    )}

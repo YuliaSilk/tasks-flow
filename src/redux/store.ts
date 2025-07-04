@@ -13,7 +13,6 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import { RootState } from './types';
 import { useDispatch, useSelector } from 'react-redux';
 import { TypedUseSelectorHook } from 'react-redux';
 
@@ -40,6 +39,7 @@ export const store = configureStore({
     }),
 });
 
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export const persistor = persistStore(store);
 

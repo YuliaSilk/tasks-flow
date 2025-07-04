@@ -1,36 +1,30 @@
-import React, {useState} from "react";
-import {CardListProps, FilterOptions} from "../../types/interfaces";
+import React from "react";
+import {CardListProps} from "../../types/interfaces";
 import Card from "../Card/Card";
 import ErrorBoundary from "../ErrorBoundary/ErrorBoundary";
-import CardFilters from "./CardFilters";
-import useCardFilters from "../../hooks/useCardFilters";
 
-const CardList: React.FC<CardListProps> = ({cards, columnId, theme}) => {
- const [filters, setFilters] = useState<FilterOptions>({});
- const filteredCards = useCardFilters(cards, filters);
+const CardList: React.FC<CardListProps> = ({cards = [], columnId, boardId}) => {
+ console.log("CardList render:", {cards, columnId, boardId});
 
  return (
   <ErrorBoundary>
-   <div className="flex flex-col gap-4">
-    <CardFilters
-     onFilterChange={setFilters}
-     theme={theme}
-     columns={[{_id: columnId, name: "Current Column"}]}
-    />
-
-    <div className="space-y-2">
-     {filteredCards.map((card, index) => (
+   <div className="flex flex-col items-center gap-2">
+    {cards?.map((card, index) => {
+     console.log("Rendering card:", {...card, index, columnId, boardId});
+     return (
       <Card
        key={card._id}
        {...card}
        index={index}
+       columnId={columnId}
+       boardId={boardId}
       />
-     ))}
+     );
+    })}
 
-     {filteredCards.length === 0 && (
-      <div className="text-center py-4 text-gray-500 dark:text-gray-400">No cards found</div>
-     )}
-    </div>
+    {(!cards || cards.length === 0) && (
+     <div className="text-center py-4 text-gray-500 dark:text-gray-400">No cards found</div>
+    )}
    </div>
   </ErrorBoundary>
  );

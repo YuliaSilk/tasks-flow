@@ -6,7 +6,9 @@ import {
   getBoardById,
   deleteBoard,
 } from './operations';
-import { BoardProps } from '../../types/interfaces';
+import { BoardProps, CardProps, ColumnProps } from '../../types/interfaces';
+import { createCard } from '../cards/operations';
+import { fetchCards } from '../cards/operations';
 
 const handlePending = (state: BoardsStateWithStatus) => {
   state.isLoading = true;
@@ -87,6 +89,32 @@ const boardsSlice = createSlice({
         state.boards = state.boards.filter((board) => board._id !== action.payload);
         if (state.currentBoard?._id === action.payload) {
           state.currentBoard = null;
+        }
+      })
+
+      // Handle card creation in the board state
+      .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardProps; columnId: string }>) => {
+        if (state.currentBoard) {
+          const columnIndex = state.currentBoard.columns.findIndex(col => col._id === action.payload.columnId);
+          if (columnIndex !== -1) {
+            if (!state.currentBoard.columns[columnIndex].cards) {
+              state.currentBoard.columns[columnIndex].cards = [];
+            }
+            state.currentBoard.columns[columnIndex].cards.push(action.payload.card);
+          }
+        }
+      })
+
+      // Handle cards fetching
+      .addCase(fetchCards.fulfilled, (state, action: PayloadAction<{ cards: CardProps[]; columns: ColumnProps[] }>) => {
+        if (state.currentBoard?._id && action.payload?.columns) {
+          const boardId = state.currentBoard._id;
+          state.currentBoard.columns = action.payload.columns.map(column => ({
+            _id: column._id,
+            name: column.name,
+            boardId,
+            cards: column.cards || []
+          }));
         }
       });
   },

@@ -37,12 +37,12 @@ const useDnd = (localColumns, setLocalColumns, saveColumnOrderToLocalStorage, cu
         try {
           const payload: DndMovementPayload = {
             cardId: draggableId,
-            card: movedCard,
-            finishTaskIndex: destination.index,
-            sourceColumnId: source.droppableId,
-            destinationColumnId: destination.droppableId,
-            boardId: currentBoardId,
-            destinationIndex: destination.index,
+              card: movedCard,
+              finishTaskIndex: destination.index,
+              sourceColumnId: source.droppableId,
+              destinationColumnId: destination.droppableId,
+              boardId: currentBoardId,
+              destinationIndex: destination.index,
           };
           
           await dispatch(dndMovement(payload));

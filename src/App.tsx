@@ -1,10 +1,15 @@
 import React, {useEffect, useState, lazy, Suspense} from "react";
 import "./App.css";
 import {SnackbarProvider} from "notistack";
+import {useDispatch} from "react-redux";
+import {fetchBoards} from "./redux/boards/operations";
+import {AppDispatch} from "./redux/store";
 
 const Header = lazy(() => import("./components/Header/Header"));
 const Board = lazy(() => import("./components/Board/Board"));
+
 const App: React.FC = () => {
+ const dispatch = useDispatch<AppDispatch>();
  const [theme, setTheme] = useState<"light" | "dark">(
   () => (localStorage.getItem("theme") as "light" | "dark") || "light"
  );
@@ -13,6 +18,11 @@ const App: React.FC = () => {
   document.documentElement.classList.toggle("dark", theme === "dark");
   localStorage.setItem("theme", theme);
  }, [theme]);
+
+ // Fetch boards when app loads
+ useEffect(() => {
+  dispatch(fetchBoards());
+ }, [dispatch]);
 
  return (
   <SnackbarProvider
