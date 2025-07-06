@@ -20,11 +20,20 @@ const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {
   <div className=" w-full h-auto md:h-[160px] flex flex-col mb-10 lg:flex-row  gap-4 justify-between items-center">
    <h1 className="hidden">Tasks Flow - your personal task manager</h1>
    <div className="flex flex-col md:flex-row gap-4 items-center md:mb-4 w-full  p-4 md:p-5 lg:px-44">
-    <img
-     src="/images/tasks-flow-logo-min.png"
-     alt="Tasks Flow Logo"
-     className="w-[160px] md:w-[160px] h-[auto]"
-    />
+    <picture>
+     <source
+      srcSet="/images/tasks-flow-logo.webp"
+      type="image/webp"
+     />
+     <img
+      src="/images/tasks-flow-logo-min.png"
+      alt="Tasks Flow Logo"
+      width="361"
+      height="237"
+      className="w-[160px] md:w-[160px] h-auto"
+      loading="eager"
+     />
+    </picture>
     <div className="flex flex-col md:flex-row gap-4 lg:gap-8 w-full items-center justify-center md:justify-end mb-4">
      <div className="flex flex-col md:flex-row items-center  w-[480px] gap-4  ">
       <SearchComponent
