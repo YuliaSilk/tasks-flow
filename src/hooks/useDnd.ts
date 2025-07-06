@@ -15,11 +15,15 @@ const useDnd = (localColumns, setLocalColumns, saveColumnOrderToLocalStorage, cu
     
         const sourceColumn = localColumns[sourceColumnIndex];
         const destinationColumn = localColumns[destinationColumnIndex];
-    
-        const sourceCards = [...sourceColumn.cards];
-        const destinationCards = [...destinationColumn.cards];
+        
+        if (!sourceColumn || !destinationColumn) return;
+        
+        // Ensure cards arrays exist and are arrays
+        const sourceCards = Array.isArray(sourceColumn.cards) ? [...sourceColumn.cards] : [];
+        const destinationCards = Array.isArray(destinationColumn.cards) ? [...destinationColumn.cards] : [];
     
         const [movedCard] = sourceCards.splice(source.index, 1);
+        if (!movedCard) return;
         const updatedColumns = [...localColumns];
     
         if (source.droppableId === destination.droppableId) {
