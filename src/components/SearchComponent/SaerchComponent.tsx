@@ -77,6 +77,7 @@ const SearchComponent: React.FC<SearchFieldProps> = ({onBoardSelected, theme}) =
      <button
       className="text-red-500 hover:text-red-700 focus:outline-none"
       onClick={(e) => handleDeleteClick(e, {value, label})}
+      aria-label={`Delete board ${label}`}
      >
       Delete
      </button>
@@ -99,6 +100,12 @@ const SearchComponent: React.FC<SearchFieldProps> = ({onBoardSelected, theme}) =
 
  return (
   <div className="w-full max-w-md">
+   <label
+    id="board-select-label"
+    className="sr-only"
+   >
+    Select a board
+   </label>
    <Select<BoardOptionType>
     ref={selectRef}
     value={selectedOption}
@@ -111,6 +118,13 @@ const SearchComponent: React.FC<SearchFieldProps> = ({onBoardSelected, theme}) =
     styles={getSelectStyles(selectTheme)}
     placeholder="Select a board..."
     isClearable
+    aria-labelledby="board-select-label"
+    aria-label="Select a board"
+    inputId="board-select-input"
+    classNamePrefix="board-select"
+    isSearchable
+    noOptionsMessage={() => "No boards found"}
+    loadingMessage={() => "Loading boards..."}
    />
 
    {isDialogOpen && (

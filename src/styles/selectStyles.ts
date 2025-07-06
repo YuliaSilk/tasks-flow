@@ -42,7 +42,7 @@ const getSelectStyles = (theme: "light" | "dark"): StylesConfig<BoardOptionType,
     overflowY: "auto",
   }),
   option: (provided, state) => ({
-     ...provided,
+    ...provided,
     backgroundColor: state.isSelected
       ? colors[theme].optionSelectedBg
       : state.isFocused
@@ -56,9 +56,12 @@ const getSelectStyles = (theme: "light" | "dark"): StylesConfig<BoardOptionType,
     padding: "10px 16px",
     fontWeight: state.isSelected ? 700 : 500,
     transition: "all 0.2s",
-    }),
+    "&:active": {
+      backgroundColor: colors[theme].optionSelectedBg,
+    },
+  }),
   control: (provided, state) => ({
-     ...provided,
+    ...provided,
     backgroundColor: colors[theme].background,
     color: colors[theme].text,
     borderColor: state.isFocused ? colors[theme].border : colors[theme].borderHover,
@@ -66,9 +69,6 @@ const getSelectStyles = (theme: "light" | "dark"): StylesConfig<BoardOptionType,
     borderRadius: "20px",
     border: `1px solid ${state.isFocused ? colors[theme].border : colors[theme].borderHover}`,
     height: "56px",
-    zIndex: 999,
-    maxHeight: "200px",
-    overflowY: "auto",
     padding: "0 16px",
     fontSize: "16px",
     fontWeight: "500",
@@ -83,14 +83,19 @@ const getSelectStyles = (theme: "light" | "dark"): StylesConfig<BoardOptionType,
       backgroundColor: theme === "dark" ? colors.dark.optionHoverBg : colors.light.optionHoverBg,
       borderColor: colors[theme].borderHover,
     },
-    "&:focus": {
-      outline: "none",
-    },
-    }),
+  }),
   singleValue: (provided) => ({
-     ...provided,
+    ...provided,
     color: colors[theme].text,
-    }),
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: theme === "light" ? "rgba(0, 2, 41, 0.7)" : "rgba(215, 217, 255, 0.7)",
+  }),
+  input: (provided) => ({
+    ...provided,
+    color: colors[theme].text,
+  }),
 });
    
 export default getSelectStyles;
