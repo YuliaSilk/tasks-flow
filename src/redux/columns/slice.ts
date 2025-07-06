@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, SerializedError } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ColumnsStateWithStatus } from '../types';
 import {
   getAllColumns,
@@ -6,19 +6,7 @@ import {
   getColumnsAndCardsByBoardId,
 } from './operations';
 import { ColumnProps } from '../../types/interfaces';
-
-const handlePending = (state: ColumnsStateWithStatus) => {
-  state.isLoading = true;
-  state.error = null;
-};
-
-const handleRejected = (
-  state: ColumnsStateWithStatus,
-  action: { error: SerializedError; payload: unknown }
-) => {
-  state.isLoading = false;
-  state.error = action.error.message || (action.payload as string) || 'An error occurred';
-};
+import { handlePending, handleRejected, handleFulfilled } from '../utils';
 
 const initialState: ColumnsStateWithStatus = {
   columns: [],
@@ -36,30 +24,30 @@ const columnsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllColumns.pending, handlePending)
-      .addCase(getAllColumns.rejected, handleRejected)
+      // Get all columns
+      .addCase(getAllColumns.pending, (state) => handlePending(state))
+      .addCase(getAllColumns.rejected, (state, action) => handleRejected(state, action))
       .addCase(getAllColumns.fulfilled, (state, action: PayloadAction<ColumnProps[]>) => {
-        state.isLoading = false;
-        state.error = null;
+        handleFulfilled(state);
         state.columns = action.payload;
       })
 
-      .addCase(getColumnsById.pending, handlePending)
-      .addCase(getColumnsById.rejected, handleRejected)
+      // Get columns by ID
+      .addCase(getColumnsById.pending, (state) => handlePending(state))
+      .addCase(getColumnsById.rejected, (state, action) => handleRejected(state, action))
       .addCase(getColumnsById.fulfilled, (state, action: PayloadAction<ColumnProps>) => {
-        state.isLoading = false;
-        state.error = null;
+        handleFulfilled(state);
         const index = state.columns.findIndex(column => column._id === action.payload._id);
         if (index !== -1) {
           state.columns[index] = action.payload;
         }
       })
 
-      .addCase(getColumnsAndCardsByBoardId.pending, handlePending)
-      .addCase(getColumnsAndCardsByBoardId.rejected, handleRejected)
+      // Get columns and cards by board ID
+      .addCase(getColumnsAndCardsByBoardId.pending, (state) => handlePending(state))
+      .addCase(getColumnsAndCardsByBoardId.rejected, (state, action) => handleRejected(state, action))
       .addCase(getColumnsAndCardsByBoardId.fulfilled, (state, action: PayloadAction<ColumnProps[]>) => {
-        state.isLoading = false;
-        state.error = null;
+        handleFulfilled(state);
         state.columns = action.payload;
       });
   },

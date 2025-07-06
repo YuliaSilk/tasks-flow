@@ -1,3 +1,4 @@
+import { SerializedError } from '@reduxjs/toolkit';
 import { BoardProps, CardProps, ColumnProps, BoardsState, CardsState, ColumnsState } from '../types/interfaces';
 import { store } from './store';
 
@@ -112,15 +113,15 @@ export type ColumnsActionTypes =
 // State Types with Status
 export interface BoardsStateWithStatus extends BoardsState {
   isLoading: boolean;
-  error: string | null;
+  error: SerializedError | null;
 }
 
 export interface CardsStateWithStatus extends CardsState {
   isLoading: boolean;
-  error: string | null;
+  error: SerializedError | null;
 }
 
 export interface ColumnsStateWithStatus extends ColumnsState {
   isLoading: boolean;
-  error: string | null;
+  error: SerializedError | null;
 } 

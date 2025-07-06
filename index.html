@@ -1,26 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site was created to manage your tasks"
-    />
+    <meta name="description" content="Tasks Flow - Your Personal Task Manager" />
     <link rel="apple-touch-icon" href="/logo192.png" />
-    
     <link rel="manifest" href="/manifest.json" />
-    <link rel=preconnect href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet" crossorigin="anonymous">
-    <link rel=preconnect href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet" crossorigin="anonymous">
-    <link href="./output.css" rel="stylesheet">
-    <link href="./src/index.css" rel="stylesheet">
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/images/tasks-flow-logo-min.png" as="image" />
+    <link rel="preload" href="/images/sprite.svg" as="image" />
+    
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="/fonts/your-main-font.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Inline critical CSS -->
+    <style>
+      /* Add any critical CSS here */
+      .loading-placeholder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #ffffff;
+      }
+      @media (prefers-color-scheme: dark) {
+        .loading-placeholder {
+          background-color: #1a1a1a;
+        }
+      }
+    </style>
+    
     <title>Tasks Flow</title>
   </head>
   <body>
-    <script type="module" src="./src/index.tsx"></script>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="loading-placeholder">
+        <!-- Add a simple loading indicator that will be replaced when React loads -->
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+      </div>
+    </div>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>

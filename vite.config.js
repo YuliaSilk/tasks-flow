@@ -1,15 +1,26 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
+import { resolve } from 'path';
 export default defineConfig({
     plugins: [react()],
     build: {
         outDir: 'build',
-        sourcemap: true
+        sourcemap: true,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-react': ['react', 'react-dom', 'react-redux'],
+                    'vendor-redux': ['@reduxjs/toolkit', 'redux-persist'],
+                    'vendor-dnd': ['@hello-pangea/dnd'],
+                    'vendor-ui': ['@mui/material', '@emotion/react', '@emotion/styled'],
+                },
+            },
+        },
+        chunkSizeWarningLimit: 1000,
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './src')
-        }
-    }
+            '@': resolve(__dirname, 'src'),
+        },
+    },
 });

@@ -4,9 +4,19 @@ import {SnackbarProvider} from "notistack";
 import {useDispatch} from "react-redux";
 import {fetchBoards} from "./redux/boards/operations";
 import {AppDispatch} from "./redux/store";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 const Header = lazy(() => import("./components/Header/Header"));
 const Board = lazy(() => import("./components/Board/Board"));
+
+const LoadingFallback = () => (
+ <div className="flex items-center justify-center h-screen">
+  <div className="animate-pulse">
+   <div className="h-8 w-64 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+   <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded"></div>
+  </div>
+ </div>
+);
 
 const App: React.FC = () => {
  const dispatch = useDispatch<AppDispatch>();
@@ -25,29 +35,31 @@ const App: React.FC = () => {
  }, [dispatch]);
 
  return (
-  <SnackbarProvider
-   maxSnack={2}
-   anchorOrigin={{
-    vertical: "top",
-    horizontal: "right",
-   }}
-  >
-   <div
-    className={`min-h-screen flex flex-col gap-2 md:gap-4 lg:gap-6 transition-colors duration-300 ${
-     theme === "light" ? "text-text-light bg-background-light" : "dark:text-text-dark dark:bg-background-dark"
-    }`}
+  <ErrorBoundary>
+   <SnackbarProvider
+    maxSnack={2}
+    anchorOrigin={{
+     vertical: "top",
+     horizontal: "right",
+    }}
    >
-    <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
-     <Header
-      theme={theme}
-      setTheme={setTheme}
-     />
-    </Suspense>
-    <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
-     <Board theme={theme} />
-    </Suspense>
-   </div>
-  </SnackbarProvider>
+    <div
+     className={`min-h-screen flex flex-col gap-2 md:gap-4 lg:gap-6 transition-colors duration-300 ${
+      theme === "light" ? "text-text-light bg-background-light" : "dark:text-text-dark dark:bg-background-dark"
+     }`}
+    >
+     <Suspense fallback={<LoadingFallback />}>
+      <Header
+       theme={theme}
+       setTheme={setTheme}
+      />
+     </Suspense>
+     <Suspense fallback={<LoadingFallback />}>
+      <Board theme={theme} />
+     </Suspense>
+    </div>
+   </SnackbarProvider>
+  </ErrorBoundary>
  );
 };
 
