@@ -7,8 +7,9 @@ export default defineConfig({
   plugins: [
     react(),
     compression({
-      algorithms: ['gzip'],
-      exclude: [/\.(br)$/, /\.(gz)$/],
+      algorithm: 'gzip',
+      exclude: [/(\.br)$/,
+        /(\.gz)$/],
       deleteOriginalAssets: false,
     }),
   ],
