@@ -15,4 +15,3 @@ export const editCard = createAsyncThunk<CardProps, EditCardProps>(
   }
 );
 
-// Add other operations as needed 

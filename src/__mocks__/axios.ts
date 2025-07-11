@@ -1,6 +1,6 @@
 const mockAxios = {
   defaults: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'https://project-tasks-flow.onrender.com',
   },
   get: jest.fn(),
   post: jest.fn(),

@@ -1,9 +1,7 @@
-const viteMock = {
-  env: {
-    VITE_BASE_URL: 'http://localhost:3000',
+globalThis.import = {
+  meta: {
+    env: {
+      VITE_BASE_URL: 'https://project-tasks-flow.onrender.com',
+    },
   },
 };
-
-global.import = {
-  meta: viteMock,
-}; 
