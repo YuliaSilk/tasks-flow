@@ -18,7 +18,7 @@ export interface CardProps extends BaseProps {
 export interface ColumnProps extends BaseProps {
   name: string;
   boardId: string;
-  cards: CardProps[];
+  card: CardProps[];
   order?: number;
 }
 
@@ -137,7 +137,7 @@ export interface CardComponentProps extends CardProps {
 }
 
 export interface CardListProps {
-  cards: CardProps[];
+  card: CardProps[];
   columnId: string;
   boardId: string;
   theme: 'light' | 'dark';
@@ -146,7 +146,7 @@ export interface CardListProps {
 export interface CurrentColumnProps {
   _id: string;
   name: string;
-  cards: CardProps[];
+  card: CardProps[];
 }
 
 export interface CurrentBoard {

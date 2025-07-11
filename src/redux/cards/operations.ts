@@ -29,11 +29,11 @@ export const fetchCards = createAsyncThunk<
       // Update cards in their respective columns
       const updatedColumns = currentColumns.map(column => ({
         ...column,
-        cards: column.card || [] // API returns 'card' instead of 'cards'
+        card: column.card || [] // API returns 'card'
       }));
 
       // Flatten all cards into a single array
-      const allCards = currentColumns.reduce((acc: CardProps[], col) => {
+      const allCards = updatedColumns.reduce((acc: CardProps[], col) => {
         return acc.concat(col.card || []);
       }, []);
 
@@ -56,13 +56,29 @@ export const createCard = createAsyncThunk<
   "cards/createCard",
   async ({ title, description, columnId, boardId }, thunkAPI) => {
     try {
+      if (!boardId || !columnId || boardId === 'undefined' || columnId === 'undefined') {
+        throw new Error('Invalid board or column ID');
+      }
+
       const response = await axios.post(`/api/boards/${boardId}/columns/${columnId}/cards`, {
         title,
         description,
       });
 
-      return { card: response.data, columnId };
+      if (!response.data || !response.data._id) {
+        throw new Error('Invalid response from server');
+      }
+
+      // Ensure the card has all required fields
+      const card: CardProps = {
+        ...response.data,
+        boardId,
+        columnId,
+      };
+
+      return { card, columnId };
     } catch (error) {
+      console.error('Error creating card:', error);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -85,10 +101,35 @@ export const editCard = createAsyncThunk<CardProps, EditCardProps>(
   "cards/editCard",
   async ({ boardId, columnId, title, description, _id }, thunkAPI) => {
     try {
-      const res = await axios.put(`/api/boards/${boardId}/columns/${columnId}/cards/${_id}`, { title, description });
-      console.log('editCard: ', res.data);
-      return res.data;
+      if (!boardId || !columnId || !_id || 
+          boardId === 'undefined' || columnId === 'undefined' || _id === 'undefined') {
+        throw new Error('Invalid board, column, or card ID');
+      }
+
+      if (!title || !description) {
+        throw new Error('Title and description are required');
+      }
+
+      const res = await axios.put(`/api/boards/${boardId}/columns/${columnId}/cards/${_id}`, { 
+        title, 
+        description 
+      });
+
+      if (!res.data || !res.data._id) {
+        throw new Error('Invalid response from server');
+      }
+
+      // Ensure the response has all required fields
+      const updatedCard: CardProps = {
+        ...res.data,
+        boardId,
+        columnId,
+      };
+
+      console.log('editCard: ', updatedCard);
+      return updatedCard;
     } catch (error) {
+      console.error('Error editing card:', error);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -98,9 +139,27 @@ export const deleteCard = createAsyncThunk<CardProps, DeleteCardProps>(
   "cards/deleteCard",
   async ({ boardId, columnId, _id }, thunkAPI) => {
     try {
+      if (!boardId || !columnId || !_id || 
+          boardId === 'undefined' || columnId === 'undefined' || _id === 'undefined') {
+        throw new Error('Invalid board, column, or card ID');
+      }
+
       const res = await axios.delete(`/api/boards/${boardId}/columns/${columnId}/cards/${_id}`);
-      return res.data;
+      
+      if (!res.data || !res.data._id) {
+        throw new Error('Invalid response from server');
+      }
+
+      // Ensure the response has all required fields
+      const deletedCard: CardProps = {
+        ...res.data,
+        boardId,
+        columnId,
+      };
+
+      return deletedCard;
     } catch (error) {
+      console.error('Error deleting card:', error);
       return thunkAPI.rejectWithValue(error.message);
     }
   }

@@ -4,7 +4,7 @@ import ButtonAdd from "../UI/Buttons/ButtonAdd";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../redux/store";
 import {getBoardById} from "../../redux/boards/operations";
-import SearchComponent from "../SearchComponent/SaerchComponent";
+import SearchComponent from "../SearchComponent/SearchComponent";
 import {HeaderProps} from "../../types/interfaces";
 
 const Header: React.FC<HeaderProps> = ({theme, setTheme}) => {

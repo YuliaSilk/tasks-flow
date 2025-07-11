@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-export const selectCards = (state) => state.cards.card;
+export const selectCards = (state) => state.cards.cards;
 export const selectFilter = (state) => state.cards.filter;
 export const selectIsLoading = (state) => state.cards.isLoading;
 export const selectError = (state) => state.cards.error;

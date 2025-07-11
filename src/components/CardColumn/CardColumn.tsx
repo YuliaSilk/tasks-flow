@@ -10,13 +10,13 @@ import {CardProps} from "../../types/interfaces";
 interface CardColumnProps {
  boardId: string;
  columnId: string;
- column: {card?: CardProps[]; cards?: CardProps[]};
+ column: {card: CardProps[]};
  name: string;
  theme: "light" | "dark";
 }
 
 const CardColumn: React.FC<CardColumnProps> = memo(
- ({boardId, columnId = "", column = {card: [], cards: []}, name = "", theme}) => {
+ ({boardId, columnId = "", column = {card: []}, name = "", theme}) => {
   const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(false);
 
@@ -29,8 +29,7 @@ const CardColumn: React.FC<CardColumnProps> = memo(
    loadCards();
   }, [dispatch, columnId]);
 
-  // Use either card or cards field from the column
-  const columnCards = column.cards || column.card || [];
+  const columnCards = column.card || [];
   console.log("Column cards:", columnCards);
 
   return (
@@ -56,7 +55,7 @@ const CardColumn: React.FC<CardColumnProps> = memo(
          >
           <CardList
            columnId={columnId}
-           cards={columnCards}
+           card={columnCards}
            theme={theme}
            boardId={boardId}
           />

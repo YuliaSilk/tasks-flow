@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteBoard, fetchBoards} from "../../redux/boards/operations";
+import {deleteBoard, fetchBoards, getBoardById} from "../../redux/boards/operations";
 import {BoardProps, BoardsState, SearchFieldProps} from "../../types/interfaces";
 import {AppDispatch} from "../../redux/store";
 import {useSnackbar} from "notistack";
@@ -27,7 +27,10 @@ const SearchComponent: React.FC<SearchFieldProps> = ({onBoardSelected, theme}) =
  const [isDialogOpen, setIsDialogOpen] = useState(false);
  const [boardToDelete, setBoardToDelete] = useState<BoardProps | null>(null);
 
- // Синхронізуємо значення в Select з поточною дошкою
+ useEffect(() => {
+  dispatch(fetchBoards());
+ }, [dispatch]);
+
  useEffect(() => {
   if (currentBoard && (!selectedOption || selectedOption.value !== currentBoard._id)) {
    const option = {
@@ -84,17 +87,23 @@ const SearchComponent: React.FC<SearchFieldProps> = ({onBoardSelected, theme}) =
     </div>
    );
   }
-  // В полі пошуку показуємо тільки назву
   return label;
  };
 
- // Ensure theme is only 'light' or 'dark'
  const selectTheme = theme === "dark" ? "dark" : "light";
 
- const handleChange = (newValue: BoardOptionType | null) => {
+ const handleChange = async (newValue: BoardOptionType | null) => {
   setSelectedOption(newValue);
   if (newValue) {
-   onBoardSelected(newValue.value);
+   try {
+    await dispatch(getBoardById(newValue.value)).unwrap();
+    onBoardSelected(newValue.value);
+   } catch (error) {
+    console.error("Error loading board:", error);
+    enqueueSnackbar("Error loading board!", {variant: "error"});
+   }
+  } else {
+   dispatch(clearCurrentBoard());
   }
  };
 

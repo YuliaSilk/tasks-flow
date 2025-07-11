@@ -46,7 +46,7 @@ export const getColumnsAndCardsByBoardId = createAsyncThunk(
       const cardsResponse = await axios.get(`/api/columns/${column._id}/cards`);
       return {
         ...column,
-        cards: cardsResponse.data || [],
+        card: cardsResponse.data || [],
       };
     }));
 

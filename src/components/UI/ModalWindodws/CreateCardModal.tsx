@@ -19,7 +19,7 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({open, onClose, columnI
  } = useForm<{cardTitle: string; cardDescription: string}>();
 
  const cards = useSelector(
-  (state: RootState) => state.boards.currentBoard?.columns.find((col) => col._id === columnId)?.cards || []
+  (state: RootState) => state.boards.currentBoard?.columns.find((col) => col._id === columnId)?.card || []
  );
 
  useEffect(() => {

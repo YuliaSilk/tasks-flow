@@ -28,7 +28,7 @@ const Board: React.FC<BoardProps> = ({theme}) => {
 
  const currentBoard = useSelector((state: {boards: BoardsState}) => state.boards.currentBoard);
  const isLoading = useSelector((state: {boards: BoardsState}) => state.boards.isLoading);
- const {columns} = currentBoard || {columns: []};
+ const columns = currentBoard?.columns || [];
 
  useEffect(() => {
   let mounted = true;
@@ -49,7 +49,7 @@ const Board: React.FC<BoardProps> = ({theme}) => {
 
  const {onDragEnd} = useDnd(localColumns, setLocalColumns, saveColumnOrderToLocalStorage, currentBoard?._id);
 
- if (!currentBoard) {
+ if (!currentBoard || !currentBoard._id) {
   return <NoBoardSelected />;
  }
 
@@ -75,16 +75,22 @@ const Board: React.FC<BoardProps> = ({theme}) => {
        </div>
       }
      >
-      {localColumns.map((column) => (
-       <CardColumn
-        key={column._id}
-        column={column}
-        name={column.name}
-        columnId={column._id}
-        boardId={currentBoard._id}
-        theme={theme}
-       />
-      ))}
+      {localColumns.map((column) => {
+       if (!column || !column._id || !column.name) {
+        console.error("Invalid column data:", column);
+        return null;
+       }
+       return (
+        <CardColumn
+         key={column._id}
+         column={column}
+         name={column.name}
+         columnId={column._id}
+         boardId={currentBoard._id}
+         theme={theme}
+        />
+       );
+      })}
      </Suspense>
     </div>
    </div>

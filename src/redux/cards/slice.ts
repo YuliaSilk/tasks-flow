@@ -38,7 +38,7 @@ const cardsSlice = createSlice({
       const { columnId, newCards } = action.payload;
       const columnIndex = state.columns.findIndex(col => col._id === columnId);
       if (columnIndex !== -1) {
-        state.columns[columnIndex].cards = newCards;
+        state.columns[columnIndex].card = newCards;
       }
     }
   },
@@ -67,9 +67,19 @@ const cardsSlice = createSlice({
       // Create card
       .addCase(createCard.pending, (state) => handlePending(state))
       .addCase(createCard.rejected, (state, action) => handleRejected(state, action))
-      .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardProps }>) => {
+      .addCase(createCard.fulfilled, (state, action: PayloadAction<{ card: CardProps; columnId: string }>) => {
         handleFulfilled(state);
-        state.cards.push(action.payload.card);
+        const { card, columnId } = action.payload;
+        // Add to global cards array
+        state.cards.push(card);
+        // Add to specific column
+        const columnIndex = state.columns.findIndex(col => col._id === columnId);
+        if (columnIndex !== -1) {
+          if (!state.columns[columnIndex].card) {
+            state.columns[columnIndex].card = [];
+          }
+          state.columns[columnIndex].card.push(card);
+        }
       })
 
       // Delete card
@@ -78,6 +88,13 @@ const cardsSlice = createSlice({
       .addCase(deleteCard.fulfilled, (state, action: PayloadAction<CardProps>) => {
         handleFulfilled(state);
         state.cards = state.cards.filter((card) => card._id !== action.payload._id);
+        // Remove from column
+        const columnIndex = state.columns.findIndex(col => col._id === action.payload.columnId);
+        if (columnIndex !== -1) {
+          state.columns[columnIndex].card = state.columns[columnIndex].card.filter(
+            card => card._id !== action.payload._id
+          );
+        }
       })
 
       // Edit card
@@ -88,6 +105,16 @@ const cardsSlice = createSlice({
         const index = state.cards.findIndex((card) => card._id === action.payload._id);
         if (index !== -1) {
           state.cards[index] = action.payload;
+        }
+        // Update in column
+        const columnIndex = state.columns.findIndex(col => col._id === action.payload.columnId);
+        if (columnIndex !== -1) {
+          const cardIndex = state.columns[columnIndex].card.findIndex(
+            card => card._id === action.payload._id
+          );
+          if (cardIndex !== -1) {
+            state.columns[columnIndex].card[cardIndex] = action.payload;
+          }
         }
       })
 

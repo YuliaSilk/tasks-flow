@@ -7,6 +7,11 @@ const useDnd = (localColumns, setLocalColumns, saveColumnOrderToLocalStorage, cu
     const dispatch = useDispatch<AppDispatch>();
 
     const onDragEnd = async (result) => {
+        if (!currentBoardId || currentBoardId === 'undefined') {
+            console.error("Invalid board ID for DnD:", currentBoardId);
+            return;
+        }
+
         const { source, destination, draggableId } = result;
         if (!destination) return;
     
@@ -16,23 +21,30 @@ const useDnd = (localColumns, setLocalColumns, saveColumnOrderToLocalStorage, cu
         const sourceColumn = localColumns[sourceColumnIndex];
         const destinationColumn = localColumns[destinationColumnIndex];
         
-        if (!sourceColumn || !destinationColumn) return;
+        if (!sourceColumn || !destinationColumn) {
+            console.error("Invalid source or destination column:", { sourceColumn, destinationColumn });
+            return;
+        }
         
         // Ensure cards arrays exist and are arrays
-        const sourceCards = Array.isArray(sourceColumn.cards) ? [...sourceColumn.cards] : [];
-        const destinationCards = Array.isArray(destinationColumn.cards) ? [...destinationColumn.cards] : [];
+        const sourceCards = Array.isArray(sourceColumn.card) ? [...sourceColumn.card] : [];
+        const destinationCards = Array.isArray(destinationColumn.card) ? [...destinationColumn.card] : [];
     
         const [movedCard] = sourceCards.splice(source.index, 1);
-        if (!movedCard) return;
+        if (!movedCard) {
+            console.error("No card found at source index:", source.index);
+            return;
+        }
+
         const updatedColumns = [...localColumns];
     
         if (source.droppableId === destination.droppableId) {
           sourceCards.splice(destination.index, 0, movedCard);
-          updatedColumns[sourceColumnIndex] = { ...sourceColumn, cards: sourceCards };
+          updatedColumns[sourceColumnIndex] = { ...sourceColumn, card: sourceCards };
         } else {
           destinationCards.splice(destination.index, 0, movedCard);
-          updatedColumns[sourceColumnIndex] = { ...sourceColumn, cards: sourceCards };
-          updatedColumns[destinationColumnIndex] = { ...destinationColumn, cards: destinationCards };
+          updatedColumns[sourceColumnIndex] = { ...sourceColumn, card: sourceCards };
+          updatedColumns[destinationColumnIndex] = { ...destinationColumn, card: destinationCards };
         }
     
         setLocalColumns(updatedColumns);
@@ -41,12 +53,12 @@ const useDnd = (localColumns, setLocalColumns, saveColumnOrderToLocalStorage, cu
         try {
           const payload: DndMovementPayload = {
             cardId: draggableId,
-              card: movedCard,
-              finishTaskIndex: destination.index,
-              sourceColumnId: source.droppableId,
-              destinationColumnId: destination.droppableId,
-              boardId: currentBoardId,
-              destinationIndex: destination.index,
+            card: movedCard,
+            finishTaskIndex: destination.index,
+            sourceColumnId: source.droppableId,
+            destinationColumnId: destination.droppableId,
+            boardId: currentBoardId,
+            destinationIndex: destination.index,
           };
           
           await dispatch(dndMovement(payload));

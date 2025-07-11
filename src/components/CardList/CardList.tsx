@@ -3,13 +3,13 @@ import {CardListProps} from "../../types/interfaces";
 import Card from "../Card/Card";
 import ErrorBoundary from "../ErrorBoundary/ErrorBoundary";
 
-const CardList: React.FC<CardListProps> = ({cards = [], columnId, boardId}) => {
- console.log("CardList render:", {cards, columnId, boardId});
+const CardList: React.FC<CardListProps> = ({card = [], columnId, boardId}) => {
+ console.log("CardList render:", {card, columnId, boardId});
 
  return (
   <ErrorBoundary>
    <div className="flex flex-col items-center gap-2">
-    {cards?.map((card, index) => {
+    {card?.map((card, index) => {
      console.log("Rendering card:", {...card, index, columnId, boardId});
      return (
       <Card
@@ -22,7 +22,7 @@ const CardList: React.FC<CardListProps> = ({cards = [], columnId, boardId}) => {
      );
     })}
 
-    {(!cards || cards.length === 0) && (
+    {(!card || card.length === 0) && (
      <div className="text-center py-4 text-gray-500 dark:text-gray-400">No cards found</div>
     )}
    </div>

@@ -69,8 +69,9 @@ const Card: React.FC<CardComponentProps> = memo(({_id: cardId, title, descriptio
   [boardIdStr, columnIdStr, dispatch, enqueueSnackbar]
  );
 
- if (!boardId || !columnId) {
-  console.log("Card not rendering due to missing IDs:", {boardId, columnId});
+ // Check if we have valid IDs
+ if (!boardIdStr || !columnIdStr || boardIdStr === "undefined" || columnIdStr === "undefined") {
+  console.error("Card not rendering due to invalid IDs:", {boardId, columnId, boardIdStr, columnIdStr});
   return null;
  }
 

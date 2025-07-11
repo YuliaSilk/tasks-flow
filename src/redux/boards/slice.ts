@@ -58,7 +58,7 @@ const boardsSlice = createSlice({
             _id: col._id,
             name: col.name,
             boardId: action.payload._id,
-            cards: col.cards || [],
+            card: col.card || [],
           })),
         };
       })
@@ -90,20 +90,20 @@ const boardsSlice = createSlice({
         if (state.currentBoard) {
           const column = state.currentBoard.columns.find(col => col._id === action.payload.columnId);
           if (column) {
-            if (!column.cards) {
-              column.cards = [];
+            if (!column.card) {
+              column.card = [];
             }
-            column.cards.push(action.payload.card);
+            column.card.push(action.payload.card);
           }
         }
       })
       .addCase(editCard.fulfilled, (state, action: PayloadAction<CardProps>) => {
         if (state.currentBoard) {
           const column = state.currentBoard.columns.find(col => col._id === action.payload.columnId);
-          if (column && column.cards) {
-            const cardIndex = column.cards.findIndex(card => card._id === action.payload._id);
+          if (column && column.card) {
+            const cardIndex = column.card.findIndex(card => card._id === action.payload._id);
             if (cardIndex !== -1) {
-              column.cards[cardIndex] = action.payload;
+              column.card[cardIndex] = action.payload;
             }
           }
         }
@@ -111,8 +111,8 @@ const boardsSlice = createSlice({
       .addCase(deleteCard.fulfilled, (state, action: PayloadAction<CardProps>) => {
         if (state.currentBoard) {
           const column = state.currentBoard.columns.find(col => col._id === action.payload.columnId);
-          if (column && column.cards) {
-            column.cards = column.cards.filter(card => card._id !== action.payload._id);
+          if (column && column.card) {
+            column.card = column.card.filter(card => card._id !== action.payload._id);
           }
         }
       });
